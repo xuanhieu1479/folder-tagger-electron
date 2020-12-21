@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
     "allowJs": true,
+    "target": "es6",
     "module": "commonjs",
+    "rootDir": "./",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "noImplicitAny": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "outDir": "dist",
+    "outDir": "build",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "paths": {
@@ -16,7 +18,8 @@
 				"node_modules/@types/babel__generator"
 			],
     },
-    "jsx": "react"
+    "jsx": "react",
+    "strict": true
   },
   "include": [
     "src/**/*"

@@ -13,5 +13,8 @@
       "plugin:prettier/recommended"
     ],
     "parser": "@typescript-eslint/parser",
-    "plugins": ["prettier"]
+    "plugins": ["prettier"],
+    "rules": {
+      "@typescript-eslint/no-var-requires": "off"
+    }
 }
