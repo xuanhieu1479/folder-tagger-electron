@@ -88,5 +88,16 @@ typings/
 # Electron-Forge
 out/
 
-# VS Code config
+# Package Manager
+yarn.lock
+
+# VS Code Config
 .vscode/
+
+# TypeORM
+.idea/
+tmp/
+temp/
+
+# Database
+*.db
