@@ -100,4 +100,7 @@ tmp/
 temp/
 
 # Database
+Database/
 *.db
+*.db-shm
+*.db-wal

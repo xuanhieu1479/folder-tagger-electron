@@ -2,7 +2,6 @@ import { app, BrowserWindow } from 'electron';
 // Data section
 import 'reflect-metadata';
 import './Data/';
-import './Data/initDB';
 // Logic section
 import './Logic/index.ts';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
