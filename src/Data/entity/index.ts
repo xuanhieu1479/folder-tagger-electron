@@ -1,3 +1,5 @@
-import { User } from './User';
+import Folder from './Folder';
+import Category from './Category';
+import Language from './Language';
 
-export default [User];
+export default [Folder, Category, Language];
