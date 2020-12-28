@@ -1,4 +1,6 @@
-const express = require('express');
+import express from 'express';
+import './logging';
+
 const app = express();
 const PORT = 8000;
 

@@ -66,6 +66,7 @@
     "better-sqlite3": "^7.1.2",
     "css-loader": "^4.2.1",
     "express": "^4.17.1",
+    "moment": "^2.29.1",
     "node-loader": "^1.0.1",
     "node-pre-gyp": "^0.17.0",
     "react": "^17.0.1",
