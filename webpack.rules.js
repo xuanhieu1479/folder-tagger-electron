@@ -23,5 +23,9 @@ module.exports = [
         transpileOnly: true
       }
     }
+  },
+  {
+    test: /\.(eot|woff|ttf)$/,
+    use: 'file-loader'
   }
 ];
