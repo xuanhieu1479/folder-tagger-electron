@@ -8,7 +8,7 @@ import Language from '../entity/Language';
 import CategorySeed from './CategorySeed';
 import LanguageSeed from './LanguageSeed';
 
-const initDatabase = async () => {
+const initDatabase = async (): Promise<void> => {
   if (!fs.existsSync(DATABASE_PATH)) {
     if (!fs.existsSync(DATABASE_DIRECTORY)) fs.mkdirSync(DATABASE_DIRECTORY);
     // Generate database
@@ -25,4 +25,4 @@ const initDatabase = async () => {
   }
 };
 
-initDatabase();
+export default initDatabase;
