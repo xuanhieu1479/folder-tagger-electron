@@ -1,4 +1,5 @@
 import { Menu, dialog, app } from 'electron';
+import { addOneFolder } from './menuAction';
 
 const onAddFolder = () => {
   const directory = dialog.showOpenDialogSync({
@@ -6,8 +7,9 @@ const onAddFolder = () => {
     defaultPath: `${app.getPath('desktop')}`,
     properties: ['openDirectory']
   });
-  if (directory) {
-    console.log(directory[0]);
+  if (directory !== undefined) {
+    const selectedDirectory = directory[0];
+    addOneFolder(selectedDirectory);
   }
 };
 

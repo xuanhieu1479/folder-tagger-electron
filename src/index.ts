@@ -1,6 +1,7 @@
 import { app, BrowserWindow, Menu } from 'electron';
 import 'reflect-metadata';
-import './be';
+import initBE from './be';
+import axiosConfig from './common/config/axiosConfig';
 import { menuTemplate } from './app';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,4 +51,6 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+axiosConfig();
+initBE();
 Menu.setApplicationMenu(menuTemplate);
