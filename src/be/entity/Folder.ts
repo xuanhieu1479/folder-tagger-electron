@@ -1,4 +1,10 @@
-import { Entity, PrimaryColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  ManyToOne,
+  getConnection
+} from 'typeorm';
 import Category from './Category';
 import Language from './Language';
 
@@ -18,4 +24,13 @@ export default class Folder {
 
   @ManyToOne(() => Language, language => language.folders)
   language!: Language;
+
+  addFolder = async (folderLocation: string): Promise<void> => {
+    await getConnection()
+      .createQueryBuilder()
+      .insert()
+      .into(Folder)
+      .values([{ FolderLocation: folderLocation }])
+      .execute();
+  };
 }

@@ -1,5 +1,5 @@
 import { ConnectionOptions } from 'typeorm';
-import { DATABASE_PATH } from '../Variables/data';
+import { DATABASE_PATH } from '../variables/data';
 import entities from '../../be/entity';
 
 const ormConfig: ConnectionOptions = {

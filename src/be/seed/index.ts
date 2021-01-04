@@ -1,8 +1,8 @@
 import fs from 'fs';
 import Database from 'better-sqlite3';
 import { createConnection } from 'typeorm';
-import ormConfig from '../../common/Config/ormconfig';
-import { DATABASE_DIRECTORY, DATABASE_PATH } from '../../common/Variables/data';
+import ormConfig from '../../common/config/ormconfig';
+import { DATABASE_DIRECTORY, DATABASE_PATH } from '../../common/variables/data';
 import Category from '../entity/Category';
 import Language from '../entity/Language';
 import CategorySeed from './CategorySeed';

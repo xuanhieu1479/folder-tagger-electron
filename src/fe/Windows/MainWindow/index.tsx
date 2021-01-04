@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Spinner, Intent } from '@blueprintjs/core';
-import '../../style/globalStyle.scss';
+import '../../styles/globalStyle.scss';
 
 ReactDOM.render(
   <div>

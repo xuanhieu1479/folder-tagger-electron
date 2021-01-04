@@ -1,7 +1,7 @@
 import fs from 'fs';
 import moment from 'moment';
-import { LOG_DIRECTORY } from '../common/Variables/log';
-import { DATE_LOG_FORMAT, TIME_LOG_FORMAT } from '../common/Variables/dateTime';
+import { LOG_DIRECTORY } from '../common/variables/log';
+import { DATE_LOG_FORMAT, TIME_LOG_FORMAT } from '../common/variables/dateTime';
 
 if (!fs.existsSync(LOG_DIRECTORY)) fs.mkdirSync(LOG_DIRECTORY);
 
