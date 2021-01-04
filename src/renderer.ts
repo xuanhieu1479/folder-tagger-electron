@@ -26,4 +26,4 @@
  * ```
  */
 
-import './fe/Windows/MainWindow/index.tsx';
+import './fe/windows/mainWindow/index.tsx';
