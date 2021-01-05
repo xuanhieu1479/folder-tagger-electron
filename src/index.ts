@@ -1,7 +1,6 @@
 import { app, BrowserWindow, Menu } from 'electron';
 import 'reflect-metadata';
 import initBE from './be';
-import axiosConfig from './common/config/axiosConfig';
 import { menuTemplate } from './app';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,7 +16,10 @@ const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
-    width: 800
+    width: 800,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   // and load the index.html of the app.
@@ -51,6 +53,5 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
-axiosConfig();
 initBE();
 Menu.setApplicationMenu(menuTemplate);
