@@ -1,7 +1,6 @@
 import fs from 'fs';
 import Database from 'better-sqlite3';
-import { createConnection } from 'typeorm';
-import ormConfig from '../../common/config/ormConfig';
+import { getConnection } from 'typeorm';
 import { DATABASE_DIRECTORY, DATABASE_PATH } from '../../common/variables/data';
 import Category from '../entity/Category';
 import Language from '../entity/Language';
@@ -15,7 +14,7 @@ const initDatabase = async (): Promise<void> => {
     new Database(DATABASE_PATH, { verbose: console.log });
 
     // Generate tables
-    const connection = await createConnection(ormConfig);
+    const connection = getConnection();
     await connection.synchronize();
 
     // Seeding data

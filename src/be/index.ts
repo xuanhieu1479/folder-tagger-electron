@@ -4,8 +4,8 @@ import initDatabase from './seed/';
 import initLogging from './logging';
 import initRouter from './controllers/';
 
-const initBE = (): void => {
-  initDatabase();
+const initBE = async (): Promise<void> => {
+  await initDatabase();
   initLogging();
 
   const app = express();

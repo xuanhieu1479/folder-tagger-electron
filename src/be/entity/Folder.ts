@@ -9,8 +9,11 @@ import Category from './Category';
 import Language from './Language';
 import MESSAGE from '../../common/variables/message';
 import STATUS_CODE from '../../common/variables/statusCode';
-import { queryResult } from '../../common/variables/interface';
+import { folderQueryResult } from '../../common/variables/interface';
 import { logErrors } from '../logging';
+
+// const connection = getConnection();
+// const queryBuilder = connection.createQueryBuilder();
 
 @Entity()
 export default class Folder {
@@ -29,7 +32,37 @@ export default class Folder {
   @ManyToOne(() => Language, language => language.folders)
   language!: Language;
 
-  addFolder = async (folderLocation: string): Promise<queryResult> => {
+  findFolder = async (folderLocation: string): Promise<folderQueryResult> => {
+    try {
+      const folder = await getConnection()
+        .createQueryBuilder()
+        .select()
+        .from(Folder, 'folder')
+        .where('folder.FolderLocation = :folderLocation', { folderLocation })
+        .getOneOrFail();
+      return {
+        data: folder,
+        message: MESSAGE.SUCCESS,
+        status: STATUS_CODE.SUCCESS
+      };
+    } catch (error) {
+      console.log('FIND FOLDER ERROR: ', error);
+      logErrors(error.message, error.stack);
+      return {
+        message: error.message,
+        status: STATUS_CODE.DB_ERROR
+      };
+    }
+  };
+
+  addFolder = async (folderLocation: string): Promise<folderQueryResult> => {
+    const folderExists = !(await this.findFolder(folderLocation)).data;
+    if (folderExists)
+      return {
+        message: MESSAGE.FOLDER_ALREADY_EXISTS,
+        status: STATUS_CODE.DB_ERROR
+      };
+
     try {
       await getConnection()
         .createQueryBuilder()
@@ -45,6 +78,7 @@ export default class Folder {
         status: STATUS_CODE.DB_ERROR
       };
     }
+
     return {
       message: MESSAGE.SUCCESS,
       status: STATUS_CODE.SUCCESS

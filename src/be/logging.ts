@@ -28,7 +28,7 @@ const initLogging = (): void => {
     logErrors(err, origin);
   });
 
-  // Promise unhandle exception
+  // Unhandled promise exception
   process.on('unhandledRejection', (reason, promise) => {
     console.log('UNHANLED REJECTION: ', promise);
     promise.catch(async error => {
