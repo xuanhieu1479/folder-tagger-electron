@@ -22,6 +22,10 @@ const initDatabase = async (): Promise<void> => {
     const queryBuilder = connection.createQueryBuilder();
     await queryBuilder.insert().into(Category).values(CategorySeed).execute();
     await queryBuilder.insert().into(Language).values(LanguageSeed).execute();
+  } else {
+    // createConnection will create new database by DATABASE_PATH
+    // therefore putting it before checking condition is meaningless
+    await createConnection(ormConfig);
   }
 };
 

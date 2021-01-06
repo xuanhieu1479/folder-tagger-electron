@@ -3,7 +3,8 @@ import {
   PrimaryColumn,
   Column,
   ManyToOne,
-  getConnection
+  getConnection,
+  getRepository
 } from 'typeorm';
 import Category from './Category';
 import Language from './Language';
@@ -29,33 +30,13 @@ export default class Folder {
   @ManyToOne(() => Language, language => language.folders)
   language!: Language;
 
-  findFolder = async (folderLocation: string): Promise<folderQueryResult> => {
-    try {
-      const folder = await getConnection()
-        .createQueryBuilder()
-        .select()
-        .from(Folder, 'folder')
-        .where('folder.FolderLocation = :folderLocation', { folderLocation })
-        .getOneOrFail();
-      return {
-        data: folder,
-        message: MESSAGE.SUCCESS,
-        status: STATUS_CODE.SUCCESS
-      };
-    } catch (error) {
-      console.log('FIND FOLDER ERROR: ', error);
-      logErrors(error.message, error.stack);
-      return {
-        message: error.message,
-        status: STATUS_CODE.DB_ERROR
-      };
-    }
+  isExisting = async (folderLocation: string): Promise<boolean> => {
+    const folder = await getRepository(Folder).findOne(folderLocation);
+    return folder !== undefined;
   };
 
-  addFolder = async (folderLocation: string): Promise<folderQueryResult> => {
-    // data returned from findFolder when no folder had been found is false
-    // but it can be null or undefined so it's best to check with !! prefix
-    const folderExists = !!(await this.findFolder(folderLocation)).data;
+  addOne = async (folderLocation: string): Promise<folderQueryResult> => {
+    const folderExists = await this.isExisting(folderLocation);
     if (folderExists)
       return {
         message: MESSAGE.FOLDER_ALREADY_EXISTS,

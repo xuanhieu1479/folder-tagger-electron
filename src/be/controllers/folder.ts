@@ -17,7 +17,7 @@ router.post(ADD_ONE_FOLDER, async (req: Request, res: Response) => {
     return;
   }
 
-  const { status, message } = await folder.addFolder(folderLocation);
+  const { status, message } = await folder.addOne(folderLocation);
   res.status(status).json({ message });
 });
 
