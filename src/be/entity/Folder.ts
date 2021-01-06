@@ -53,7 +53,9 @@ export default class Folder {
   };
 
   addFolder = async (folderLocation: string): Promise<folderQueryResult> => {
-    const folderExists = !(await this.findFolder(folderLocation)).data;
+    // data returned from findFolder when no folder had been found is false
+    // but it can be null or undefined so it's best to check with !! prefix
+    const folderExists = !!(await this.findFolder(folderLocation)).data;
     if (folderExists)
       return {
         message: MESSAGE.FOLDER_ALREADY_EXISTS,
