@@ -12,9 +12,6 @@ import STATUS_CODE from '../../common/variables/statusCode';
 import { folderQueryResult } from '../../common/variables/interface';
 import { logErrors } from '../logging';
 
-// const connection = getConnection();
-// const queryBuilder = connection.createQueryBuilder();
-
 @Entity()
 export default class Folder {
   @PrimaryColumn()

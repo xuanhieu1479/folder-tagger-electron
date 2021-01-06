@@ -1,3 +1,4 @@
+import 'source-map-support/register';
 import { app, BrowserWindow, Menu } from 'electron';
 import 'reflect-metadata';
 import { createConnection, getConnection } from 'typeorm';
