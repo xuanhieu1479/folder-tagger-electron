@@ -1,6 +1,6 @@
 import fs from 'fs';
 import express, { Request, Response } from 'express';
-import Folder from '../entity/Folder';
+import { Folder } from '../entity/entity';
 import { ADD_ONE_FOLDER } from '../../common/variables/api';
 import MESSAGE from '../../common/variables/message';
 import STATUS_CODE from '../../common/variables/statusCode';

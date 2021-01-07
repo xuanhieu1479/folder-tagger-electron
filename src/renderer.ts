@@ -26,4 +26,4 @@
  * ```
  */
 
-import './fe/';
+import './fe/fe';

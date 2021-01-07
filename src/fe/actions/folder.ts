@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ADD_ONE_FOLDER_API } from '../../common/variables/api';
-import { showMessage } from '../../utility/';
+import { showMessage } from '../../utility/utility';
 
 const addOneFolder = async (folderLocation: string): Promise<void> => {
   try {

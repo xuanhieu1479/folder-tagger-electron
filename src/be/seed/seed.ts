@@ -3,8 +3,7 @@ import Database from 'better-sqlite3';
 import { createConnection } from 'typeorm';
 import { DATABASE_DIRECTORY, DATABASE_PATH } from '../../common/variables/data';
 import ormConfig from '../../common/config/ormConfig';
-import Category from '../entity/Category';
-import Language from '../entity/Language';
+import { Category, Language } from '../entity/entity';
 import CategorySeed from './CategorySeed';
 import LanguageSeed from './LanguageSeed';
 

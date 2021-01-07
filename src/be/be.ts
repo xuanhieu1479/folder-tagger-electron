@@ -1,8 +1,8 @@
 import express from 'express';
 import { BACK_END_PORT } from '../common/config/beConfig';
-import initDatabase from './seed/';
+import initDatabase from './seed/seed';
 import initLogging from './logging';
-import initRouter from './controllers/';
+import initRouter from './controllers/controllers';
 
 const initBE = async (): Promise<void> => {
   await initDatabase();
