@@ -5,8 +5,8 @@ import initLogging from './logging';
 import initRouter from './controllers/controllers';
 
 const initBE = async (): Promise<void> => {
-  await initDatabase();
   initLogging();
+  await initDatabase();
 
   const app = express();
   app.listen(BACK_END_PORT);

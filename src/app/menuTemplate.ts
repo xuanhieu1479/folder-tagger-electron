@@ -27,6 +27,18 @@ const menuTemplate = [
         click: onAddFolder
       }
     ]
+  },
+  {
+    label: 'Debug',
+    submenu: [
+      {
+        label: 'Open Devtool',
+        accelerator: 'F12',
+        click: () => {
+          BrowserWindow.getFocusedWindow()?.webContents.openDevTools();
+        }
+      }
+    ]
   }
 ];
 
