@@ -1,3 +1,5 @@
-const BACK_END_PORT = 8000;
+const BE_CONFIG = {
+  PORT: 8000
+};
 
-export { BACK_END_PORT };
+export default BE_CONFIG;

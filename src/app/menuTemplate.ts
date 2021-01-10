@@ -1,10 +1,7 @@
-import { Menu, dialog, app, BrowserWindow } from 'electron';
-import { ADD_ONE_FOLDER_API } from '../common/variables/api';
-
-let window;
+import { Menu, dialog, app, webContents } from 'electron';
+import { IPC_EVENT } from '../common/variables/commonVariables';
 
 const onAddFolder = () => {
-  window = BrowserWindow.getFocusedWindow();
   const directory = dialog.showOpenDialogSync({
     title: 'Add folder',
     defaultPath: `${app.getPath('desktop')}`,
@@ -12,7 +9,7 @@ const onAddFolder = () => {
   });
   if (directory !== undefined) {
     const selectedDirectory = directory[0];
-    window?.webContents.send(ADD_ONE_FOLDER_API, {
+    webContents.getFocusedWebContents()?.send(IPC_EVENT.ADD_ONE_FOLDER, {
       folderLocation: selectedDirectory
     });
   }
@@ -35,7 +32,7 @@ const menuTemplate = [
         label: 'Open Devtool',
         accelerator: 'F12',
         click: () => {
-          BrowserWindow.getFocusedWindow()?.webContents.openDevTools();
+          webContents.getFocusedWebContents()?.openDevTools();
         }
       }
     ]

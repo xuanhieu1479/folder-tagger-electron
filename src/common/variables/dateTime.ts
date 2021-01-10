@@ -1,4 +1,6 @@
-const DATE_LOG_FORMAT = 'YYYY-MM-DD';
-const TIME_LOG_FORMAT = 'HH:mm:ss';
+const DATE_TIME = {
+  DATE_LOG_FORMAT: 'YYYY-MM-DD',
+  TIME_LOG_FORMAT: 'HH:mm:ss'
+};
 
-export { DATE_LOG_FORMAT, TIME_LOG_FORMAT };
+export default DATE_TIME;

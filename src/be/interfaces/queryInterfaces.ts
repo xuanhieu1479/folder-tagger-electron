@@ -1,4 +1,4 @@
-import { Folder } from '../../be/entity/entity';
+import { Folder } from '../entity/entity';
 
 interface folderQueryResult {
   data?: Folder | Array<Folder>;

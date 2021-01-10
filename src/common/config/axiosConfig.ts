@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { BASE_API } from '../variables/api';
+import { API } from '../variables/commonVariables';
 
-axios.defaults.baseURL = BASE_API;
 const axiosConfig = (): void => {
-  axios.defaults.baseURL = BASE_API;
+  axios.defaults.baseURL = API.BASE;
 };
 
 export default axiosConfig;

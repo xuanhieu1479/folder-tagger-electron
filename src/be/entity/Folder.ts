@@ -3,14 +3,12 @@ import {
   PrimaryColumn,
   Column,
   ManyToOne,
-  getConnection,
   getRepository
 } from 'typeorm';
 import Category from './Category';
 import Language from './Language';
-import MESSAGE from '../../common/variables/message';
-import STATUS_CODE from '../../common/variables/statusCode';
-import { folderQueryResult } from '../../common/variables/interface';
+import { MESSAGE, STATUS_CODE } from '../../common/variables/commonVariables';
+import { folderQueryResult } from '../interfaces/queryInterfaces';
 import { logErrors } from '../logging';
 
 @Entity()
@@ -44,10 +42,9 @@ export default class Folder {
       };
 
     try {
-      await getConnection()
+      await getRepository(Folder)
         .createQueryBuilder()
         .insert()
-        .into(Folder)
         .values([{ FolderLocation: folderLocation }])
         .execute();
     } catch (error) {

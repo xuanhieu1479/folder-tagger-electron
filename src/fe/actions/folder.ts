@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { ADD_ONE_FOLDER_API } from '../../common/variables/api';
+import { API } from '../../common/variables/commonVariables';
 import { showMessage } from '../../utility/utility';
 
 const addOneFolder = async (folderLocation: string): Promise<void> => {
   try {
-    await axios.post(ADD_ONE_FOLDER_API, { folderLocation });
+    await axios.post(API.ADD_ONE, { folderLocation });
   } catch (error) {
     showMessage.error(error.response.data.message);
   }

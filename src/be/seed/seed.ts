@@ -1,17 +1,17 @@
 import fs from 'fs';
 import Database from 'better-sqlite3';
 import { createConnection } from 'typeorm';
-import { DATABASE_DIRECTORY, DATABASE_PATH } from '../../common/variables/data';
+import { DATABASE } from '../../common/variables/commonVariables';
 import ormConfig from '../../common/config/ormConfig';
 import { Category, Language } from '../entity/entity';
 import CategorySeed from './CategorySeed';
 import LanguageSeed from './LanguageSeed';
 
 const initDatabase = async (): Promise<void> => {
-  if (!fs.existsSync(DATABASE_PATH)) {
-    if (!fs.existsSync(DATABASE_DIRECTORY)) fs.mkdirSync(DATABASE_DIRECTORY);
+  if (!fs.existsSync(DATABASE.PATH)) {
+    if (!fs.existsSync(DATABASE.DIRECTORY)) fs.mkdirSync(DATABASE.DIRECTORY);
     // Generate database
-    new Database(DATABASE_PATH, { verbose: console.log });
+    new Database(DATABASE.PATH);
 
     // Generate tables
     const connection = await createConnection(ormConfig);
@@ -22,8 +22,8 @@ const initDatabase = async (): Promise<void> => {
     await queryBuilder.insert().into(Category).values(CategorySeed).execute();
     await queryBuilder.insert().into(Language).values(LanguageSeed).execute();
   } else {
-    // createConnection will create new database by DATABASE_PATH
-    // therefore putting it before checking condition is meaningless
+    // createConnection will create new database by DATABASE.PATH
+    // therefore putting it before checking if DATABASE.PATH existing is meaningless
     await createConnection(ormConfig);
   }
 };

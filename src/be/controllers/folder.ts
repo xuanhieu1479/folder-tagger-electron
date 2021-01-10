@@ -1,14 +1,16 @@
 import fs from 'fs';
 import express, { Request, Response } from 'express';
 import { Folder } from '../entity/entity';
-import { ADD_ONE_FOLDER } from '../../common/variables/api';
-import MESSAGE from '../../common/variables/message';
-import STATUS_CODE from '../../common/variables/statusCode';
+import {
+  CONTROLLER_PATH,
+  MESSAGE,
+  STATUS_CODE
+} from '../../common/variables/commonVariables';
 
 const router = express.Router();
 const folder = new Folder();
 
-router.post(ADD_ONE_FOLDER, async (req: Request, res: Response) => {
+router.post(CONTROLLER_PATH.ADD_ONE, async (req: Request, res: Response) => {
   const { folderLocation } = req.body;
   if (!fs.existsSync(folderLocation)) {
     res

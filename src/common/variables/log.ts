@@ -1,3 +1,5 @@
-const LOG_DIRECTORY = 'Log';
+const LOG = {
+  DIRECTORY: 'Log'
+};
 
-export { LOG_DIRECTORY };
+export default LOG;

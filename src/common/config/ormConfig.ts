@@ -1,10 +1,10 @@
 import { ConnectionOptions } from 'typeorm';
-import { DATABASE_PATH } from '../variables/data';
+import { DATABASE } from '../variables/commonVariables';
 import { Category, Folder, Language } from '../../be/entity/entity';
 
 const ormConfig: ConnectionOptions = {
   type: 'better-sqlite3',
-  database: DATABASE_PATH,
+  database: DATABASE.PATH,
   entities: [Category, Folder, Language]
 };
 
