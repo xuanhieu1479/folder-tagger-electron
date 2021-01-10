@@ -1,7 +1,8 @@
-import 'source-map-support/register';
+import path from 'path';
 import { app, BrowserWindow, Menu } from 'electron';
 import 'reflect-metadata';
 import { getConnection } from 'typeorm';
+import 'source-map-support/register';
 import initBE from './be/be';
 import { menuTemplate } from './app/app';
 
@@ -14,27 +15,37 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-const createWindow = (): void => {
-  // Create the browser window.
+const initWindows = (): void => {
+  const splashWindow = new BrowserWindow({
+    height: 300,
+    width: 600,
+    frame: false
+  });
+  splashWindow.loadFile(path.resolve(__dirname, './splash.html'));
+
   const mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
+    show: false,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true
     }
   });
-
-  // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+
+  mainWindow.once('ready-to-show', async () => {
+    await initApp();
+    splashWindow.destroy();
+    mainWindow.show();
+  });
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  createWindow();
-  await initApp();
+  initWindows();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -51,7 +62,7 @@ app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    initWindows();
   }
 });
 
