@@ -11,8 +11,12 @@ import { MESSAGE, STATUS_CODE } from '../../common/variables/commonVariables';
 import { folderQueryResult } from '../interfaces/queryInterfaces';
 import { logErrors } from '../logging';
 
-@Entity()
+@Entity({ name: 'Folders' })
 export default class Folder {
+  // In development if no name was decided better-sqlite3 will
+  // create table with the same name as its equivalent class.
+  // However in production new table will be given random or gibberish name
+  // therefore deciding table's name beforehand is a must.
   @PrimaryColumn()
   FolderLocation!: string;
 

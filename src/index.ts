@@ -52,9 +52,12 @@ app.on('ready', async () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', async () => {
-  await getConnection().close();
-  if (process.platform !== 'darwin') {
-    app.quit();
+  try {
+    await getConnection().close();
+  } finally {
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
   }
 });
 

@@ -5,7 +5,7 @@ import { LOG, DATE_TIME } from '../common/variables/commonVariables';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const logErrors = (error: Error | any, origin: Promise<any> | string): void => {
   if (!fs.existsSync(LOG.DIRECTORY)) fs.mkdirSync(LOG.DIRECTORY);
-  const seperator = '-'.repeat(150);
+  const seperator = '-'.repeat(100);
   const logFileName = `${moment().format(DATE_TIME.DATE_LOG_FORMAT)}.txt`;
   const logFilePath = `${LOG.DIRECTORY}/${logFileName}`;
   const errorMessage = `${moment().format(

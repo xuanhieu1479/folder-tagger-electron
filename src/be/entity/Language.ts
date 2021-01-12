@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import Folder from './Folder';
 
-@Entity()
+@Entity({ name: 'Languages' })
 export default class Language {
   @PrimaryGeneratedColumn()
   LanguageId!: number;
