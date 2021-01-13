@@ -1,4 +1,4 @@
-import { dialog, app, webContents } from 'electron';
+import { dialog, app, BrowserWindow } from 'electron';
 import fs from 'fs';
 import { IPC_EVENT } from '../../common/variables/commonVariables';
 
@@ -10,9 +10,12 @@ const onAddFolder = (): void => {
   });
   if (directory !== undefined) {
     const selectedDirectory = directory[0];
-    webContents.getFocusedWebContents()?.send(IPC_EVENT.ADD_ONE_FOLDER, {
-      folderLocation: selectedDirectory
-    });
+    BrowserWindow.getFocusedWindow()?.webContents.send(
+      IPC_EVENT.ADD_ONE_FOLDER,
+      {
+        folderLocation: selectedDirectory
+      }
+    );
   }
 };
 
@@ -28,9 +31,12 @@ const onAddParentFolder = (): void => {
       .readdirSync(parentDirectory, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())
       .map(dirent => `${parentDirectory}\\${dirent.name}`);
-    webContents.getFocusedWebContents()?.send(IPC_EVENT.ADD_PARENT_FOLDER, {
-      folderLocations: subDirectories
-    });
+    BrowserWindow.getFocusedWindow()?.webContents.send(
+      IPC_EVENT.ADD_PARENT_FOLDER,
+      {
+        folderLocations: subDirectories
+      }
+    );
   }
 };
 

@@ -1,3 +1,4 @@
+import { onOpenDevtool } from './setting';
 import { onAddFolder, onAddParentFolder } from './folder';
 
-export { onAddFolder, onAddParentFolder };
+export { onOpenDevtool, onAddFolder, onAddParentFolder };
