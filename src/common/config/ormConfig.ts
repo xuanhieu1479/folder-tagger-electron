@@ -1,11 +1,32 @@
-import { ConnectionOptions } from 'typeorm';
-import { DATABASE } from '../variables/commonVariables';
+import { app } from 'electron';
+import moment from 'moment';
+import { ConnectionOptions, FileLogger } from 'typeorm';
+import { DATABASE, LOG, DATE_TIME } from '../variables/commonVariables';
 import { Category, Folder, Language } from '../../be/entity/entity';
+
+/**
+ * Since typeorm logger base path is where
+ * main process is running and the Log folder
+ * is outside at App root path, backtrack is
+ * necessary to get desired location.
+ */
+const getLogPath = (): string => {
+  const appRootPath = app.getAppPath();
+  const mainProcessPath = __dirname;
+  const needToBeRemovedPath = mainProcessPath.replace(appRootPath, '');
+  const backtrackCount = (needToBeRemovedPath.match(/\\/g) || []).length;
+  const backtrackString = '../'.repeat(backtrackCount);
+  const result = `${backtrackString}/${LOG.DIRECTORY}/${moment().format(
+    DATE_TIME.DATE_LOG_FORMAT
+  )}-QUERY.log`;
+  return result;
+};
 
 const ormConfig: ConnectionOptions = {
   type: 'better-sqlite3',
   database: DATABASE.PATH,
-  entities: [Category, Folder, Language]
+  entities: [Category, Folder, Language],
+  logger: new FileLogger('all', { logPath: getLogPath() })
 };
 
 export default ormConfig;

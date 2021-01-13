@@ -6,7 +6,7 @@ import { LOG, DATE_TIME } from '../common/variables/commonVariables';
 const logErrors = (error: Error | any, origin: Promise<any> | string): void => {
   if (!fs.existsSync(LOG.DIRECTORY)) fs.mkdirSync(LOG.DIRECTORY);
   const seperator = '-'.repeat(100);
-  const logFileName = `${moment().format(DATE_TIME.DATE_LOG_FORMAT)}.txt`;
+  const logFileName = `${moment().format(DATE_TIME.DATE_LOG_FORMAT)}.log`;
   const logFilePath = `${LOG.DIRECTORY}/${logFileName}`;
   const errorMessage = `${moment().format(
     DATE_TIME.TIME_LOG_FORMAT

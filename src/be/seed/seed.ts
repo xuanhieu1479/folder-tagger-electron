@@ -9,7 +9,6 @@ import LanguageSeed from './LanguageSeed';
 
 const initDatabase = async (): Promise<void> => {
   if (!fs.existsSync(DATABASE.PATH)) {
-    if (!fs.existsSync(DATABASE.DIRECTORY)) fs.mkdirSync(DATABASE.DIRECTORY);
     // Generate database
     new Database(DATABASE.PATH);
 

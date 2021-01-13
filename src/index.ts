@@ -4,7 +4,7 @@ import 'reflect-metadata';
 import { getConnection } from 'typeorm';
 import 'source-map-support/register';
 import initBE from './be/be';
-import { menuTemplate } from './app/app';
+import { menuTemplate, initDirectory } from './app/app';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
@@ -35,6 +35,7 @@ const initWindows = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   mainWindow.once('ready-to-show', async () => {
+    initDirectory();
     await initApp();
     splashWindow.destroy();
     mainWindow.show();
