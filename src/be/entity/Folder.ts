@@ -72,15 +72,17 @@ export default class Folder {
     }
     const validFolders: validFolder[] = [];
 
-    folderLocations.forEach(async folderLocation => {
+    // Foreach does not support async await
+    // How many times does it need for me to remember :(
+    for (const folderLocation of folderLocations) {
       const folderExists = await this.isExisting(folderLocation);
       if (folderExists)
         return {
-          message: MESSAGE.FOLDER_ALREADY_EXISTS,
+          message: MESSAGE.SPECIFIC_FOLDER_ALREADY_EXISTS(folderLocation),
           status: STATUS_CODE.DB_ERROR
         };
       else validFolders.push({ FolderLocation: folderLocation });
-    });
+    }
 
     try {
       await getRepository(Folder)
