@@ -23,4 +23,19 @@ router.post(CONTROLLER_PATH.ADD_ONE, async (req: Request, res: Response) => {
   res.status(status).json({ message });
 });
 
+router.post(CONTROLLER_PATH.ADD_MANY, async (req: Request, res: Response) => {
+  const { folderLocations } = req.body;
+  folderLocations.forEach((folderLocation: string) => {
+    if (!fs.existsSync(folderLocation)) {
+      res
+        .status(STATUS_CODE.INVALID_DATA)
+        .json({ message: MESSAGE.FOLDER_NOT_FOUND });
+      return;
+    }
+  });
+
+  const { status, message } = await folder.addMany(folderLocations);
+  res.status(status).json({ message });
+});
+
 export default router;

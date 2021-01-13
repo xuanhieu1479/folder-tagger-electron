@@ -1,19 +1,5 @@
-import { Menu, dialog, app, webContents } from 'electron';
-import { IPC_EVENT } from '../common/variables/commonVariables';
-
-const onAddFolder = () => {
-  const directory = dialog.showOpenDialogSync({
-    title: 'Add folder',
-    defaultPath: `${app.getPath('desktop')}`,
-    properties: ['openDirectory']
-  });
-  if (directory !== undefined) {
-    const selectedDirectory = directory[0];
-    webContents.getFocusedWebContents()?.send(IPC_EVENT.ADD_ONE_FOLDER, {
-      folderLocation: selectedDirectory
-    });
-  }
-};
+import { Menu, webContents } from 'electron';
+import { onAddFolder, onAddParentFolder } from './menuActions/menuActions';
 
 const menuTemplate = [
   {
@@ -22,6 +8,10 @@ const menuTemplate = [
       {
         label: 'Add folder',
         click: onAddFolder
+      },
+      {
+        label: 'Add parent folder',
+        click: onAddParentFolder
       }
     ]
   },

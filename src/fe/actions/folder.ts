@@ -10,4 +10,12 @@ const addOneFolder = async (folderLocation: string): Promise<void> => {
   }
 };
 
-export { addOneFolder };
+const addParentFolder = async (folderLocations: string[]): Promise<void> => {
+  try {
+    await axios.post(API.ADD_MANY, { folderLocations });
+  } catch (error) {
+    showMessage.error(error.response.data.message);
+  }
+};
+
+export { addOneFolder, addParentFolder };

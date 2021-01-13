@@ -65,4 +65,41 @@ export default class Folder {
       status: STATUS_CODE.SUCCESS
     };
   };
+
+  addMany = async (folderLocations: string[]): Promise<folderQueryResult> => {
+    interface validFolder {
+      FolderLocation: string;
+    }
+    const validFolders: validFolder[] = [];
+
+    folderLocations.forEach(async folderLocation => {
+      const folderExists = await this.isExisting(folderLocation);
+      if (folderExists)
+        return {
+          message: MESSAGE.FOLDER_ALREADY_EXISTS,
+          status: STATUS_CODE.DB_ERROR
+        };
+      else validFolders.push({ FolderLocation: folderLocation });
+    });
+
+    try {
+      await getRepository(Folder)
+        .createQueryBuilder()
+        .insert()
+        .values(validFolders)
+        .execute();
+    } catch (error) {
+      console.log('ADD MANY FOLDERS ERROR: ', error);
+      logErrors(error.message, error.stack);
+      return {
+        message: error.message,
+        status: STATUS_CODE.DB_ERROR
+      };
+    }
+
+    return {
+      message: MESSAGE.SUCCESS,
+      status: STATUS_CODE.SUCCESS
+    };
+  };
 }
