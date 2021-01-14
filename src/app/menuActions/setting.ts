@@ -12,4 +12,8 @@ const onOpenDevtool = (): void => {
     : focusedWebContents.openDevTools();
 };
 
-export { onOpenDevtool };
+const onReload = (): void => {
+  BrowserWindow.getFocusedWindow()?.reload();
+};
+
+export { onOpenDevtool, onReload };

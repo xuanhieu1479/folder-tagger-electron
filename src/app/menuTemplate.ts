@@ -1,6 +1,7 @@
 import { Menu } from 'electron';
 import {
   onOpenDevtool,
+  onReload,
   onAddFolder,
   onAddParentFolder
 } from './menuActions/menuActions';
@@ -26,6 +27,11 @@ const menuTemplate = [
         label: 'Toggle Devtool',
         accelerator: 'F12',
         click: onOpenDevtool
+      },
+      {
+        label: 'Reload',
+        accelerator: 'F5',
+        click: onReload
       }
     ]
   }
