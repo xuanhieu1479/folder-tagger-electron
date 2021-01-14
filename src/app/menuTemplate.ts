@@ -23,7 +23,7 @@ const menuTemplate = [
     label: 'Debug',
     submenu: [
       {
-        label: 'Open Devtool',
+        label: 'Toggle Devtool',
         accelerator: 'F12',
         click: onOpenDevtool
       }
