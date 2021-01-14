@@ -4,6 +4,7 @@ import {
   initIpcEventListeners,
   clearIpcEventListerners
 } from './actions/ipcEvent';
+import MainBody from './modules/mainBody/MainBody';
 
 axiosConfig();
 
@@ -16,7 +17,11 @@ const App = (): ReactElement => {
     };
   }, []);
 
-  return <></>;
+  return (
+    <section className="app-container">
+      <MainBody />
+    </section>
+  );
 };
 
 export default App;
