@@ -1,8 +1,5 @@
-const DIRECTORY = 'Log';
-
 const LOG = {
-  DIRECTORY,
-  DIRECTORY_QUERY: `${__dirname}/${DIRECTORY}`
+  DIRECTORY: 'Log'
 };
 
 export default LOG;
