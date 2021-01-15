@@ -5,6 +5,7 @@ import IPC_EVENT from './ipcEvent';
 import LOG from './log';
 import MESSAGE from './message';
 import STATUS_CODE from './statusCode';
+import ASSET from './asset';
 
 export {
   MODULE,
@@ -15,5 +16,6 @@ export {
   IPC_EVENT,
   LOG,
   MESSAGE,
-  STATUS_CODE
+  STATUS_CODE,
+  ASSET
 };

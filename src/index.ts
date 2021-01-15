@@ -1,5 +1,5 @@
 import path from 'path';
-import { app, BrowserWindow, Menu } from 'electron';
+import { app, BrowserWindow, Menu, protocol } from 'electron';
 import 'reflect-metadata';
 import { getConnection } from 'typeorm';
 import 'source-map-support/register';
@@ -29,7 +29,8 @@ const initWindows = (): void => {
     show: false,
     webPreferences: {
       nodeIntegration: true,
-      enableRemoteModule: true
+      enableRemoteModule: true,
+      webSecurity: false
     }
   });
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
@@ -46,6 +47,7 @@ const initWindows = (): void => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  customizeProtocol();
   initWindows();
 });
 
@@ -75,4 +77,14 @@ app.on('activate', () => {
 const initApp = async () => {
   await initBE();
   Menu.setApplicationMenu(menuTemplate);
+};
+
+/**
+ * To make electron allows loading local files.
+ */
+const customizeProtocol = () => {
+  protocol.registerFileProtocol('file', (request, callback) => {
+    const pathname = decodeURI(request.url.replace('file:///', ''));
+    callback(pathname);
+  });
 };

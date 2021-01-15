@@ -24,6 +24,10 @@ module.exports = {
         {
           from: path.resolve(__dirname, './src/splash.css'),
           to: path.resolve(__dirname, './.webpack/main/')
+        },
+        {
+          from: path.resolve(__dirname, './src/fe/assets'),
+          to: path.resolve(__dirname, `./.webpack/renderer/Asset/`)
         }
       ]
     })

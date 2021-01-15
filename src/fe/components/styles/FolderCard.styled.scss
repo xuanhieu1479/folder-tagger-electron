@@ -1,0 +1,33 @@
+@import '../../styles/variables.scss';
+
+.folder-card-container {
+  height: $folder-card-height;
+  width: $folder-card-width;
+  margin: 10px;
+  padding: 0px !important;
+}
+
+.folder-card-content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+}
+
+.folder-card-thumbnail {
+  height: $folder-card-thumbnail-height;
+  width: 100%;
+  object-fit: cover;
+}
+
+.folder-card-name {
+  height: $folder-card-thumbnail-height;
+  padding: $folder-card-name-padding;
+  text-align: center;
+  overflow: hidden;
+
+  :focus {
+    outline: none;
+  }
+}
