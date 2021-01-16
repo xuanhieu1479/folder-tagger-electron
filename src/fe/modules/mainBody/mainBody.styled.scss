@@ -1,8 +1,15 @@
 .main-body_container {
   flex: 1;
   padding: 10px 5px;
-  background-color: aqua;
   display: flex;
   flex-wrap: wrap;
   overflow-x: hidden;
+}
+
+.main-body_loading-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -1,6 +1,7 @@
 import path from 'path';
 import { app, BrowserWindow, Menu, protocol } from 'electron';
 import 'reflect-metadata';
+import installExtention, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
 import { getConnection } from 'typeorm';
 import 'source-map-support/register';
 import { APP } from './common/variables/commonVariables';
@@ -55,6 +56,7 @@ const initWindows = (): void => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   customizeProtocol();
+  await installExtention(REDUX_DEVTOOLS);
   initWindows();
 });
 
