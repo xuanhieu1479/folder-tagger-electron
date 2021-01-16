@@ -1,12 +1,12 @@
-interface rootState {
+interface RootState {
   status: {
     isLoading: boolean;
   };
 }
 
-interface reducerAction {
+interface ReducerAction {
   type: string;
   payload?: unknown;
 }
 
-export { rootState, reducerAction };
+export { RootState, ReducerAction };

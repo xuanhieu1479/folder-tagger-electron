@@ -1,10 +1,10 @@
-interface folder {
+interface Folder {
   location: string;
   name: string;
   thumbnail?: string;
 }
 
-interface folderFilterParams {
+interface FolderFilterParams {
   name?: string;
   category?: string;
   language?: string;
@@ -16,10 +16,10 @@ interface folderFilterParams {
   ];
 }
 
-interface folderQueryResult {
-  folders?: Array<folder>;
+interface FolderQueryResult {
+  folders?: Array<Folder>;
   message: string;
   status: number;
 }
 
-export { folder, folderFilterParams, folderQueryResult };
+export { Folder, FolderFilterParams, FolderQueryResult };

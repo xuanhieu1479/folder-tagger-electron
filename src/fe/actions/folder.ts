@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { API } from '../../common/variables/commonVariables';
 import {
-  folder,
-  folderFilterParams
+  Folder,
+  FolderFilterParams
 } from '../../common/interfaces/folderInterfaces';
 import { showMessage } from '../../utility/utility';
 
 const getFolders = async (
-  params?: folderFilterParams
-): Promise<Array<folder>> => {
+  params?: FolderFilterParams
+): Promise<Array<Folder>> => {
   try {
     const { data } = await axios.get(API.GET, { params });
     return data.folders;

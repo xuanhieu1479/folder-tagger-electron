@@ -10,9 +10,9 @@ import {
 import { Category, Language, Tag } from './entity';
 import { MESSAGE, STATUS_CODE } from '../../common/variables/commonVariables';
 import {
-  folder,
-  folderFilterParams,
-  folderQueryResult
+  Folder as FolderInterface,
+  FolderFilterParams,
+  FolderQueryResult
 } from '../../common/interfaces/folderInterfaces';
 import { logErrors } from '../logging';
 
@@ -46,7 +46,7 @@ export default class Folder {
     return folder !== undefined;
   };
 
-  get = async (params: folderFilterParams): Promise<folderQueryResult> => {
+  get = async (params: FolderFilterParams): Promise<FolderQueryResult> => {
     const { category, language, name, tag } = params;
     const query = getRepository(Folder)
       .createQueryBuilder('folder')
@@ -75,7 +75,7 @@ export default class Folder {
     }
   };
 
-  addOne = async (params: folder): Promise<folderQueryResult> => {
+  addOne = async (params: FolderInterface): Promise<FolderQueryResult> => {
     const { location, name, thumbnail } = params;
     const folderExists = await this.isExisting(location);
     if (folderExists)
@@ -111,13 +111,15 @@ export default class Folder {
     };
   };
 
-  addMany = async (params: Array<folder>): Promise<folderQueryResult> => {
-    interface validFolder {
+  addMany = async (
+    params: Array<FolderInterface>
+  ): Promise<FolderQueryResult> => {
+    interface ValidFolder {
       FolderLocation: string;
       FolderName: string;
       FolderThumbnail?: string | undefined;
     }
-    const validFolders: validFolder[] = [];
+    const validFolders: ValidFolder[] = [];
 
     // Foreach does not support async await
     // How many times does it need for me to remember :(

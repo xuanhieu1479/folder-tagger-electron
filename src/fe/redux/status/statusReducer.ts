@@ -1,7 +1,7 @@
 import { START_LOADING, FINISH_LOADING } from './statusActionType';
-import { reducerAction } from '../../../common/interfaces/feInterfaces';
+import { ReducerAction } from '../../../common/interfaces/feInterfaces';
 
-interface statusReducerInterface {
+interface StatusReducerInterface {
   isLoading: boolean;
 }
 const initState = {
@@ -9,9 +9,9 @@ const initState = {
 };
 
 const statusReducer = (
-  state: statusReducerInterface = initState,
-  action: reducerAction
-): statusReducerInterface => {
+  state: StatusReducerInterface = initState,
+  action: ReducerAction
+): StatusReducerInterface => {
   switch (action.type) {
     case START_LOADING:
       return { ...state, isLoading: true };

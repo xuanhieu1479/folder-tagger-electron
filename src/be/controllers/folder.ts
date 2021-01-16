@@ -6,7 +6,7 @@ import {
   MESSAGE,
   STATUS_CODE
 } from '../../common/variables/commonVariables';
-import { folder as folderInterface } from '../../common/interfaces/folderInterfaces';
+import { Folder as FolderInterface } from '../../common/interfaces/folderInterfaces';
 import { getFolderName, getFolderThumbnail } from '../../utility/folderUtility';
 
 const router = express.Router();
@@ -27,7 +27,7 @@ router.post(CONTROLLER_PATH.ADD_ONE, async (req: Request, res: Response) => {
     return;
   }
 
-  const params: folderInterface = {
+  const params: FolderInterface = {
     location: folderLocation,
     name: getFolderName(folderLocation),
     thumbnail: getFolderThumbnail(folderLocation)
@@ -38,7 +38,7 @@ router.post(CONTROLLER_PATH.ADD_ONE, async (req: Request, res: Response) => {
 
 router.post(CONTROLLER_PATH.ADD_MANY, async (req: Request, res: Response) => {
   const { folderLocations } = req.body;
-  const params: folderInterface[] = [];
+  const params: FolderInterface[] = [];
   for (const folderLocation of folderLocations) {
     if (!fs.existsSync(folderLocation)) {
       res

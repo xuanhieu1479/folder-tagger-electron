@@ -1,9 +1,9 @@
 import { createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { rootState } from '../../common/interfaces/feInterfaces';
+import { RootState } from '../../common/interfaces/feInterfaces';
 import rootReducer from './rootReducer';
 
-const initState: rootState = {
+const initState: RootState = {
   status: {
     isLoading: false
   }
