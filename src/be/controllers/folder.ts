@@ -10,6 +10,12 @@ import {
 const router = express.Router();
 const folder = new Folder();
 
+router.get(CONTROLLER_PATH.GET, async (req: Request, res: Response) => {
+  const params = req.body;
+  const { folders, status, message } = await folder.get(params);
+  res.status(status).json({ folders, message });
+});
+
 router.post(CONTROLLER_PATH.ADD_ONE, async (req: Request, res: Response) => {
   const { folderLocation } = req.body;
   if (!fs.existsSync(folderLocation)) {

@@ -1,6 +1,22 @@
 import axios from 'axios';
 import { API } from '../../common/variables/commonVariables';
+import {
+  folder,
+  folderFilterParams
+} from '../../common/interfaces/folderInterfaces';
 import { showMessage } from '../../utility/utility';
+
+const getFolders = async (
+  params?: folderFilterParams
+): Promise<Array<folder>> => {
+  try {
+    const { data } = await axios.get(API.GET, { params });
+    return data.folders;
+  } catch (error) {
+    showMessage.error(error.response.data.message);
+    return [];
+  }
+};
 
 const addOneFolder = async (folderLocation: string): Promise<void> => {
   try {
@@ -18,4 +34,4 @@ const addParentFolder = async (folderLocations: string[]): Promise<void> => {
   }
 };
 
-export { addOneFolder, addParentFolder };
+export { getFolders, addOneFolder, addParentFolder };

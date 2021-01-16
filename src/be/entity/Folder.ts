@@ -4,11 +4,15 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
-  getRepository
+  getRepository,
+  Column
 } from 'typeorm';
 import { Category, Language, Tag } from './entity';
 import { MESSAGE, STATUS_CODE } from '../../common/variables/commonVariables';
-import { folderQueryResult } from '../interfaces/queryInterfaces';
+import {
+  folderFilterParams,
+  folderQueryResult
+} from '../../common/interfaces/folderInterfaces';
 import { logErrors } from '../logging';
 
 @Entity({ name: 'Folders' })
@@ -19,6 +23,12 @@ export default class Folder {
   // therefore deciding table's name beforehand is a must.
   @PrimaryColumn()
   FolderLocation!: string;
+
+  @Column()
+  FolderName!: string;
+
+  @Column({ nullable: true })
+  FolderThumbnail!: string;
 
   @ManyToOne(() => Category, category => category.Folders)
   Category!: Category;
@@ -33,6 +43,35 @@ export default class Folder {
   isExisting = async (folderLocation: string): Promise<boolean> => {
     const folder = await getRepository(Folder).findOne(folderLocation);
     return folder !== undefined;
+  };
+
+  get = async (params: folderFilterParams): Promise<folderQueryResult> => {
+    const { category, language, name, tag } = params;
+    const query = getRepository(Folder)
+      .createQueryBuilder('folder')
+      .select('folder.FolderLocation')
+      .addSelect('folder.FolderName')
+      .addSelect('folder.FolderThumbnail');
+    if (category) query.andWhere('folder.Category = :category', { category });
+    if (language) query.andWhere('folder.Language = :language', { language });
+    if (name) query.andWhere('folder.FolderName = :name', { name });
+
+    try {
+      const result = await query.getRawMany();
+      return {
+        folders: result,
+        message: MESSAGE.SUCCESS,
+        status: STATUS_CODE.SUCCESS
+      };
+    } catch (error) {
+      console.log('GET FOLDERS: ', error);
+      logErrors(error.message, error.stack);
+      return {
+        folders: [],
+        message: error.message,
+        status: STATUS_CODE.DB_ERROR
+      };
+    }
   };
 
   addOne = async (folderLocation: string): Promise<folderQueryResult> => {

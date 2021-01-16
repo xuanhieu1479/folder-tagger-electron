@@ -1,5 +1,5 @@
-$folder-card-thumbnail-height: 350px;
 $folder-card-thumbnail-width: 250px;
+$folder-card-thumbnail-height: $folder-card-thumbnail-width * 1.4;
 $folder-card-name-height: 50px;
 $folder-card-name-padding: 10px;
 $folder-card-height: calc(
