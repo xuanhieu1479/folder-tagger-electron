@@ -6,6 +6,8 @@ import {
   MESSAGE,
   STATUS_CODE
 } from '../../common/variables/commonVariables';
+import { folder as folderInterface } from '../../common/interfaces/folderInterfaces';
+import { getFolderName, getFolderThumbnail } from '../../utility/folderUtility';
 
 const router = express.Router();
 const folder = new Folder();
@@ -25,22 +27,34 @@ router.post(CONTROLLER_PATH.ADD_ONE, async (req: Request, res: Response) => {
     return;
   }
 
-  const { status, message } = await folder.addOne(folderLocation);
+  const params: folderInterface = {
+    location: folderLocation,
+    name: getFolderName(folderLocation),
+    thumbnail: getFolderThumbnail(folderLocation)
+  };
+  const { status, message } = await folder.addOne(params);
   res.status(status).json({ message });
 });
 
 router.post(CONTROLLER_PATH.ADD_MANY, async (req: Request, res: Response) => {
   const { folderLocations } = req.body;
-  folderLocations.forEach((folderLocation: string) => {
+  const params: folderInterface[] = [];
+  for (const folderLocation of folderLocations) {
     if (!fs.existsSync(folderLocation)) {
       res
         .status(STATUS_CODE.INVALID_DATA)
         .json({ message: MESSAGE.FOLDER_NOT_FOUND });
       return;
     }
-  });
 
-  const { status, message } = await folder.addMany(folderLocations);
+    params.push({
+      location: folderLocation,
+      name: getFolderName(folderLocation),
+      thumbnail: getFolderThumbnail(folderLocation)
+    });
+  }
+
+  const { status, message } = await folder.addMany(params);
   res.status(status).json({ message });
 });
 

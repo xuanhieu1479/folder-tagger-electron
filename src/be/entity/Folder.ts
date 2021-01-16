@@ -10,6 +10,7 @@ import {
 import { Category, Language, Tag } from './entity';
 import { MESSAGE, STATUS_CODE } from '../../common/variables/commonVariables';
 import {
+  folder,
   folderFilterParams,
   folderQueryResult
 } from '../../common/interfaces/folderInterfaces';
@@ -49,9 +50,9 @@ export default class Folder {
     const { category, language, name, tag } = params;
     const query = getRepository(Folder)
       .createQueryBuilder('folder')
-      .select('folder.FolderLocation')
-      .addSelect('folder.FolderName')
-      .addSelect('folder.FolderThumbnail');
+      .select('folder.FolderLocation', 'location')
+      .addSelect('folder.FolderName', 'name')
+      .addSelect('folder.FolderThumbnail', 'thumbnail');
     if (category) query.andWhere('folder.Category = :category', { category });
     if (language) query.andWhere('folder.Language = :language', { language });
     if (name) query.andWhere('folder.FolderName = :name', { name });
@@ -74,8 +75,9 @@ export default class Folder {
     }
   };
 
-  addOne = async (folderLocation: string): Promise<folderQueryResult> => {
-    const folderExists = await this.isExisting(folderLocation);
+  addOne = async (params: folder): Promise<folderQueryResult> => {
+    const { location, name, thumbnail } = params;
+    const folderExists = await this.isExisting(location);
     if (folderExists)
       return {
         message: MESSAGE.FOLDER_ALREADY_EXISTS,
@@ -86,7 +88,13 @@ export default class Folder {
       await getRepository(Folder)
         .createQueryBuilder()
         .insert()
-        .values([{ FolderLocation: folderLocation }])
+        .values([
+          {
+            FolderLocation: location,
+            FolderName: name,
+            FolderThumbnail: thumbnail
+          }
+        ])
         .execute();
     } catch (error) {
       console.log('ADD ONE FOLDER ERROR: ', error);
@@ -103,22 +111,30 @@ export default class Folder {
     };
   };
 
-  addMany = async (folderLocations: string[]): Promise<folderQueryResult> => {
+  addMany = async (params: Array<folder>): Promise<folderQueryResult> => {
     interface validFolder {
       FolderLocation: string;
+      FolderName: string;
+      FolderThumbnail?: string | undefined;
     }
     const validFolders: validFolder[] = [];
 
     // Foreach does not support async await
     // How many times does it need for me to remember :(
-    for (const folderLocation of folderLocations) {
-      const folderExists = await this.isExisting(folderLocation);
+    for (const folder of params) {
+      const { location, name, thumbnail } = folder;
+      const folderExists = await this.isExisting(location);
       if (folderExists)
         return {
-          message: MESSAGE.SPECIFIC_FOLDER_ALREADY_EXISTS(folderLocation),
+          message: MESSAGE.SPECIFIC_FOLDER_ALREADY_EXISTS(location),
           status: STATUS_CODE.DB_ERROR
         };
-      else validFolders.push({ FolderLocation: folderLocation });
+      else
+        validFolders.push({
+          FolderLocation: location,
+          FolderName: name,
+          FolderThumbnail: thumbnail
+        });
     }
 
     try {

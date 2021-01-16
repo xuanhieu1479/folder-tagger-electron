@@ -17,7 +17,7 @@ interface FolderCardInterface {
 }
 
 const FolderCard = ({
-  thumbnailLocation = defaultThumbnail,
+  thumbnailLocation,
   folderName,
   onClickImage
 }: FolderCardInterface): ReactElement => {
@@ -30,7 +30,7 @@ const FolderCard = ({
     <Card interactive={true} className="folder-card-container">
       <figure className="folder-card-content">
         <img
-          src={thumbnailLocation}
+          src={thumbnailLocation || defaultThumbnail}
           className="folder-card-thumbnail"
           onClick={onClickImage}
         />

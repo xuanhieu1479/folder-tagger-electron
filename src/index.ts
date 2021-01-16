@@ -6,6 +6,7 @@ import 'source-map-support/register';
 import { APP } from './common/variables/commonVariables';
 import initBE from './be/be';
 import { menuTemplate, initDirectory } from './app/app';
+import { logErrors } from './be/logging';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
@@ -90,7 +91,18 @@ const initApp = async () => {
  */
 const customizeProtocol = () => {
   protocol.registerFileProtocol('file', (request, callback) => {
-    const pathname = decodeURI(request.url.replace('file:///', ''));
-    callback(pathname);
+    let pathname = request.url;
+    try {
+      pathname = decodeURI(request.url.replace('file:///', ''));
+    } catch (error) {
+      // There are some odd cases like special characters (ex: %)
+      // do not get encoded automatically (wtf?) so decodeURI fails
+      // because % is supposed to be %25 which it's not, or images with #
+      // in name does not load on production (another wtf).
+      // And many more undiscovered bugs...
+      logErrors(error.message, error.stack);
+    } finally {
+      callback(pathname);
+    }
   });
 };
