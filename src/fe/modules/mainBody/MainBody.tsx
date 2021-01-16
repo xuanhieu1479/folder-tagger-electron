@@ -18,14 +18,20 @@ const MainBody = (): ReactElement => {
 
   useEffect((): void => {
     const getNewFolders = async () => {
-      dispatch({ type: START_LOADING });
-      const newFolders = await getFolders();
+      const newFolders = await getFolders(startLoading, finishLoading);
       setFolders(newFolders);
-      dispatch({ type: FINISH_LOADING });
     };
 
     getNewFolders();
   }, []);
+
+  const startLoading = () => {
+    dispatch({ type: START_LOADING });
+  };
+
+  const finishLoading = () => {
+    dispatch({ type: FINISH_LOADING });
+  };
 
   const renderFolders = (): Array<ReactElement> => {
     return folders.map(folder => {
