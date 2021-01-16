@@ -3,6 +3,7 @@ import { app, BrowserWindow, Menu, protocol } from 'electron';
 import 'reflect-metadata';
 import { getConnection } from 'typeorm';
 import 'source-map-support/register';
+import { APP } from './common/variables/commonVariables';
 import initBE from './be/be';
 import { menuTemplate, initDirectory } from './app/app';
 
@@ -16,6 +17,10 @@ if (require('electron-squirrel-startup')) {
 }
 
 const initWindows = (): void => {
+  const startUpTimeOut = setTimeout(() => {
+    app.quit();
+  }, APP.START_UP_TIMEOUT);
+
   const splashWindow = new BrowserWindow({
     height: 300,
     width: 600,
@@ -36,6 +41,7 @@ const initWindows = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   mainWindow.once('ready-to-show', async () => {
+    clearTimeout(startUpTimeOut);
     initDirectory();
     await initApp();
     splashWindow.destroy();
