@@ -1,15 +1,12 @@
 const LanguageSeed = [
   {
-    LanguageId: 1,
-    LanguageLabel: 'english'
+    Language: 'english'
   },
   {
-    LanguageId: 2,
-    LanguageLabel: 'japanese'
+    Language: 'japanese'
   },
   {
-    LanguageId: 3,
-    LanguageLabel: 'speechless'
+    Language: 'speechless'
   }
 ];
 

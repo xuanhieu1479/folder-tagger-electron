@@ -1,12 +1,12 @@
 import {
   Entity,
   PrimaryColumn,
-  Column,
   ManyToOne,
+  ManyToMany,
+  JoinTable,
   getRepository
 } from 'typeorm';
-import Category from './Category';
-import Language from './Language';
+import { Category, Language, Tag } from './entity';
 import { MESSAGE, STATUS_CODE } from '../../common/variables/commonVariables';
 import { folderQueryResult } from '../interfaces/queryInterfaces';
 import { logErrors } from '../logging';
@@ -20,17 +20,15 @@ export default class Folder {
   @PrimaryColumn()
   FolderLocation!: string;
 
-  @Column({ nullable: true })
-  CategoryId!: number;
+  @ManyToOne(() => Category, category => category.Folders)
+  Category!: Category;
 
-  @Column({ nullable: true })
-  LanguageId!: number;
+  @ManyToOne(() => Language, language => language.Folders)
+  Language!: Language;
 
-  @ManyToOne(() => Category, category => category.folders)
-  category!: Category;
-
-  @ManyToOne(() => Language, language => language.folders)
-  language!: Language;
+  @ManyToMany(() => Tag, tag => tag.TagId)
+  @JoinTable()
+  Tags!: Tag[];
 
   isExisting = async (folderLocation: string): Promise<boolean> => {
     const folder = await getRepository(Folder).findOne(folderLocation);

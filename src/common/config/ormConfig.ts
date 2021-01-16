@@ -1,7 +1,13 @@
 import moment from 'moment';
 import { ConnectionOptions, FileLogger } from 'typeorm';
 import { DATABASE, LOG, DATE_TIME } from '../variables/commonVariables';
-import { Category, Folder, Language } from '../../be/entity/entity';
+import {
+  Folder,
+  Category,
+  Language,
+  Tag,
+  TagType
+} from '../../be/entity/entity';
 
 /**
  * Since typeorm logger base path is where
@@ -24,7 +30,7 @@ const getLogPath = (): string => {
 const ormConfig: ConnectionOptions = {
   type: 'better-sqlite3',
   database: DATABASE.PATH,
-  entities: [Category, Folder, Language],
+  entities: [Folder, Category, Language, Tag, TagType],
   logger: new FileLogger('all', { logPath: getLogPath() })
 };
 

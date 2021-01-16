@@ -1,19 +1,15 @@
 const CategorySeed = [
   {
-    CategoryId: 1,
-    CategoryType: 'manga'
+    Category: 'manga'
   },
   {
-    CategoryId: 2,
-    CategoryType: 'voice'
+    Category: 'voice'
   },
   {
-    CategoryId: 3,
-    CategoryType: 'game'
+    Category: 'game'
   },
   {
-    CategoryId: 4,
-    CategoryType: 'anime'
+    Category: 'anime'
   }
 ];
 

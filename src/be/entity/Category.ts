@@ -1,14 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import Folder from './Folder';
+import { Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Folder } from './entity';
 
 @Entity({ name: 'Categories' })
 export default class Category {
-  @PrimaryGeneratedColumn()
-  CategoryId!: number;
+  @PrimaryColumn()
+  Category!: string;
 
-  @Column()
-  CategoryType!: string;
-
-  @OneToMany(() => Folder, folder => folder.category)
-  folders!: Folder[];
+  @OneToMany(() => Folder, folder => folder.Category)
+  Folders!: Folder[];
 }
