@@ -13,4 +13,9 @@ const initState: RootState = {
   }
 };
 
-export default createStore(rootReducer, initState, composeWithDevTools());
+const integrateReduxDevTools = () => {
+  if (process.env.NODE_ENV === 'development') return composeWithDevTools();
+  else return undefined;
+};
+
+export default createStore(rootReducer, initState, integrateReduxDevTools());

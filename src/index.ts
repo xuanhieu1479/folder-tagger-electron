@@ -55,7 +55,8 @@ const initWindows = (): void => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   customizeProtocol();
-  await installExtention(REDUX_DEVTOOLS);
+  if (process.env.NODE_ENV === 'development')
+    await installExtention(REDUX_DEVTOOLS);
   initWindows();
 });
 
