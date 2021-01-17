@@ -13,7 +13,7 @@ const router = express.Router();
 const folder = new Folder();
 
 router.get(CONTROLLER_PATH.GET, async (req: Request, res: Response) => {
-  const params = req.body;
+  const params = req.query;
   const { folders, status, message } = await folder.get(params);
   res.status(status).json({ folders, message });
 });

@@ -8,7 +8,11 @@ import {
   Column
 } from 'typeorm';
 import { Category, Language, Tag } from './entity';
-import { MESSAGE, STATUS_CODE } from '../../common/variables/commonVariables';
+import {
+  MESSAGE,
+  STATUS_CODE,
+  PAGINATION
+} from '../../common/variables/commonVariables';
 import {
   Folder as FolderInterface,
   FolderFilterParams,
@@ -47,12 +51,35 @@ export default class Folder {
   };
 
   get = async (params: FolderFilterParams): Promise<FolderQueryResult> => {
-    const { category, language, name, tag } = params;
+    const {
+      currentPage = 1,
+      itemsPerPage = PAGINATION.ITEMS_PER_PAGE[0],
+      category,
+      language,
+      name,
+      tag
+    } = params;
+    const skipQuantity = (currentPage - 1) * itemsPerPage;
+
+    const totalFolders = await getRepository(Folder).count();
+    if (skipQuantity > totalFolders) {
+      return {
+        folders: {
+          foldersList: [],
+          totalFolders: 0
+        },
+        message: MESSAGE.INVALID_PARAMS,
+        status: STATUS_CODE.INVALID_DATA
+      };
+    }
+
     const query = getRepository(Folder)
       .createQueryBuilder('folder')
       .select('folder.FolderLocation', 'location')
       .addSelect('folder.FolderName', 'name')
-      .addSelect('folder.FolderThumbnail', 'thumbnail');
+      .addSelect('folder.FolderThumbnail', 'thumbnail')
+      .offset(skipQuantity)
+      .limit(itemsPerPage);
     if (category) query.andWhere('folder.Category = :category', { category });
     if (language) query.andWhere('folder.Language = :language', { language });
     if (name) query.andWhere('folder.FolderName = :name', { name });
@@ -60,7 +87,10 @@ export default class Folder {
     try {
       const result = await query.getRawMany();
       return {
-        folders: result,
+        folders: {
+          foldersList: result,
+          totalFolders
+        },
         message: MESSAGE.SUCCESS,
         status: STATUS_CODE.SUCCESS
       };
@@ -68,7 +98,10 @@ export default class Folder {
       console.log('GET FOLDERS: ', error);
       logErrors(error.message, error.stack);
       return {
-        folders: [],
+        folders: {
+          foldersList: [],
+          totalFolders: 0
+        },
         message: error.message,
         status: STATUS_CODE.DB_ERROR
       };

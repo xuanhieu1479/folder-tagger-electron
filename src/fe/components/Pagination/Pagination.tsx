@@ -21,12 +21,14 @@ const Pagination = ({
   itemsPerPage,
   setItemsPerPage
 }: PaginationInterface): ReactElement => {
+  const totalPages = Math.ceil(totalFolders / itemsPerPage);
+
   return (
     <section className="footer_pagination-container">
       <TotalPages totalFolders={totalFolders} />
-      {totalFolders > 0 ? (
+      {totalPages > 1 ? (
         <PagePagination
-          totalPages={Math.ceil(totalFolders / itemsPerPage)}
+          totalPages={totalPages}
           pagesRangeDisplayed={pagesRangeDisplayed}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

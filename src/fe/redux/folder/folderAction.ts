@@ -1,24 +1,28 @@
 import { Dispatch } from 'redux';
 import axios from 'axios';
-import { API } from '../../common/variables/commonVariables';
-import {
-  Folder,
-  FolderFilterParams
-} from '../../common/interfaces/folderInterfaces';
-import { showMessage } from '../../utility/showMessage';
-import { startLoading, finishLoading } from '../../utility/showLoadingOverlay';
+import { API } from '../../../common/variables/commonVariables';
+import { FolderFilterParams } from '../../../common/interfaces/folderInterfaces';
+import { UPDATE_FOLDERS } from './folderActionType';
+import { showMessage } from '../../../utility/showMessage';
+import { startLoading, finishLoading } from '../status/statusAction';
 
 const getFolders = async (
   dispatch: Dispatch,
-  params?: FolderFilterParams
-): Promise<Array<Folder>> => {
+  params: FolderFilterParams
+): Promise<void> => {
   try {
     startLoading(dispatch);
     const { data } = await axios.get(API.GET, { params });
-    return data.folders;
+    const { foldersList, totalFolders } = data.folders;
+    dispatch({
+      type: UPDATE_FOLDERS,
+      payload: {
+        foldersList,
+        totalFolders
+      }
+    });
   } catch (error) {
     showMessage.error(error.response.data.message);
-    return [];
   } finally {
     finishLoading(dispatch);
   }

@@ -1,8 +1,5 @@
 import { Dispatch } from 'redux';
-import {
-  START_LOADING,
-  FINISH_LOADING
-} from '../fe/redux/status/statusActionType';
+import { START_LOADING, FINISH_LOADING } from './statusActionType';
 
 const startLoading = (dispatch: Dispatch): void => {
   dispatch({ type: START_LOADING });

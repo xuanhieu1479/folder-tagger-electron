@@ -5,6 +5,8 @@ interface Folder {
 }
 
 interface FolderFilterParams {
+  currentPage?: number;
+  itemsPerPage?: number;
   name?: string;
   category?: string;
   language?: string;
@@ -17,7 +19,10 @@ interface FolderFilterParams {
 }
 
 interface FolderQueryResult {
-  folders?: Array<Folder>;
+  folders?: {
+    foldersList: Array<Folder>;
+    totalFolders: number;
+  };
   message: string;
   status: number;
 }
