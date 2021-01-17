@@ -7,6 +7,7 @@ import MESSAGE from './message';
 import STATUS_CODE from './statusCode';
 import ASSET from './asset';
 import APP from './app';
+import PAGINATION from './pagination';
 
 export {
   MODULE,
@@ -19,5 +20,6 @@ export {
   MESSAGE,
   STATUS_CODE,
   ASSET,
-  APP
+  APP,
+  PAGINATION
 };

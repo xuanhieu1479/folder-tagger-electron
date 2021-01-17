@@ -1,0 +1,6 @@
+const PAGINATION = {
+  PAGES_RANGE_DISPLAYED: 10,
+  ITEMS_PER_PAGE: [25, 50, 100]
+};
+
+export default PAGINATION;

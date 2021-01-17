@@ -1,0 +1,49 @@
+.footer_pagination-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer_pagination_page-button-container {
+  margin: 0 10px;
+
+  button:not(:first-child) {
+    margin-left: 5px;
+  }
+}
+
+.footer_pagination_page-button {
+  &:focus {
+    outline-offset: 0;
+  }
+}
+
+.footer_pagination_total-folders {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.footer_pagination_pagination-options {
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+
+  .bp3-html-select {
+    margin: 0 2px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  select {
+    font-size: 16px !important;
+    font-weight: 600;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

@@ -16,4 +16,4 @@ const showMessage = {
     toaster.show({ intent: Intent.DANGER, message, timeout: errorTimeout })
 };
 
-export default showMessage;
+export { showMessage };

@@ -1,55 +1,54 @@
+import { Dispatch } from 'redux';
 import axios from 'axios';
 import { API } from '../../common/variables/commonVariables';
 import {
   Folder,
   FolderFilterParams
 } from '../../common/interfaces/folderInterfaces';
-import { showMessage } from '../../utility/utility';
+import { showMessage } from '../../utility/showMessage';
+import { startLoading, finishLoading } from '../../utility/showLoadingOverlay';
 
 const getFolders = async (
-  startLoading: () => void,
-  finishLoading: () => void,
+  dispatch: Dispatch,
   params?: FolderFilterParams
 ): Promise<Array<Folder>> => {
   try {
-    startLoading();
+    startLoading(dispatch);
     const { data } = await axios.get(API.GET, { params });
     return data.folders;
   } catch (error) {
     showMessage.error(error.response.data.message);
     return [];
   } finally {
-    finishLoading();
+    finishLoading(dispatch);
   }
 };
 
 const addOneFolder = async (
-  folderLocation: string,
-  startLoading: () => void,
-  finishLoading: () => void
+  dispatch: Dispatch,
+  folderLocation: string
 ): Promise<void> => {
   try {
-    startLoading();
+    startLoading(dispatch);
     await axios.post(API.ADD_ONE, { folderLocation });
   } catch (error) {
     showMessage.error(error.response.data.message);
   } finally {
-    finishLoading();
+    finishLoading(dispatch);
   }
 };
 
 const addParentFolder = async (
-  folderLocations: string[],
-  startLoading: () => void,
-  finishLoading: () => void
+  dispatch: Dispatch,
+  folderLocations: string[]
 ): Promise<void> => {
   try {
-    startLoading();
+    startLoading(dispatch);
     await axios.post(API.ADD_MANY, { folderLocations });
   } catch (error) {
     showMessage.error(error.response.data.message);
   } finally {
-    finishLoading();
+    finishLoading(dispatch);
   }
 };
 

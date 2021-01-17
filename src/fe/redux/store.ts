@@ -6,6 +6,10 @@ import rootReducer from './rootReducer';
 const initState: RootState = {
   status: {
     isLoading: false
+  },
+  folder: {
+    foldersList: [],
+    totalFolders: 0
   }
 };
 
