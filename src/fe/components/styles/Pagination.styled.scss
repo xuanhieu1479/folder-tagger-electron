@@ -8,6 +8,9 @@
 .footer_pagination_page-button-container {
   margin: 0 10px;
 
+  button {
+    width: 35px;
+  }
   button:not(:first-child) {
     margin-left: 5px;
   }
