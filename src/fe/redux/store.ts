@@ -10,7 +10,9 @@ const initState: RootState = {
   folder: {
     selectedFolders: [],
     foldersList: [],
-    totalFolders: 0
+    totalFolders: 0,
+    categories: [],
+    languages: []
   }
 };
 

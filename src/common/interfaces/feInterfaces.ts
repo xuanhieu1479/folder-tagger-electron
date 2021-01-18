@@ -8,6 +8,8 @@ interface RootState {
     selectedFolders: Array<string>;
     foldersList: Array<Folder>;
     totalFolders: number;
+    categories: Array<string>;
+    languages: Array<string>;
   };
 }
 

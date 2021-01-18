@@ -3,6 +3,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { MODULE } from '../../common/variables/commonVariables';
 import folderRouter from './folder';
+import categoryRouter from './category';
+import languageRouter from './language';
 
 const initRouter = (app: Express): void => {
   app.use(cors());
@@ -11,6 +13,8 @@ const initRouter = (app: Express): void => {
     res.send('Server is running!');
   });
   app.use(MODULE.FOLDER, folderRouter);
+  app.use(MODULE.CATEGORY, categoryRouter);
+  app.use(MODULE.LANGUAGE, languageRouter);
 };
 
 export default initRouter;

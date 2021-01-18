@@ -1,8 +1,12 @@
 import { Dispatch } from 'redux';
 import axios from 'axios';
-import { API } from '../../../common/variables/commonVariables';
+import {
+  FOLDER_API,
+  CATEGORY_API,
+  LANGUAGE_API
+} from '../../../common/variables/commonVariables';
 import { FolderFilterParams } from '../../../common/interfaces/folderInterfaces';
-import { UPDATE_FOLDERS } from './folderActionType';
+import { GET_FOLDERS, GET_CATEGORIES, GET_LANGUAGES } from './folderActionType';
 import { showMessage } from '../../../utility/showMessage';
 import { startLoading, finishLoading } from '../status/statusAction';
 
@@ -12,10 +16,10 @@ const getFolders = async (
 ): Promise<void> => {
   try {
     startLoading(dispatch);
-    const { data } = await axios.get(API.GET, { params });
+    const { data } = await axios.get(FOLDER_API.GET, { params });
     const { foldersList, totalFolders } = data.folders;
     dispatch({
-      type: UPDATE_FOLDERS,
+      type: GET_FOLDERS,
       payload: {
         foldersList,
         totalFolders
@@ -34,7 +38,7 @@ const addOneFolder = async (
 ): Promise<void> => {
   try {
     startLoading(dispatch);
-    await axios.post(API.ADD_ONE, { folderLocation });
+    await axios.post(FOLDER_API.ADD_ONE, { folderLocation });
   } catch (error) {
     showMessage.error(error.response.data.message);
   } finally {
@@ -48,7 +52,7 @@ const addParentFolder = async (
 ): Promise<void> => {
   try {
     startLoading(dispatch);
-    await axios.post(API.ADD_MANY, { folderLocations });
+    await axios.post(FOLDER_API.ADD_MANY, { folderLocations });
   } catch (error) {
     showMessage.error(error.response.data.message);
   } finally {
@@ -56,4 +60,30 @@ const addParentFolder = async (
   }
 };
 
-export { getFolders, addOneFolder, addParentFolder };
+const getCategories = async (dispatch: Dispatch): Promise<void> => {
+  try {
+    const { data } = await axios.get(CATEGORY_API.GET);
+    const { categories } = data;
+    dispatch({ type: GET_CATEGORIES, payload: { categories } });
+  } catch (error) {
+    showMessage.error(error.response.data.message);
+  }
+};
+
+const getLanguages = async (dispatch: Dispatch): Promise<void> => {
+  try {
+    const { data } = await axios.get(LANGUAGE_API.GET);
+    const { languages } = data;
+    dispatch({ type: GET_LANGUAGES, payload: { languages } });
+  } catch (error) {
+    showMessage.error(error.response.data.message);
+  }
+};
+
+export {
+  getFolders,
+  addOneFolder,
+  addParentFolder,
+  getCategories,
+  getLanguages
+};
