@@ -1,7 +1,15 @@
+@import '../../styles/variables.scss';
+
 .folder-display-container {
   height: 100vh;
   display: flex;
   flex-direction: column;
   font-family: 'Roboto';
   overflow-y: hidden;
+}
+
+.dialog-container {
+  height: $dialog-content-height !important;
+  width: $dialog-content-width !important;
+  padding: $dialog-content-padding !important;
 }
