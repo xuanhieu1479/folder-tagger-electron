@@ -5,6 +5,7 @@ interface RootState {
     isLoading: boolean;
   };
   folder: {
+    selectedFolders: Array<string>;
     foldersList: Array<Folder>;
     totalFolders: number;
   };

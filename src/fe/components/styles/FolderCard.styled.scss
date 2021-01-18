@@ -1,10 +1,25 @@
 @import '../../styles/variables.scss';
 
-.folder-card-container {
+@mixin container {
   height: $folder-card-height;
   width: $folder-card-width;
   margin: 10px;
   padding: 0px !important;
+
+  &:hover {
+    cursor: default !important;
+  }
+}
+
+.folder-card-container {
+  @include container;
+}
+
+.folder-card-container--selected {
+  @include container;
+
+  outline: rgba(19, 124, 189, 0.6) auto 2px;
+  outline-offset: 2px;
 }
 
 .folder-card-content {
@@ -26,6 +41,7 @@
   padding: $folder-card-name-padding;
   text-align: center;
   overflow: hidden;
+  cursor: pointer;
 
   :focus {
     outline: none;

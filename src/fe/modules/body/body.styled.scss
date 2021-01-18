@@ -1,4 +1,4 @@
-.main-body_container {
+.body-container {
   flex: 1;
   padding: 10px 5px;
   display: flex;
@@ -6,7 +6,7 @@
   overflow-x: hidden;
 }
 
-.main-body_loading-container {
+.body-container_loading-container {
   height: 100vh;
   width: 100vw;
   display: flex;

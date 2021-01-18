@@ -1,5 +1,5 @@
 import { remote } from 'electron';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, MouseEvent } from 'react';
 import { Card, Tooltip } from '@blueprintjs/core';
 import { ASSET } from '../../common/variables/commonVariables';
 import { showMessage } from '../../utility/showMessage';
@@ -11,15 +11,21 @@ const defaultThumbnail = `${app.getAppPath()}\\.webpack\\renderer\\${
 }\\default-thumbnail.jpg`;
 
 interface FolderCardInterface {
+  id: string;
+  folderLocation: string;
   thumbnailLocation?: string;
   folderName: string;
-  onClickImage?: () => void;
+  onClick: (event: MouseEvent, folderLocation: string) => void;
+  isBeingSelected: boolean;
 }
 
 const FolderCard = ({
+  id,
+  folderLocation,
   thumbnailLocation,
   folderName,
-  onClickImage
+  onClick,
+  isBeingSelected
 }: FolderCardInterface): ReactElement => {
   const onClickCardName = () => {
     navigator.clipboard.writeText(folderName);
@@ -27,12 +33,16 @@ const FolderCard = ({
   };
 
   return (
-    <Card interactive={true} className="folder-card-container">
+    <Card
+      id={id}
+      interactive={true}
+      className={`folder-card-container${isBeingSelected ? '--selected' : ''}`}
+      onClick={event => onClick(event, folderLocation)}
+    >
       <figure className="folder-card-content">
         <img
           src={thumbnailLocation || defaultThumbnail}
           className="folder-card-thumbnail"
-          onClick={onClickImage}
         />
         <figcaption
           className="folder-card-name bp3-text-large"

@@ -8,6 +8,7 @@ const initState: RootState = {
     isLoading: false
   },
   folder: {
+    selectedFolders: [],
     foldersList: [],
     totalFolders: 0
   }

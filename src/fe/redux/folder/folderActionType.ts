@@ -1,1 +1,2 @@
 export const UPDATE_FOLDERS = 'UPDATE_FOLDERS';
+export const SELECT_FOLDERS = 'SELECT_FOLDERS';
