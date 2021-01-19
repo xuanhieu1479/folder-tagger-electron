@@ -1,9 +1,9 @@
 import { START_LOADING, FINISH_LOADING } from './statusActionType';
-import { ReducerAction } from '../../../common/interfaces/feInterfaces';
+import {
+  ReducerAction,
+  StatusReducerInterface
+} from '../../../common/interfaces/feInterfaces';
 
-interface StatusReducerInterface {
-  isLoading: boolean;
-}
 const initState = {
   isLoading: false
 };

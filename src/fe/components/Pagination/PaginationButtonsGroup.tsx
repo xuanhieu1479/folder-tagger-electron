@@ -4,19 +4,19 @@ import { PAGINATION } from '../../../common/variables/commonVariables';
 import PaginationButton from './PaginationButton';
 import '.././styles/Pagination.styled.scss';
 
-interface PagePaginationInterface {
+interface PaginationButtonsGroupInterface {
   totalPages: number;
   pagesRangeDisplayed?: number;
   currentPage: number;
   setCurrentPage: (page: number) => void;
 }
 
-const PagePagination = ({
+const PaginationButtonsGroup = ({
   totalPages,
   pagesRangeDisplayed = PAGINATION.PAGES_RANGE_DISPLAYED,
   currentPage,
   setCurrentPage
-}: PagePaginationInterface): ReactElement => {
+}: PaginationButtonsGroupInterface): ReactElement => {
   const [firstButtonInRange, setFirstButtonInRange] = useState(currentPage);
 
   useEffect(() => {
@@ -90,4 +90,4 @@ const PagePagination = ({
   );
 };
 
-export default PagePagination;
+export default PaginationButtonsGroup;

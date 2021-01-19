@@ -1,9 +1,6 @@
 import React, { ReactElement, createElement, useEffect } from 'react';
 import { ContextMenu, Menu, MenuItem } from '@blueprintjs/core';
-
-interface CustomContextMenuInterface {
-  children: ReactElement;
-}
+import { WrapperComponentInterface } from '../../common/interfaces/feInterfaces';
 
 const ContextMenuBody = () => {
   return (
@@ -19,7 +16,7 @@ const ContextMenuBody = () => {
  */
 const CustomContextMenu = ({
   children
-}: CustomContextMenuInterface): ReactElement => {
+}: WrapperComponentInterface): ReactElement => {
   useEffect(() => {
     if (typeof children.key === 'string') {
       const childrenElement = document.getElementById(children.key);

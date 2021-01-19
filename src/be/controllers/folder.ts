@@ -6,7 +6,7 @@ import {
   MESSAGE,
   STATUS_CODE
 } from '../../common/variables/commonVariables';
-import { Folder as FolderInterface } from '../../common/interfaces/folderInterfaces';
+import { Folder as FolderInterface } from '../../common/interfaces/commonInterfaces';
 import { getFolderName, getFolderThumbnail } from '../../utility/folderUtility';
 
 const router = express.Router();

@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import TotalPages from './TotalPages';
-import PagePagination from './PagePagination';
+import PaginationButtonsGroup from './PaginationButtonsGroup';
 import PaginationOptions from './PaginationOptions';
 import '.././styles/Pagination.styled.scss';
 
@@ -27,7 +27,7 @@ const Pagination = ({
     <section className="footer_pagination-container">
       <TotalPages totalFolders={totalFolders} />
       {totalPages > 1 ? (
-        <PagePagination
+        <PaginationButtonsGroup
           totalPages={totalPages}
           pagesRangeDisplayed={pagesRangeDisplayed}
           currentPage={currentPage}

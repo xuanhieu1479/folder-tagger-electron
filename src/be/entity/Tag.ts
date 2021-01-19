@@ -7,9 +7,11 @@ import {
 } from 'typeorm';
 import { TagType } from './entity';
 import { MESSAGE, STATUS_CODE } from '../../common/variables/commonVariables';
+import { LooseObject } from '../../common/interfaces/commonInterfaces';
+import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
 import { logErrors } from '../logging';
 
-interface TagQueryResult {
+interface TagQueryResult extends QueryResultInterface {
   tags: {
     artist?: Array<string>;
     group?: Array<string>;
@@ -17,12 +19,6 @@ interface TagQueryResult {
     character?: Array<string>;
     genre?: Array<string>;
   };
-  message: string;
-  status: number;
-}
-
-interface LooseObject {
-  [key: string]: Array<string>;
 }
 
 @Entity({ name: 'Tags' })

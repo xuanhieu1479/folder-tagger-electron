@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { FolderFilterParams } from '../../../common/interfaces/folderInterfaces';
+import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import { PAGINATION } from '../../../common/variables/commonVariables';
 import { Pagination } from '../../components/commonComponents';

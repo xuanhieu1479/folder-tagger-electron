@@ -1,12 +1,11 @@
 import { Entity, getRepository, OneToMany, PrimaryColumn } from 'typeorm';
 import { MESSAGE, STATUS_CODE } from '../../common/variables/commonVariables';
+import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
 import { Folder } from './entity';
 import { logErrors } from '../logging';
 
-interface CategoryQueryResult {
+interface CategoryQueryResult extends QueryResultInterface {
   categories: Array<string>;
-  message: string;
-  status: number;
 }
 
 @Entity({ name: 'Categories' })

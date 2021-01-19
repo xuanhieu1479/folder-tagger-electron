@@ -4,16 +4,11 @@ import {
   GET_CATEGORIES,
   GET_LANGUAGES
 } from './folderActionType';
-import { ReducerAction } from '../../../common/interfaces/feInterfaces';
-import { Folder } from '../../../common/interfaces/folderInterfaces';
+import {
+  ReducerAction,
+  FolderReducerInterface
+} from '../../../common/interfaces/feInterfaces';
 
-interface FolderReducerInterface {
-  selectedFolders: Array<string>;
-  foldersList: Array<Folder>;
-  totalFolders: number;
-  categories: Array<string>;
-  languages: Array<string>;
-}
 const initState = {
   selectedFolders: [],
   foldersList: [],

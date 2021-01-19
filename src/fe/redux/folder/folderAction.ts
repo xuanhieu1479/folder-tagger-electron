@@ -5,7 +5,7 @@ import {
   CATEGORY_API,
   LANGUAGE_API
 } from '../../../common/variables/commonVariables';
-import { FolderFilterParams } from '../../../common/interfaces/folderInterfaces';
+import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import { GET_FOLDERS, GET_CATEGORIES, GET_LANGUAGES } from './folderActionType';
 import { showMessage } from '../../../utility/showMessage';
 import { startLoading, finishLoading } from '../status/statusAction';

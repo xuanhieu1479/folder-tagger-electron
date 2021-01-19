@@ -1,12 +1,11 @@
 import { Entity, PrimaryColumn, OneToMany, getRepository } from 'typeorm';
 import { MESSAGE, STATUS_CODE } from '../../common/variables/commonVariables';
+import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
 import { Folder } from './entity';
 import { logErrors } from '../logging';
 
-interface LanguageQueryResult {
+interface LanguageQueryResult extends QueryResultInterface {
   languages: Array<string>;
-  message: string;
-  status: number;
 }
 
 @Entity({ name: 'Languages' })

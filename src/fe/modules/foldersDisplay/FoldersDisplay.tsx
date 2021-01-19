@@ -2,7 +2,7 @@ import React, { ReactElement, useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Dialog } from '@blueprintjs/core';
 import { RootState } from '../../../common/interfaces/feInterfaces';
-import { FolderFilterParams } from '../../../common/interfaces/folderInterfaces';
+import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import { PAGINATION } from '../../../common/variables/commonVariables';
 import { DialogContent } from '../../components/commonComponents';
 import Body from '../body/Body';

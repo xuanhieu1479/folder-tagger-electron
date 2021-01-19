@@ -1,13 +1,9 @@
 import { GET_TAGS } from './tagActionType';
-import { ReducerAction } from '../../../common/interfaces/feInterfaces';
+import {
+  ReducerAction,
+  TagReducerInterface
+} from '../../../common/interfaces/feInterfaces';
 
-interface TagReducerInterface {
-  artist: Array<string>;
-  group: Array<string>;
-  parody: Array<string>;
-  character: Array<string>;
-  genre: Array<string>;
-}
 const initState = {
   artist: [],
   group: [],

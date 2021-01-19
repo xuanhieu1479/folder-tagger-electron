@@ -13,12 +13,19 @@ import {
   STATUS_CODE,
   PAGINATION
 } from '../../common/variables/commonVariables';
+import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
 import {
   Folder as FolderInterface,
-  FolderFilterParams,
-  FolderQueryResult
-} from '../../common/interfaces/folderInterfaces';
+  FolderFilterParams
+} from '../../common/interfaces/commonInterfaces';
 import { logErrors } from '../logging';
+
+interface FolderQueryResult extends QueryResultInterface {
+  folders?: {
+    foldersList: Array<Folder>;
+    totalFolders: number;
+  };
+}
 
 @Entity({ name: 'Folders' })
 export default class Folder {

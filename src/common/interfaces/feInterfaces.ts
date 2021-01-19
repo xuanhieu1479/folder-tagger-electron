@@ -1,23 +1,9 @@
-import { Folder } from './folderInterfaces';
+import { Folder } from './commonInterfaces';
 
 interface RootState {
-  status: {
-    isLoading: boolean;
-  };
-  folder: {
-    selectedFolders: Array<string>;
-    foldersList: Array<Folder>;
-    totalFolders: number;
-    categories: Array<string>;
-    languages: Array<string>;
-  };
-  tag: {
-    artist: Array<string>;
-    group: Array<string>;
-    parody: Array<string>;
-    character: Array<string>;
-    genre: Array<string>;
-  };
+  status: StatusReducerInterface;
+  folder: FolderReducerInterface;
+  tag: TagReducerInterface;
 }
 
 interface ReducerAction {
@@ -26,4 +12,33 @@ interface ReducerAction {
   payload?: any;
 }
 
-export { RootState, ReducerAction };
+interface StatusReducerInterface {
+  isLoading: boolean;
+}
+interface FolderReducerInterface {
+  selectedFolders: Array<string>;
+  foldersList: Array<Folder>;
+  totalFolders: number;
+  categories: Array<string>;
+  languages: Array<string>;
+}
+interface TagReducerInterface {
+  artist: Array<string>;
+  group: Array<string>;
+  parody: Array<string>;
+  character: Array<string>;
+  genre: Array<string>;
+}
+
+interface WrapperComponentInterface {
+  children: React.ReactElement;
+}
+
+export {
+  RootState,
+  ReducerAction,
+  WrapperComponentInterface,
+  StatusReducerInterface,
+  FolderReducerInterface,
+  TagReducerInterface
+};
