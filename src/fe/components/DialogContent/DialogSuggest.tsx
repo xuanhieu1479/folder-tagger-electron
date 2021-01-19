@@ -14,7 +14,7 @@ const DialogSuggest = ({
   items,
   updateSelectedItem
 }: DialogSuggestInterface): ReactElement => {
-  const onSelectCategoryItem = (newItem: string) => {
+  const onItemSelect = (newItem: string) => {
     updateSelectedItem(newItem);
   };
 
@@ -45,7 +45,7 @@ const DialogSuggest = ({
       itemRenderer={renderSelectItems}
       itemPredicate={filterItems}
       popoverProps={{ minimal: true }}
-      onItemSelect={onSelectCategoryItem}
+      onItemSelect={onItemSelect}
       noResults={<MenuItem disabled={true} text="No results." />}
     />
   );
