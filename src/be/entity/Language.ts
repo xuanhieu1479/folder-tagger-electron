@@ -29,7 +29,7 @@ export default class Language {
         status: STATUS_CODE.SUCCESS
       };
     } catch (error) {
-      console.log('GET LANGUAGES ERROR: ', error);
+      console.error('GET LANGUAGES ERROR: ', error);
       logErrors(error.message, error.stack);
       return {
         languages: [],

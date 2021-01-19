@@ -102,7 +102,7 @@ export default class Tag {
         status: STATUS_CODE.SUCCESS
       };
     } catch (error) {
-      console.log('GET TAGS ERROR:', error);
+      console.error('GET TAGS ERROR:', error);
       logErrors(error.message, error.stack);
       return {
         tags: {},

@@ -95,7 +95,7 @@ export default class Folder {
         status: STATUS_CODE.SUCCESS
       };
     } catch (error) {
-      console.log('GET FOLDERS: ', error);
+      console.error('GET FOLDERS: ', error);
       logErrors(error.message, error.stack);
       return {
         folders: {
@@ -130,7 +130,7 @@ export default class Folder {
         ])
         .execute();
     } catch (error) {
-      console.log('ADD ONE FOLDER ERROR: ', error);
+      console.error('ADD ONE FOLDER ERROR: ', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,
@@ -179,7 +179,7 @@ export default class Folder {
         .values(validFolders)
         .execute();
     } catch (error) {
-      console.log('ADD MANY FOLDERS ERROR: ', error);
+      console.error('ADD MANY FOLDERS ERROR: ', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,

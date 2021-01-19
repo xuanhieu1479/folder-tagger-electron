@@ -29,7 +29,7 @@ export default class Category {
         status: STATUS_CODE.SUCCESS
       };
     } catch (error) {
-      console.log('GET CATEGORIES ERROR: ', error);
+      console.error('GET CATEGORIES ERROR: ', error);
       logErrors(error.message, error.stack);
       return {
         categories: [],

@@ -23,13 +23,13 @@ const logErrors = (error: Error | any, origin: Promise<any> | string): void => {
 const initLogging = (): void => {
   // General unhandled exception
   process.on('uncaughtExceptionMonitor', (err: Error, origin: string) => {
-    console.log('UNCAUGHT EXCEPTION: ', origin);
+    console.error('UNCAUGHT EXCEPTION: ', origin);
     logErrors(err, origin);
   });
 
   // Unhandled promise exception
   process.on('unhandledRejection', (reason, promise) => {
-    console.log('UNHANLED REJECTION: ', promise);
+    console.error('UNHANLED REJECTION: ', promise);
     promise.catch(async error => {
       logErrors(reason, error.stack);
     });
