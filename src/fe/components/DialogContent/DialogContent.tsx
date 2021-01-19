@@ -1,15 +1,21 @@
-import React, { ReactElement, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { ReactElement, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import DialogSuggest from './DialogSuggest';
+import { getTags } from '../../redux/tag/tagAction';
 import '../styles/DialogContent.styled.scss';
 
 const DialogContent = (): ReactElement => {
+  const dispatch = useDispatch();
   const { categories, languages } = useSelector(
     (state: RootState) => state.folder
   );
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('');
+
+  useEffect(() => {
+    getTags(dispatch);
+  }, []);
 
   return (
     <section className="dialog-content-container">

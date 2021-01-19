@@ -11,6 +11,13 @@ interface RootState {
     categories: Array<string>;
     languages: Array<string>;
   };
+  tag: {
+    artist: Array<string>;
+    group: Array<string>;
+    parody: Array<string>;
+    character: Array<string>;
+    genre: Array<string>;
+  };
 }
 
 interface ReducerAction {

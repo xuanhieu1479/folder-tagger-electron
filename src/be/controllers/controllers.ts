@@ -5,6 +5,7 @@ import { MODULE } from '../../common/variables/commonVariables';
 import folderRouter from './folder';
 import categoryRouter from './category';
 import languageRouter from './language';
+import tagRouter from './tag';
 
 const initRouter = (app: Express): void => {
   app.use(cors());
@@ -15,6 +16,7 @@ const initRouter = (app: Express): void => {
   app.use(MODULE.FOLDER, folderRouter);
   app.use(MODULE.CATEGORY, categoryRouter);
   app.use(MODULE.LANGUAGE, languageRouter);
+  app.use(MODULE.TAG, tagRouter);
 };
 
 export default initRouter;

@@ -5,7 +5,8 @@ const BASE_API = `http://localhost:${BACK_END_CONFIG.PORT}`;
 const MODULE = {
   FOLDER: '/folder',
   CATEGORY: '/category',
-  LANGUAGE: '/language'
+  LANGUAGE: '/language',
+  TAG: '/tag'
 };
 
 const CONTROLLER_PATH = {
@@ -28,11 +29,16 @@ const LANGUAGE_API = {
   GET: `${MODULE.LANGUAGE}${CONTROLLER_PATH.GET}`
 };
 
+const TAG_API = {
+  GET: `${MODULE.TAG}${CONTROLLER_PATH.GET}`
+};
+
 export {
   BASE_API,
   MODULE,
   CONTROLLER_PATH,
   FOLDER_API,
   CATEGORY_API,
-  LANGUAGE_API
+  LANGUAGE_API,
+  TAG_API
 };

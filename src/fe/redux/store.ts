@@ -13,6 +13,13 @@ const initState: RootState = {
     totalFolders: 0,
     categories: [],
     languages: []
+  },
+  tag: {
+    artist: [],
+    group: [],
+    parody: [],
+    character: [],
+    genre: []
   }
 };
 
