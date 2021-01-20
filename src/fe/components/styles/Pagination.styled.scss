@@ -1,8 +1,8 @@
+@import '../../styles/mixin.scss';
+
 .footer_pagination-container {
+  @include flex-space-between;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .footer_pagination_page-button-container {
@@ -23,30 +23,22 @@
 }
 
 .footer_pagination_total-folders {
-  font-size: 16px;
-  font-weight: 600;
+  @include middle-important-text;
 }
 
 .footer_pagination_pagination-options {
-  font-size: 16px;
-  font-weight: 600;
+  @include middle-important-text;
   display: flex;
   align-items: center;
 
   .bp3-html-select {
+    @include no-outline-focus;
     margin: 0 2px;
-
-    &:focus {
-      outline: none;
-    }
   }
 
   select {
+    @include no-outline-focus;
     font-size: 16px !important;
     font-weight: 600;
-
-    &:focus {
-      outline: none;
-    }
   }
 }

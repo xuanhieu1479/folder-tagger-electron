@@ -4,7 +4,7 @@ import { Overlay, Spinner, Intent } from '@blueprintjs/core';
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import { FolderCard } from '../../components/commonComponents';
 import { SELECT_FOLDERS } from '../../redux/folder/folderActionType';
-import './body.styled.scss';
+import './Body.styled.scss';
 
 const Body = (): ReactElement => {
   const dispatch = useDispatch();

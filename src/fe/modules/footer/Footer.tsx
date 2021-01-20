@@ -4,7 +4,7 @@ import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces'
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import { PAGINATION } from '../../../common/variables/commonVariables';
 import { Pagination } from '../../components/commonComponents';
-import './footer.styled.scss';
+import './Footer.styled.scss';
 
 interface FooterInterface {
   updateParams: (newParams: FolderFilterParams) => void;

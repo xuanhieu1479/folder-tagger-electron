@@ -1,9 +1,8 @@
+@import '../../styles/mixin.scss';
+
 .dialog-content-container {
+  @include flex-vertical-space-between;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .dialog-content-row {

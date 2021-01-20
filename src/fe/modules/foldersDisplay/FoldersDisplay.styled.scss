@@ -1,0 +1,13 @@
+@import '../../styles/mixin.scss';
+
+.folder-display-container {
+  @include flex-full-vertical;
+  height: 100vh;
+  overflow-y: hidden;
+}
+
+.dialog-container {
+  height: 450px !important;
+  width: 900px !important;
+  padding: 30px 15px;
+}

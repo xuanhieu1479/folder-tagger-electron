@@ -8,7 +8,7 @@ import { DialogContent } from '../../components/commonComponents';
 import Body from '../body/Body';
 import Footer from '../footer/Footer';
 import { getFolders } from '../../redux/folder/folderAction';
-import './foldersDisplay.styled.scss';
+import './FoldersDisplay.styled.scss';
 
 const defaultParams = {
   currentPage: 1,

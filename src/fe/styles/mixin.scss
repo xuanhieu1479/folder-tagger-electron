@@ -1,0 +1,40 @@
+// Layout
+@mixin flex-full-vertical {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+@mixin flex-space-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+@mixin flex-vertical-space-between {
+  @include flex-space-between;
+  flex-direction: column;
+}
+@mixin middle-screen {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Text
+@mixin middle-important-text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+// General
+@mixin no-outline-focus {
+  &:focus {
+    outline: none;
+  }
+}
+@mixin selected-item {
+  outline: rgba(19, 124, 189, 0.6) auto 2px;
+  outline-offset: 2px;
+}
