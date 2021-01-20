@@ -42,11 +42,11 @@ const initWindows = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   mainWindow.once('ready-to-show', async () => {
-    clearTimeout(startUpTimeOut);
     initDirectory();
     await initApp();
     splashWindow.destroy();
     mainWindow.show();
+    clearTimeout(startUpTimeOut);
   });
 };
 
