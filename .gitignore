@@ -106,3 +106,6 @@ Database/
 *.db
 *.db-shm
 *.db-wal
+
+# Setting
+Setting/

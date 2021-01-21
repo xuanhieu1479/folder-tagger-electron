@@ -8,6 +8,7 @@ import ASSET from './asset';
 import APP from './app';
 import PAGINATION from './pagination';
 import DIALOG from './dialog';
+import SETTING from './setting';
 
 export * from './api';
 export {
@@ -20,5 +21,6 @@ export {
   ASSET,
   APP,
   PAGINATION,
-  DIALOG
+  DIALOG,
+  SETTING
 };

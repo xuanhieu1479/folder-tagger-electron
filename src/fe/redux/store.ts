@@ -20,6 +20,10 @@ const initState: RootState = {
     parody: [],
     character: [],
     genre: []
+  },
+  setting: {
+    defaultCategory: '',
+    defaultLanguage: ''
   }
 };
 

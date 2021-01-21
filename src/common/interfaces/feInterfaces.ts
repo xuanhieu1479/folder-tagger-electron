@@ -4,6 +4,7 @@ interface RootState {
   status: StatusReducerInterface;
   folder: FolderReducerInterface;
   tag: TagReducerInterface;
+  setting: SettingReducerInterface;
 }
 
 interface ReducerAction {
@@ -29,6 +30,10 @@ interface TagReducerInterface {
   character: Array<string>;
   genre: Array<string>;
 }
+interface SettingReducerInterface {
+  defaultCategory: string;
+  defaultLanguage: string;
+}
 
 interface WrapperComponentInterface {
   children: React.ReactElement;
@@ -40,5 +45,6 @@ export {
   WrapperComponentInterface,
   StatusReducerInterface,
   FolderReducerInterface,
-  TagReducerInterface
+  TagReducerInterface,
+  SettingReducerInterface
 };
