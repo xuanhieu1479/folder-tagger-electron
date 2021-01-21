@@ -6,7 +6,7 @@ import { DIALOG } from '../../../common/variables/commonVariables';
 import DialogSuggest from './DialogSuggest';
 import DialogMultiSelect from './DialogMultiSelect';
 import { getTags } from '../../redux/tag/tagAction';
-import './DialogContent.styled.scss';
+import './FolderDialog.styled.scss';
 
 interface DialogContentInterface {
   dialogType: string;
@@ -51,10 +51,10 @@ const DialogContent = ({
   };
 
   return (
-    <section className="dialog-content-container">
-      <div className="dialog-content-row">
-        <div className="dialog-content-row-title">Category</div>
-        <div className="dialog-content-row-select">
+    <section className="folder-dialog-content-container">
+      <div className="folder-dialog-content-row">
+        <div className="folder-dialog-content-row-title">Category</div>
+        <div className="folder-dialog-content-row-select">
           <DialogSuggest
             selectedItem={selectedCategory}
             items={categories}
@@ -62,9 +62,9 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="dialog-content-row">
-        <div className="dialog-content-row-title">Language</div>
-        <div className="dialog-content-row-select">
+      <div className="folder-dialog-content-row">
+        <div className="folder-dialog-content-row-title">Language</div>
+        <div className="folder-dialog-content-row-select">
           <DialogSuggest
             selectedItem={selectedLanguage}
             items={languages}
@@ -72,9 +72,9 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="dialog-content-row">
-        <div className="dialog-content-row-title">Artist</div>
-        <div className="dialog-content-row-tags">
+      <div className="folder-dialog-content-row">
+        <div className="folder-dialog-content-row-title">Artist</div>
+        <div className="folder-dialog-content-row-tags">
           <DialogMultiSelect
             selectedItems={selectedArtists}
             items={artist}
@@ -82,9 +82,9 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="dialog-content-row">
-        <div className="dialog-content-row-title">Group</div>
-        <div className="dialog-content-row-tags">
+      <div className="folder-dialog-content-row">
+        <div className="folder-dialog-content-row-title">Group</div>
+        <div className="folder-dialog-content-row-tags">
           <DialogMultiSelect
             selectedItems={selectedGroups}
             items={group}
@@ -92,9 +92,9 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="dialog-content-row">
-        <div className="dialog-content-row-title">Parody</div>
-        <div className="dialog-content-row-tags">
+      <div className="folder-dialog-content-row">
+        <div className="folder-dialog-content-row-title">Parody</div>
+        <div className="folder-dialog-content-row-tags">
           <DialogMultiSelect
             selectedItems={selectedParodies}
             items={parody}
@@ -102,9 +102,9 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="dialog-content-row">
-        <div className="dialog-content-row-title">Character</div>
-        <div className="dialog-content-row-tags">
+      <div className="folder-dialog-content-row">
+        <div className="folder-dialog-content-row-title">Character</div>
+        <div className="folder-dialog-content-row-tags">
           <DialogMultiSelect
             selectedItems={selectedCharacters}
             items={character}
@@ -112,9 +112,9 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="dialog-content-row">
-        <div className="dialog-content-row-title">Genre</div>
-        <div className="dialog-content-row-tags">
+      <div className="folder-dialog-content-row">
+        <div className="folder-dialog-content-row-title">Genre</div>
+        <div className="folder-dialog-content-row-tags">
           <DialogMultiSelect
             selectedItems={selectedGenres}
             items={genre}
@@ -122,11 +122,11 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="dialog-content-row dialog-footer-container">
+      <div className="folder-dialog-content-row folder-dialog-footer-container">
         <Button
           text="Save"
           intent={Intent.PRIMARY}
-          className="dialog-save-button"
+          className="folder-dialog-save-button"
           onClick={onSave}
         />
       </div>

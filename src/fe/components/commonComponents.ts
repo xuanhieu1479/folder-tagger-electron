@@ -1,6 +1,6 @@
 import CustomContextMenu from './CustomContextMenu';
 import FolderCard from './FolderCard';
 import Pagination from './Pagination/Pagination';
-import DialogContent from './DialogContent/DialogContent';
+import FolderDialog from './FolderDialog/FolderDialog';
 
-export { CustomContextMenu, FolderCard, Pagination, DialogContent };
+export { CustomContextMenu, FolderCard, Pagination, FolderDialog };

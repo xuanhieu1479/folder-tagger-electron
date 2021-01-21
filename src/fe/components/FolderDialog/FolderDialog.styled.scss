@@ -1,32 +1,32 @@
 @import '../../styles/mixin.scss';
 
-.dialog-content-container {
+.folder-dialog-content-container {
   @include flex-vertical-space-between;
   height: 100%;
   padding: 20px 10px;
 }
 
-.dialog-content-row {
+.folder-dialog-content-row {
   width: 100%;
   display: flex;
   align-items: center;
 
-  .dialog-content-row-title {
+  .folder-dialog-content-row-title {
     width: 50px;
     font-size: 16px;
     text-align: right;
   }
-  .dialog-content-row-select {
+  .folder-dialog-content-row-select {
     margin-left: 20px;
   }
-  .dialog-content-row-tags {
+  .folder-dialog-content-row-tags {
     flex: 1;
     margin-left: 20px;
   }
-  &.dialog-footer-container {
+  &.folder-dialog-footer-container {
     flex-direction: row-reverse;
   }
-  .dialog-save-button {
+  .folder-dialog-save-button {
     width: 70px;
   }
 }
