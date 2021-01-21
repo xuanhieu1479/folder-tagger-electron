@@ -2,7 +2,7 @@ import React, { ReactElement, useState, useEffect } from 'react';
 import { ButtonGroup, Intent } from '@blueprintjs/core';
 import { PAGINATION } from '../../../common/variables/commonVariables';
 import PaginationButton from './PaginationButton';
-import '.././styles/Pagination.styled.scss';
+import './Pagination.styled.scss';
 
 interface PaginationButtonsGroupInterface {
   totalPages: number;

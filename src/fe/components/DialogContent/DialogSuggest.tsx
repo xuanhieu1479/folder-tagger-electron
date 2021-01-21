@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
-import '../styles/DialogContent.styled.scss';
+import './DialogContent.styled.scss';
 
 interface DialogSuggestInterface {
   selectedItem: string;

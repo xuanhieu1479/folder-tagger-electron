@@ -1,12 +1,20 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Button, Intent } from '@blueprintjs/core';
 import { RootState } from '../../../common/interfaces/feInterfaces';
+import { DIALOG } from '../../../common/variables/commonVariables';
 import DialogSuggest from './DialogSuggest';
 import DialogMultiSelect from './DialogMultiSelect';
 import { getTags } from '../../redux/tag/tagAction';
-import '../styles/DialogContent.styled.scss';
+import './DialogContent.styled.scss';
 
-const DialogContent = (): ReactElement => {
+interface DialogContentInterface {
+  dialogType: string;
+}
+
+const DialogContent = ({
+  dialogType
+}: DialogContentInterface): ReactElement => {
   const dispatch = useDispatch();
   const { categories, languages } = useSelector(
     (state: RootState) => state.folder
@@ -27,6 +35,20 @@ const DialogContent = (): ReactElement => {
   useEffect(() => {
     getTags(dispatch);
   }, []);
+
+  const onSave = () => {
+    switch (dialogType) {
+      case DIALOG.ADD_TAGS:
+        console.log(DIALOG.ADD_TAGS);
+        break;
+      case DIALOG.EDIT_TAGS:
+        console.log(DIALOG.EDIT_TAGS);
+        break;
+      case DIALOG.REMOVE_TAGS:
+        console.log(DIALOG.REMOVE_TAGS);
+        break;
+    }
+  };
 
   return (
     <section className="dialog-content-container">
@@ -99,6 +121,14 @@ const DialogContent = (): ReactElement => {
             updateSelectedItems={setSelectedGenres}
           />
         </div>
+      </div>
+      <div className="dialog-content-row dialog-footer-container">
+        <Button
+          text="Save"
+          intent={Intent.PRIMARY}
+          className="dialog-save-button"
+          onClick={onSave}
+        />
       </div>
     </section>
   );

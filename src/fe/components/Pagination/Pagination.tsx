@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import TotalPages from './TotalPages';
 import PaginationButtonsGroup from './PaginationButtonsGroup';
 import PaginationOptions from './PaginationOptions';
-import '.././styles/Pagination.styled.scss';
+import './Pagination.styled.scss';
 
 interface PaginationInterface {
   totalFolders: number;

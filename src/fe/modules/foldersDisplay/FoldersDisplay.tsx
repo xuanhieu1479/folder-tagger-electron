@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Dialog } from '@blueprintjs/core';
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
-import { PAGINATION } from '../../../common/variables/commonVariables';
+import { PAGINATION, DIALOG } from '../../../common/variables/commonVariables';
 import { DialogContent } from '../../components/commonComponents';
 import Body from '../body/Body';
 import Footer from '../footer/Footer';
@@ -21,6 +21,7 @@ const FoldersDisplay = (): ReactElement => {
   const updatedSelectedFolders = useRef(selectedFolders);
   const [params, setParams] = useState(defaultParams);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState('');
 
   useEffect(() => {
     const keyDownListerner = (event: KeyboardEvent) => {
@@ -29,6 +30,7 @@ const FoldersDisplay = (): ReactElement => {
           case 'e':
             if (updatedSelectedFolders.current.length > 0)
               setIsDialogOpen(true);
+            setDialogTitle(DIALOG.ADD_TAGS);
             break;
         }
       }
@@ -68,8 +70,9 @@ const FoldersDisplay = (): ReactElement => {
         isOpen={isDialogOpen}
         onClose={onCloseDialog}
         className="dialog-container"
+        title={dialogTitle}
       >
-        <DialogContent />
+        <DialogContent dialogType={DIALOG.ADD_TAGS} />
       </Dialog>
     </>
   );

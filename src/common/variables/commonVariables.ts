@@ -7,6 +7,7 @@ import STATUS_CODE from './statusCode';
 import ASSET from './asset';
 import APP from './app';
 import PAGINATION from './pagination';
+import DIALOG from './dialog';
 
 export * from './api';
 export {
@@ -18,5 +19,6 @@ export {
   STATUS_CODE,
   ASSET,
   APP,
-  PAGINATION
+  PAGINATION,
+  DIALOG
 };
