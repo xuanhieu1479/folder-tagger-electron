@@ -21,27 +21,27 @@ $folder-card-width: $folder-card-thumbnail-width;
   }
 }
 
-.folder-card-container {
+.folder-card_container {
   @include container;
 }
 
-.folder-card-container--selected {
+.folder-card_container--selected {
   @include container;
   @include selected-item;
 }
 
-.folder-card-content {
+.folder-card_content {
   @include flex-full-vertical;
   margin: 0px;
 }
 
-.folder-card-thumbnail {
+.folder-card_thumbnail {
   height: $folder-card-thumbnail-height;
   width: 100%;
   object-fit: cover;
 }
 
-.folder-card-name {
+.folder-card_name {
   @include no-outline-focus;
   height: $folder-card-thumbnail-height;
   padding: $folder-card-name-padding;

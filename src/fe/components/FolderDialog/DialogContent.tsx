@@ -50,10 +50,10 @@ const DialogContent = ({
   };
 
   return (
-    <section className="folder-dialog-content-container">
-      <div className="folder-dialog-content-row">
-        <div className="folder-dialog-content-row-title">Category</div>
-        <div className="folder-dialog-content-row-select">
+    <section className="folder-dialog_content_container">
+      <div className="folder-dialog_content_row">
+        <div className="folder-dialog_content_row_title">Category</div>
+        <div className="folder-dialog_content_row_select">
           <DialogSuggest
             selectedItem={selectedCategory}
             items={categories}
@@ -61,9 +61,9 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="folder-dialog-content-row">
-        <div className="folder-dialog-content-row-title">Language</div>
-        <div className="folder-dialog-content-row-select">
+      <div className="folder-dialog_content_row">
+        <div className="folder-dialog_content_row_title">Language</div>
+        <div className="folder-dialog_content_row_select">
           <DialogSuggest
             selectedItem={selectedLanguage}
             items={languages}
@@ -71,9 +71,9 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="folder-dialog-content-row">
-        <div className="folder-dialog-content-row-title">Artist</div>
-        <div className="folder-dialog-content-row-tags">
+      <div className="folder-dialog_content_row">
+        <div className="folder-dialog_content_row_title">Artist</div>
+        <div className="folder-dialog_content_row_tags">
           <DialogMultiSelect
             selectedItems={selectedArtists}
             items={artist}
@@ -81,9 +81,9 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="folder-dialog-content-row">
-        <div className="folder-dialog-content-row-title">Group</div>
-        <div className="folder-dialog-content-row-tags">
+      <div className="folder-dialog_content_row">
+        <div className="folder-dialog_content_row_title">Group</div>
+        <div className="folder-dialog_content_row_tags">
           <DialogMultiSelect
             selectedItems={selectedGroups}
             items={group}
@@ -91,9 +91,9 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="folder-dialog-content-row">
-        <div className="folder-dialog-content-row-title">Parody</div>
-        <div className="folder-dialog-content-row-tags">
+      <div className="folder-dialog_content_row">
+        <div className="folder-dialog_content_row_title">Parody</div>
+        <div className="folder-dialog_content_row_tags">
           <DialogMultiSelect
             selectedItems={selectedParodies}
             items={parody}
@@ -101,9 +101,9 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="folder-dialog-content-row">
-        <div className="folder-dialog-content-row-title">Character</div>
-        <div className="folder-dialog-content-row-tags">
+      <div className="folder-dialog_content_row">
+        <div className="folder-dialog_content_row_title">Character</div>
+        <div className="folder-dialog_content_row_tags">
           <DialogMultiSelect
             selectedItems={selectedCharacters}
             items={character}
@@ -111,9 +111,9 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="folder-dialog-content-row">
-        <div className="folder-dialog-content-row-title">Genre</div>
-        <div className="folder-dialog-content-row-tags">
+      <div className="folder-dialog_content_row">
+        <div className="folder-dialog_content_row_title">Genre</div>
+        <div className="folder-dialog_content_row_tags">
           <DialogMultiSelect
             selectedItems={selectedGenres}
             items={genre}
@@ -121,11 +121,11 @@ const DialogContent = ({
           />
         </div>
       </div>
-      <div className="folder-dialog-content-row folder-dialog-footer-container">
+      <div className="folder-dialog_content_row folder-dialog_footer_container">
         <Button
           text="Save"
           intent={Intent.PRIMARY}
-          className="folder-dialog-save-button"
+          className="folder-dialog_save-button"
           onClick={onSave}
         />
       </div>

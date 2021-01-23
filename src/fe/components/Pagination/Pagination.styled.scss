@@ -1,11 +1,11 @@
 @import '../../styles/mixin.scss';
 
-.footer_pagination-container {
+.footer_pagination_container {
   @include flex-space-between;
   height: 100%;
 }
 
-.footer_pagination_page-button-container {
+.footer_pagination_page-button_container {
   margin: 0 10px;
 
   button {
@@ -26,7 +26,7 @@
   @include middle-important-text;
 }
 
-.footer_pagination_pagination-options {
+.footer_pagination_pagination_options {
   @include middle-important-text;
   display: flex;
   align-items: center;

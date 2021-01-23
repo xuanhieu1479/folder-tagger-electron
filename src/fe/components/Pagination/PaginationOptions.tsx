@@ -19,13 +19,13 @@ const PaginationOptions = ({
   };
 
   return (
-    <section className="footer_pagination_pagination-options">
+    <section className="footer_pagination_pagination_options">
       <span>{'Show'}</span>
       <HTMLSelect
         value={itemsPerPage}
         minimal={true}
         onChange={onChangeSelect}
-        className="footer_pagination_pagination-options"
+        className="footer_pagination_pagination_options"
         options={PAGINATION.ITEMS_PER_PAGE.map(quantity => {
           return { value: quantity };
         })}

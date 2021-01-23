@@ -36,16 +36,16 @@ const FolderCard = ({
     <Card
       id={id}
       interactive={true}
-      className={`folder-card-container${isBeingSelected ? '--selected' : ''}`}
+      className={`folder-card_container${isBeingSelected ? '--selected' : ''}`}
       onClick={event => onClick(event, folderLocation)}
     >
-      <figure className="folder-card-content">
+      <figure className="folder-card_content">
         <img
           src={thumbnailLocation || defaultThumbnail}
-          className="folder-card-thumbnail"
+          className="folder-card_thumbnail"
         />
         <figcaption
-          className="folder-card-name bp3-text-large"
+          className="folder-card_name bp3-text-large"
           onClick={onClickCardName}
         >
           <Tooltip content="Click to copy" minimal={true}>

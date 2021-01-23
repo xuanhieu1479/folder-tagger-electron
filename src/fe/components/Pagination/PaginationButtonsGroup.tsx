@@ -73,7 +73,7 @@ const PaginationButtonsGroup = ({
         disabled={currentPage === 1}
         onClick={() => setCurrentPage(currentPage - 1)}
       />
-      <div className="footer_pagination_page-button-container">
+      <div className="footer_pagination_page-button_container">
         {renderPaginationButtons()}
       </div>
       <PaginationButton

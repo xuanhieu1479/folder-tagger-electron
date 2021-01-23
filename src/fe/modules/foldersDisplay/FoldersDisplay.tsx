@@ -78,7 +78,7 @@ const FoldersDisplay = (): ReactElement => {
 
   return (
     <>
-      <section className="folder-display-container">
+      <section className="folder-display_container">
         <Body />
         <Footer updateParams={updateParams} />
       </section>

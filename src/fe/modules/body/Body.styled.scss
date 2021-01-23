@@ -1,6 +1,6 @@
 @import '../../styles/mixin.scss';
 
-.body-container {
+.body_container {
   flex: 1;
   padding: 10px 5px;
   display: flex;
@@ -8,6 +8,6 @@
   overflow-x: hidden;
 }
 
-.body-container_loading-container {
+.body_container_loading_container {
   @include middle-screen;
 }

@@ -24,7 +24,7 @@ const Pagination = ({
   const totalPages = Math.ceil(totalFolders / itemsPerPage);
 
   return (
-    <section className="footer_pagination-container">
+    <section className="footer_pagination_container">
       <TotalPages totalFolders={totalFolders} />
       {totalPages > 1 ? (
         <PaginationButtonsGroup

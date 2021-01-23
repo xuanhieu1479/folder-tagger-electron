@@ -90,14 +90,14 @@ const Body = (): ReactElement => {
   };
 
   return (
-    <section className="body-container">
+    <section className="body_container">
       {renderFolders()}
       <Overlay
         canEscapeKeyClose={false}
         canOutsideClickClose={false}
         isOpen={isLoading}
       >
-        <section className="body-container_loading-container">
+        <section className="body_container_loading_container">
           <Spinner intent={Intent.PRIMARY} size={Spinner.SIZE_LARGE} />
         </section>
       </Overlay>

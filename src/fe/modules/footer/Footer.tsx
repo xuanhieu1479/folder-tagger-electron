@@ -27,7 +27,7 @@ const Footer = ({ updateParams }: FooterInterface): ReactElement => {
   }, [currentPage, itemsPerPage]);
 
   return (
-    <footer className="footer-container">
+    <footer className="footer_container">
       <Pagination
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}

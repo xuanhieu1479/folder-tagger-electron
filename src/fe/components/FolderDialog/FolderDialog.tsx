@@ -19,7 +19,7 @@ const FolderDialog = ({
       isOpen={isOpen}
       onClose={onClose}
       title={dialogType}
-      className="folder-dialog-container"
+      className="folder-dialog_container"
     >
       <DialogContent dialogType={dialogType} />
     </Dialog>

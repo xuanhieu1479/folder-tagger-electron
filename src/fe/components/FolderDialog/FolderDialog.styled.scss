@@ -1,37 +1,37 @@
 @import '../../styles/mixin.scss';
 
-.folder-dialog-container {
+.folder-dialog_container {
   height: 450px !important;
   width: 900px !important;
   padding-bottom: unset !important;
 }
 
-.folder-dialog-content-container {
+.folder-dialog_content_container {
   @include flex-vertical-space-between;
   height: 100%;
   padding: 20px 10px;
 
-  .folder-dialog-content-row {
+  .folder-dialog_content_row {
     width: 100%;
     display: flex;
     align-items: center;
 
-    .folder-dialog-content-row-title {
+    .folder-dialog_content_row_title {
       width: 50px;
       font-size: 16px;
       text-align: right;
     }
-    .folder-dialog-content-row-select {
+    .folder-dialog_content_row_select {
       margin-left: 20px;
     }
-    .folder-dialog-content-row-tags {
+    .folder-dialog_content_row_tags {
       flex: 1;
       margin-left: 20px;
     }
-    &.folder-dialog-footer-container {
+    &.folder-dialog_footer_container {
       flex-direction: row-reverse;
     }
-    .folder-dialog-save-button {
+    .folder-dialog_save-button {
       width: 70px;
     }
   }
