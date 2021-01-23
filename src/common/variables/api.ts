@@ -1,6 +1,5 @@
-import BACK_END_CONFIG from '../config/beConfig';
-
-const BASE_API = `http://localhost:${BACK_END_CONFIG.PORT}`;
+const BACK_END_PORT = 8000;
+const BASE_API = `http://localhost:${BACK_END_PORT}`;
 
 const MODULE = {
   FOLDER: '/folder',
@@ -34,6 +33,7 @@ const TAG_API = {
 };
 
 export {
+  BACK_END_PORT,
   BASE_API,
   MODULE,
   CONTROLLER_PATH,

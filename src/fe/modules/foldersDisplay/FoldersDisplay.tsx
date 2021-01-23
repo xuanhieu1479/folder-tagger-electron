@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import { PAGINATION, DIALOG } from '../../../common/variables/commonVariables';
-import { FolderDialog } from '../../components/commonComponents';
+import { FolderDialog, SettingDialog } from '../../components/commonComponents';
 import Body from '../body/Body';
 import Footer from '../footer/Footer';
 import { getFolders } from '../../redux/folder/folderAction';
@@ -28,6 +28,7 @@ const FoldersDisplay = (): ReactElement => {
     isOpen: false,
     dialogType: DIALOG.ADD_TAGS
   });
+  const [isSettingDialogOpen, setIsSettingDialogOpen] = useState(false);
 
   useEffect(() => {
     const keyDownListerner = (event: KeyboardEvent) => {
@@ -36,6 +37,9 @@ const FoldersDisplay = (): ReactElement => {
           case 'e':
             if (updatedSelectedFolders.current.length > 0)
               updateFolderDialog({ isOpen: true, dialogType: DIALOG.ADD_TAGS });
+            break;
+          case 't':
+            setIsSettingDialogOpen(true);
             break;
         }
       }
@@ -68,6 +72,9 @@ const FoldersDisplay = (): ReactElement => {
   const onCloseFolderDialog = () => {
     updateFolderDialog({ isOpen: false });
   };
+  const onCloseSettingDialog = () => {
+    setIsSettingDialogOpen(false);
+  };
 
   return (
     <>
@@ -75,10 +82,11 @@ const FoldersDisplay = (): ReactElement => {
         <Body />
         <Footer updateParams={updateParams} />
       </section>
-      <FolderDialog
-        className="folder-dialog-container"
-        onClose={onCloseFolderDialog}
-        {...folderDialogParams}
+      <FolderDialog onClose={onCloseFolderDialog} {...folderDialogParams} />
+      <SettingDialog
+        isOpen={isSettingDialogOpen}
+        onClose={onCloseSettingDialog}
+        title="Settings"
       />
     </>
   );

@@ -9,6 +9,7 @@ import APP from './app';
 import PAGINATION from './pagination';
 import DIALOG from './dialog';
 import SETTING from './setting';
+import SEED_DATA from './seedData';
 
 export * from './api';
 export {
@@ -22,5 +23,6 @@ export {
   APP,
   PAGINATION,
   DIALOG,
-  SETTING
+  SETTING,
+  SEED_DATA
 };

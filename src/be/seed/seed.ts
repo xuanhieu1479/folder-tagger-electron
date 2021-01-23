@@ -1,12 +1,9 @@
 import fs from 'fs';
 import Database from 'better-sqlite3';
 import { createConnection } from 'typeorm';
-import { DATABASE } from '../../common/variables/commonVariables';
-import ormConfig from '../../common/config/ormConfig';
+import { DATABASE, SEED_DATA } from '../../common/variables/commonVariables';
+import ormConfig from '../config/ormConfig';
 import { Category, Language, TagType } from '../entity/entity';
-import CategorySeed from './CategorySeed';
-import LanguageSeed from './LanguageSeed';
-import TagTypeSeed from './TagTypeSeed';
 
 const initDatabase = async (): Promise<void> => {
   if (!fs.existsSync(DATABASE.PATH)) {
@@ -19,9 +16,21 @@ const initDatabase = async (): Promise<void> => {
 
     // Seeding data
     const queryBuilder = connection.createQueryBuilder();
-    await queryBuilder.insert().into(Category).values(CategorySeed).execute();
-    await queryBuilder.insert().into(Language).values(LanguageSeed).execute();
-    await queryBuilder.insert().into(TagType).values(TagTypeSeed).execute();
+    await queryBuilder
+      .insert()
+      .into(Category)
+      .values(SEED_DATA.CATEGORY)
+      .execute();
+    await queryBuilder
+      .insert()
+      .into(Language)
+      .values(SEED_DATA.LANGUAGE)
+      .execute();
+    await queryBuilder
+      .insert()
+      .into(TagType)
+      .values(SEED_DATA.TAG_TYPE)
+      .execute();
   } else {
     // createConnection will create new database by DATABASE.PATH
     // therefore putting it before checking if DATABASE.PATH existing is meaningless

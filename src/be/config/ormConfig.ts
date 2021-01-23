@@ -1,13 +1,11 @@
 import moment from 'moment';
 import { ConnectionOptions, FileLogger } from 'typeorm';
-import { DATABASE, LOG, DATE_TIME } from '../variables/commonVariables';
 import {
-  Folder,
-  Category,
-  Language,
-  Tag,
-  TagType
-} from '../../be/entity/entity';
+  DATABASE,
+  LOG,
+  DATE_TIME
+} from '../../common/variables/commonVariables';
+import { Folder, Category, Language, Tag, TagType } from '../entity/entity';
 
 /**
  * Since typeorm logger base path is where

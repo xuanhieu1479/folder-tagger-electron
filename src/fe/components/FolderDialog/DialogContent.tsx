@@ -6,7 +6,6 @@ import { DIALOG } from '../../../common/variables/commonVariables';
 import DialogSuggest from './DialogSuggest';
 import DialogMultiSelect from './DialogMultiSelect';
 import { getTags } from '../../redux/tag/tagAction';
-import './FolderDialog.styled.scss';
 
 interface DialogContentInterface {
   dialogType: string;
