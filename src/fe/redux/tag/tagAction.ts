@@ -18,30 +18,26 @@ const getTags = async (dispatch: Dispatch): Promise<void> => {
   }
 };
 
-const createTags = async (params: Array<Tags>): Promise<void> => {
-  try {
-    await axios.post(TAG_API.CREATE_MANY, params);
-  } catch (error) {
-    showMessage.error(error.response.data.message);
-  }
-};
-
 const addTags = async (
   selectedFolders: Array<string>,
-  tags: Array<Tags>,
+  existingTags: Array<Tags>,
+  newTags: Array<Tags>,
   category: string | undefined,
-  language: string | undefined
+  language: string | undefined,
+  onSuccess: () => void
 ): Promise<void> => {
   try {
-    await axios.post(TAG_API.ADD_MANY, {
+    await axios.post(TAG_API.ADD, {
       folderLocations: selectedFolders,
-      tags,
+      existingTags,
+      newTags,
       category,
       language
     });
+    onSuccess();
   } catch (error) {
     showMessage.error(error.response.data.message);
   }
 };
 
-export { getTags, createTags, addTags };
+export { getTags, addTags };

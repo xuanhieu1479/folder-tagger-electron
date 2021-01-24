@@ -1,11 +1,6 @@
-import fs from 'fs';
 import express, { Request, Response } from 'express';
 import { Folder } from '../entity/entity';
-import {
-  CONTROLLER_PATH,
-  MESSAGE,
-  STATUS_CODE
-} from '../../common/variables/commonVariables';
+import { CONTROLLER_PATH } from '../../common/variables/commonVariables';
 import { Folder as FolderInterface } from '../../common/interfaces/commonInterfaces';
 import { getFolderName, getFolderThumbnail } from '../../utility/folderUtility';
 
@@ -18,35 +13,10 @@ router.get(CONTROLLER_PATH.GET, async (req: Request, res: Response) => {
   res.status(status).json({ folders, message });
 });
 
-router.post(CONTROLLER_PATH.ADD_ONE, async (req: Request, res: Response) => {
-  const { folderLocation } = req.body;
-  if (!fs.existsSync(folderLocation)) {
-    res
-      .status(STATUS_CODE.INVALID_DATA)
-      .json({ message: MESSAGE.FOLDER_NOT_FOUND });
-    return;
-  }
-
-  const params: FolderInterface = {
-    location: folderLocation,
-    name: getFolderName(folderLocation),
-    thumbnail: getFolderThumbnail(folderLocation)
-  };
-  const { status, message } = await folder.addOne(params);
-  res.status(status).json({ message });
-});
-
-router.post(CONTROLLER_PATH.ADD_MANY, async (req: Request, res: Response) => {
+router.post(CONTROLLER_PATH.ADD, async (req: Request, res: Response) => {
   const { folderLocations } = req.body;
-  const params: FolderInterface[] = [];
+  const params: Array<FolderInterface> = [];
   for (const folderLocation of folderLocations) {
-    if (!fs.existsSync(folderLocation)) {
-      res
-        .status(STATUS_CODE.INVALID_DATA)
-        .json({ message: MESSAGE.FOLDER_NOT_FOUND });
-      return;
-    }
-
     params.push({
       location: folderLocation,
       name: getFolderName(folderLocation),
@@ -54,7 +24,7 @@ router.post(CONTROLLER_PATH.ADD_MANY, async (req: Request, res: Response) => {
     });
   }
 
-  const { status, message } = await folder.addMany(params);
+  const { status, message } = await folder.add(params);
   res.status(status).json({ message });
 });
 

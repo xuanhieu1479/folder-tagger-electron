@@ -4,14 +4,13 @@ import {
   ManyToOne,
   Column,
   getRepository,
-  getManager
+  getManager,
+  EntityManager
 } from 'typeorm';
+import _ from 'lodash';
 import { TagType, Folder, Category, Language } from './entity';
 import { MESSAGE, STATUS_CODE } from '../../common/variables/commonVariables';
-import {
-  Tags as TagsInterface,
-  LooseObject
-} from '../../common/interfaces/commonInterfaces';
+import { Tags as TagsInterface } from '../../common/interfaces/commonInterfaces';
 import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
 import { logErrors } from '../logging';
 
@@ -22,7 +21,8 @@ interface TagQueryResult extends QueryResultInterface {
 }
 interface AddTagsToFoldersInterface extends TagsInterface {
   folderLocations: Array<string>;
-  tags: Array<TagsInterface>;
+  existingTags: Array<TagsInterface>;
+  newTags: Array<TagsInterface>;
   category: string | undefined;
   language: string | undefined;
 }
@@ -67,85 +67,94 @@ export default class Tag {
     }
   };
 
-  create = async (newTags: Array<TagsInterface>): Promise<TagQueryResult> => {
-    const allTagTypes = await getRepository(TagType)
+  create = async (
+    newTags: Array<TagsInterface>,
+    transactionManager?: EntityManager
+  ): Promise<Array<Tag>> => {
+    const typesOfNewTags = newTags.map(newTag => newTag.tagType);
+    const tagTypes = await getRepository(TagType)
       .createQueryBuilder()
+      .whereInIds(typesOfNewTags)
       .getMany();
     const getTagType = (type: string) => {
-      return allTagTypes.find(tagType => tagType.TagType === type);
-    };
-    const tagTypes: LooseObject = {
-      artist: getTagType('artist'),
-      group: getTagType('group'),
-      parody: getTagType('parody'),
-      character: getTagType('character'),
-      genre: getTagType('genre')
+      return tagTypes.find(tagType => tagType.TagType === type);
     };
 
+    const manager = transactionManager || getManager();
     const insertValues = newTags.map(newTag => {
       const { tagType, tagName } = newTag;
-      return {
+      return manager.create(Tag, {
         TagId: getTagId(tagType, tagName),
         TagName: tagName,
-        TagType: tagTypes[tagType]
-      };
+        TagType: getTagType(tagType)
+      });
     });
 
     try {
-      await getRepository(Tag)
-        .createQueryBuilder()
-        .insert()
-        .values(insertValues)
-        .execute();
-      return {
-        message: MESSAGE.SUCCESS,
-        status: STATUS_CODE.SUCCESS
-      };
+      await manager.insert(Tag, insertValues);
+      return insertValues;
     } catch (error) {
       console.error('CREATE TAGS ERROR:', error);
       logErrors(error.message, error.stack);
-      return {
-        message: error.message,
-        status: STATUS_CODE.DB_ERROR
-      };
+      return [];
     }
   };
 
   addToFolders = async (
     params: AddTagsToFoldersInterface
   ): Promise<QueryResultInterface> => {
-    const { folderLocations, tags, category, language } = params;
-    const tagIds = tags.map(tag => getTagId(tag.tagType, tag.tagName));
+    const {
+      folderLocations,
+      existingTags,
+      newTags,
+      category,
+      language
+    } = params;
 
     const insertFolders = await getRepository(Folder)
-      .createQueryBuilder()
+      .createQueryBuilder('folder')
       .whereInIds(folderLocations)
+      .leftJoinAndSelect('folder.Tags', 'Tag')
       .getMany();
-    const insertTags = await getRepository(Tag)
-      .createQueryBuilder()
-      .whereInIds(tagIds)
-      .getMany();
-    let insertCategory = undefined;
-    if (category)
-      insertCategory = await getRepository(Category)
-        .createQueryBuilder()
-        .whereInIds(category)
-        .getOne();
-    let insertLanguage = undefined;
-    if (language)
-      insertLanguage = await getRepository(Language)
-        .createQueryBuilder()
-        .whereInIds(language)
-        .getOne();
+    const insertCategory = category
+      ? await getRepository(Category)
+          .createQueryBuilder()
+          .whereInIds(category)
+          .getOne()
+      : undefined;
+    const insertLanguage = language
+      ? await getRepository(Language)
+          .createQueryBuilder()
+          .whereInIds(language)
+          .getOne()
+      : undefined;
 
-    try {
-      const manager = getManager();
+    const updateFoldersTag = async (newlyCreatedTags: Array<Tag>) => {
+      const tagIds = existingTags.map(tag =>
+        getTagId(tag.tagType, tag.tagName)
+      );
+      const foundTags = await getRepository(Tag)
+        .createQueryBuilder()
+        .whereInIds(tagIds)
+        .getMany();
       for (const folder of insertFolders) {
         if (insertCategory) folder.Category = insertCategory;
         if (insertLanguage) folder.Language = insertLanguage;
-        folder.Tags = [...folder.Tags, ...insertTags];
-        manager.save(folder);
+        const holdingTags = folder.Tags || [];
+        folder.Tags = [...holdingTags, ...foundTags, ...newlyCreatedTags];
       }
+    };
+
+    try {
+      const manager = getManager();
+      await manager.transaction(async transactionManager => {
+        let newlyCreatedTags: Array<Tag> = [];
+        if (!_.isEmpty(newTags)) {
+          newlyCreatedTags = await this.create(newTags, transactionManager);
+        }
+        await updateFoldersTag(newlyCreatedTags);
+        await transactionManager.save(insertFolders);
+      });
       return {
         message: MESSAGE.SUCCESS,
         status: STATUS_CODE.SUCCESS

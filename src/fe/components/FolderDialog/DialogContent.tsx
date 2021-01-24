@@ -8,7 +8,7 @@ import { DIALOG, MESSAGE } from '../../../common/variables/commonVariables';
 import DialogSuggest from './DialogSuggest';
 import DialogMultiSelect from './DialogMultiSelect';
 import { showMessage } from '../../../utility/showMessage';
-import { getTags, createTags, addTags } from '../../redux/tag/tagAction';
+import { getTags, addTags } from '../../redux/tag/tagAction';
 
 interface DialogContentInterface {
   dialogType: string;
@@ -63,18 +63,26 @@ const DialogContent = ({
     return result;
   };
   const getNewlyCreatedTags = (selectedTags: Array<Tags>) => {
-    return selectedTags.filter(
-      tag =>
-        !allTags.find(
-          t => t.tagType === tag.tagType && t.tagName === tag.tagName
+    const newTags: Array<Tags> = [];
+    const existingTags: Array<Tags> = [];
+    selectedTags.forEach(selectedTag => {
+      if (
+        allTags.find(
+          tag =>
+            tag.tagType === selectedTag.tagType &&
+            tag.tagName === selectedTag.tagName
         )
-    );
+      )
+        existingTags.push(selectedTag);
+      else newTags.push(selectedTag);
+    });
+    return { existingTags, newTags };
   };
 
   const onSave = async () => {
     switch (dialogType) {
       case DIALOG.ADD_TAGS:
-        await addTagsToFolder();
+        addTagsToFolder();
         break;
       case DIALOG.EDIT_TAGS:
         console.log(DIALOG.EDIT_TAGS);
@@ -83,20 +91,29 @@ const DialogContent = ({
         console.log(DIALOG.REMOVE_TAGS);
         break;
     }
+  };
+  const onSaveSuccess = () => {
     showMessage.success(MESSAGE.SUCCESS);
     onClose();
   };
 
-  const addTagsToFolder = async () => {
+  const addTagsToFolder = () => {
     const transformedSelectedTags = transformSelectedTags();
-    const newTags = getNewlyCreatedTags(transformedSelectedTags);
-    const hasNewTags = !_.isEmpty(newTags);
-    if (hasNewTags) await createTags(newTags);
+    const { existingTags, newTags } = getNewlyCreatedTags(
+      transformedSelectedTags
+    );
     const category =
       selectedCategory === defaultSuggestion ? undefined : selectedCategory;
     const language =
       selectedLanguage === defaultSuggestion ? undefined : selectedLanguage;
-    await addTags(selectedFolders, transformedSelectedTags, category, language);
+    addTags(
+      selectedFolders,
+      existingTags,
+      newTags,
+      category,
+      language,
+      onSaveSuccess
+    );
   };
 
   const allItems = useMemo(

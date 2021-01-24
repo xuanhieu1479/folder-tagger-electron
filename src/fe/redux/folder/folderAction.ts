@@ -32,27 +32,13 @@ const getFolders = async (
   }
 };
 
-const addOneFolder = async (
-  dispatch: Dispatch,
-  folderLocation: string
-): Promise<void> => {
-  try {
-    startLoading(dispatch);
-    await axios.post(FOLDER_API.ADD_ONE, { folderLocation });
-  } catch (error) {
-    showMessage.error(error.response.data.message);
-  } finally {
-    finishLoading(dispatch);
-  }
-};
-
-const addParentFolder = async (
+const addFolders = async (
   dispatch: Dispatch,
   folderLocations: string[]
 ): Promise<void> => {
   try {
     startLoading(dispatch);
-    await axios.post(FOLDER_API.ADD_MANY, { folderLocations });
+    await axios.post(FOLDER_API.ADD, { folderLocations });
   } catch (error) {
     showMessage.error(error.response.data.message);
   } finally {
@@ -80,10 +66,4 @@ const getLanguages = async (dispatch: Dispatch): Promise<void> => {
   }
 };
 
-export {
-  getFolders,
-  addOneFolder,
-  addParentFolder,
-  getCategories,
-  getLanguages
-};
+export { getFolders, addFolders, getCategories, getLanguages };

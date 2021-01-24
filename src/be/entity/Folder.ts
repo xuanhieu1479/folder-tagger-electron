@@ -5,7 +5,8 @@ import {
   ManyToMany,
   JoinTable,
   getRepository,
-  Column
+  Column,
+  getManager
 } from 'typeorm';
 import { Category, Language, Tag } from './entity';
 import {
@@ -102,7 +103,7 @@ export default class Folder {
         status: STATUS_CODE.SUCCESS
       };
     } catch (error) {
-      console.error('GET FOLDERS: ', error);
+      console.error('GET FOLDERS ERROR: ', error);
       logErrors(error.message, error.stack);
       return {
         folders: {
@@ -115,55 +116,13 @@ export default class Folder {
     }
   };
 
-  addOne = async (params: FolderInterface): Promise<FolderQueryResult> => {
-    const { location, name, thumbnail } = params;
-    const folderExists = await this.isExisting(location);
-    if (folderExists)
-      return {
-        message: MESSAGE.FOLDER_ALREADY_EXISTS,
-        status: STATUS_CODE.DB_ERROR
-      };
-
-    try {
-      await getRepository(Folder)
-        .createQueryBuilder()
-        .insert()
-        .values([
-          {
-            FolderLocation: location,
-            FolderName: name,
-            FolderThumbnail: thumbnail
-          }
-        ])
-        .execute();
-    } catch (error) {
-      console.error('ADD ONE FOLDER ERROR: ', error);
-      logErrors(error.message, error.stack);
-      return {
-        message: error.message,
-        status: STATUS_CODE.DB_ERROR
-      };
-    }
-
-    return {
-      message: MESSAGE.SUCCESS,
-      status: STATUS_CODE.SUCCESS
-    };
-  };
-
-  addMany = async (
-    params: Array<FolderInterface>
-  ): Promise<FolderQueryResult> => {
-    interface ValidFolder {
-      FolderLocation: string;
-      FolderName: string;
-      FolderThumbnail?: string | undefined;
-    }
-    const validFolders: ValidFolder[] = [];
+  add = async (folders: Array<FolderInterface>): Promise<FolderQueryResult> => {
+    const insertFolders: Array<Folder> = [];
+    const manager = getManager();
 
     // Foreach does not support async await
     // How many times does it need for me to remember :(
-    for (const folder of params) {
+    for (const folder of folders) {
       const { location, name, thumbnail } = folder;
       const folderExists = await this.isExisting(location);
       if (folderExists)
@@ -172,31 +131,28 @@ export default class Folder {
           status: STATUS_CODE.DB_ERROR
         };
       else
-        validFolders.push({
-          FolderLocation: location,
-          FolderName: name,
-          FolderThumbnail: thumbnail
-        });
+        insertFolders.push(
+          manager.create(Folder, {
+            FolderLocation: location,
+            FolderName: name,
+            FolderThumbnail: thumbnail
+          })
+        );
     }
 
     try {
-      await getRepository(Folder)
-        .createQueryBuilder()
-        .insert()
-        .values(validFolders)
-        .execute();
+      await manager.insert(Folder, insertFolders);
+      return {
+        message: MESSAGE.SUCCESS,
+        status: STATUS_CODE.SUCCESS
+      };
     } catch (error) {
-      console.error('ADD MANY FOLDERS ERROR: ', error);
+      console.error('ADD FOLDERS ERROR: ', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,
         status: STATUS_CODE.DB_ERROR
       };
     }
-
-    return {
-      message: MESSAGE.SUCCESS,
-      status: STATUS_CODE.SUCCESS
-    };
   };
 }

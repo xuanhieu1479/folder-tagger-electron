@@ -10,12 +10,9 @@ const onAddFolder = (): void => {
   });
   if (directory !== undefined) {
     const selectedDirectory = directory[0];
-    BrowserWindow.getFocusedWindow()?.webContents.send(
-      IPC_EVENT.ADD_ONE_FOLDER,
-      {
-        folderLocation: selectedDirectory
-      }
-    );
+    BrowserWindow.getFocusedWindow()?.webContents.send(IPC_EVENT.ADD_FOLDERS, {
+      folderLocations: [selectedDirectory]
+    });
   }
 };
 
@@ -31,12 +28,9 @@ const onAddParentFolder = (): void => {
       .readdirSync(parentDirectory, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())
       .map(dirent => `${parentDirectory}\\${dirent.name}`);
-    BrowserWindow.getFocusedWindow()?.webContents.send(
-      IPC_EVENT.ADD_PARENT_FOLDER,
-      {
-        folderLocations: subDirectories
-      }
-    );
+    BrowserWindow.getFocusedWindow()?.webContents.send(IPC_EVENT.ADD_FOLDERS, {
+      folderLocations: subDirectories
+    });
   }
 };
 
