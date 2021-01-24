@@ -1,9 +1,10 @@
 import { Menu } from 'electron';
 import {
-  onOpenDevtool,
-  onReload,
   onAddFolder,
-  onAddParentFolder
+  onAddParentFolder,
+  onOpenSetting,
+  onOpenDevtool,
+  onReload
 } from './menuActions/menuActions';
 
 const menuTemplate = [
@@ -17,6 +18,15 @@ const menuTemplate = [
       {
         label: 'Add parent folder',
         click: onAddParentFolder
+      }
+    ]
+  },
+  {
+    label: 'Setting',
+    submenu: [
+      {
+        label: 'Open setting',
+        click: onOpenSetting
       }
     ]
   },

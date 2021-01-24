@@ -4,32 +4,34 @@ import _ from 'lodash';
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import { PAGINATION, DIALOG } from '../../../common/variables/commonVariables';
-import { FolderDialog, SettingDialog } from '../../components/commonComponents';
+import { FolderDialog } from '../../components/commonComponents';
 import Body from '../body/Body';
 import Footer from '../footer/Footer';
 import { getFolders } from '../../redux/folder/folderAction';
 import './FoldersDisplay.styled.scss';
 
-interface FolderDialogParamsInterface {
-  isOpen?: boolean;
-  dialogType?: string;
+interface FoldersDisplayInterface {
+  openSettingDialog: () => void;
 }
-
 const defaultParams = {
   currentPage: 1,
   itemsPerPage: PAGINATION.ITEMS_PER_PAGE[0]
 };
+const defaultFolderDialogParams = {
+  isOpen: false,
+  dialogType: DIALOG.ADD_TAGS
+};
 
-const FoldersDisplay = (): ReactElement => {
+const FoldersDisplay = ({
+  openSettingDialog
+}: FoldersDisplayInterface): ReactElement => {
   const dispatch = useDispatch();
   const { selectedFolders } = useSelector((state: RootState) => state.folder);
   const selectedFoldersRef = useRef(selectedFolders);
   const [params, setParams] = useState(defaultParams);
-  const [folderDialogParams, SetFolderDialogParams] = useState({
-    isOpen: false,
-    dialogType: DIALOG.ADD_TAGS
-  });
-  const [isSettingDialogOpen, setIsSettingDialogOpen] = useState(false);
+  const [folderDialogParams, setFolderDialogParams] = useState(
+    defaultFolderDialogParams
+  );
 
   useEffect(() => {
     const keyDownListerner = (event: KeyboardEvent) => {
@@ -37,10 +39,10 @@ const FoldersDisplay = (): ReactElement => {
         switch (event.key) {
           case 'e':
             if (!_.isEmpty(selectedFoldersRef.current))
-              updateFolderDialog({ isOpen: true, dialogType: DIALOG.ADD_TAGS });
+              onOpenAddTagsToFoldersDialog();
             break;
           case 't':
-            setIsSettingDialogOpen(true);
+            openSettingDialog();
             break;
         }
       }
@@ -66,15 +68,11 @@ const FoldersDisplay = (): ReactElement => {
     setParams({ ...params, ...newParams });
   };
 
-  const updateFolderDialog = (newParams: FolderDialogParamsInterface): void => {
-    SetFolderDialogParams({ ...folderDialogParams, ...newParams });
+  const onOpenAddTagsToFoldersDialog = () => {
+    setFolderDialogParams({ isOpen: true, dialogType: DIALOG.ADD_TAGS });
   };
-
   const onCloseFolderDialog = () => {
-    updateFolderDialog({ isOpen: false });
-  };
-  const onCloseSettingDialog = () => {
-    setIsSettingDialogOpen(false);
+    setFolderDialogParams(defaultFolderDialogParams);
   };
 
   return (
@@ -84,11 +82,6 @@ const FoldersDisplay = (): ReactElement => {
         <Footer updateParams={updateParams} />
       </section>
       <FolderDialog onClose={onCloseFolderDialog} {...folderDialogParams} />
-      <SettingDialog
-        isOpen={isSettingDialogOpen}
-        onClose={onCloseSettingDialog}
-        title="Settings"
-      />
     </>
   );
 };
