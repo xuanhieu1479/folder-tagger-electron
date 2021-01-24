@@ -4,23 +4,19 @@ import {
   TagReducerInterface
 } from '../../../common/interfaces/feInterfaces';
 
-const initState = {
-  artist: [],
-  group: [],
-  parody: [],
-  character: [],
-  genre: []
+export const tagInitState = {
+  allTags: []
 };
 
 const statusReducer = (
-  state: TagReducerInterface = initState,
+  state: TagReducerInterface = tagInitState,
   action: ReducerAction
 ): TagReducerInterface => {
   const data = action.payload || {};
-  const { artist, group, parody, character, genre } = data;
+  const { allTags } = data;
   switch (action.type) {
     case GET_TAGS:
-      return { ...state, artist, group, parody, character, genre };
+      return { ...state, allTags };
     default:
       return state;
   }

@@ -2,29 +2,16 @@ import { createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { RootState } from '../../common/interfaces/feInterfaces';
 import rootReducer from './rootReducer';
+import { folderInitState } from './folder/folderReducer';
+import { settingInitState } from './setting/settingReducer';
+import { statusInitState } from './status/statusReducer';
+import { tagInitState } from './tag/tagReducer';
 
 const initState: RootState = {
-  status: {
-    isLoading: false
-  },
-  folder: {
-    selectedFolders: [],
-    foldersList: [],
-    totalFolders: 0,
-    categories: [],
-    languages: []
-  },
-  tag: {
-    artist: [],
-    group: [],
-    parody: [],
-    character: [],
-    genre: []
-  },
-  setting: {
-    defaultCategory: '',
-    defaultLanguage: ''
-  }
+  status: { ...statusInitState },
+  folder: { ...folderInitState },
+  tag: { ...tagInitState },
+  setting: { ...settingInitState }
 };
 
 const integrateReduxDevTools = () => {

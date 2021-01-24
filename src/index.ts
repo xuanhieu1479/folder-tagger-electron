@@ -4,6 +4,7 @@ import 'reflect-metadata';
 import installExtention, { REDUX_DEVTOOLS } from 'electron-devtools-installer';
 import { getConnection } from 'typeorm';
 import 'source-map-support/register';
+import _ from 'lodash';
 import { APP } from './common/variables/commonVariables';
 import initBE from './be/be';
 import { menuTemplate, initDirectory } from './app/app';
@@ -76,7 +77,7 @@ app.on('window-all-closed', async () => {
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
+  if (_.isEmpty(BrowserWindow.getAllWindows())) {
     initWindows();
   }
 });

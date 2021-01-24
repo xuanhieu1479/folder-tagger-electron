@@ -28,4 +28,12 @@ interface FolderFilterParams {
   ];
 }
 
-export { LooseObject, Folder, FolderFilterParams };
+/**
+ * Tag interfaces
+ */
+interface Tags {
+  tagType: string;
+  tagName: string;
+}
+
+export { LooseObject, Folder, FolderFilterParams, Tags };

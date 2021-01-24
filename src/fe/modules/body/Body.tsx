@@ -28,8 +28,10 @@ const Body = (): ReactElement => {
       }
     };
 
-    document.addEventListener('click', clearSelectedFolders);
-    return () => document.removeEventListener('click', clearSelectedFolders);
+    const rootElement = document.getElementById('root');
+    rootElement?.addEventListener('click', clearSelectedFolders);
+    return () =>
+      rootElement?.removeEventListener('click', clearSelectedFolders);
   }, []);
 
   const onSelectFolder = (

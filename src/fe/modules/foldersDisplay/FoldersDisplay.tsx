@@ -1,5 +1,6 @@
 import React, { ReactElement, useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import _ from 'lodash';
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import { PAGINATION, DIALOG } from '../../../common/variables/commonVariables';
@@ -22,7 +23,7 @@ const defaultParams = {
 const FoldersDisplay = (): ReactElement => {
   const dispatch = useDispatch();
   const { selectedFolders } = useSelector((state: RootState) => state.folder);
-  const updatedSelectedFolders = useRef(selectedFolders);
+  const selectedFoldersRef = useRef(selectedFolders);
   const [params, setParams] = useState(defaultParams);
   const [folderDialogParams, SetFolderDialogParams] = useState({
     isOpen: false,
@@ -35,7 +36,7 @@ const FoldersDisplay = (): ReactElement => {
       if (event.ctrlKey) {
         switch (event.key) {
           case 'e':
-            if (updatedSelectedFolders.current.length > 0)
+            if (!_.isEmpty(selectedFoldersRef.current))
               updateFolderDialog({ isOpen: true, dialogType: DIALOG.ADD_TAGS });
             break;
           case 't':
@@ -58,7 +59,7 @@ const FoldersDisplay = (): ReactElement => {
   }, [params]);
 
   useEffect(() => {
-    updatedSelectedFolders.current = selectedFolders;
+    selectedFoldersRef.current = selectedFolders;
   }, [selectedFolders]);
 
   const updateParams = (newParams: FolderFilterParams): void => {

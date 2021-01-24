@@ -3,46 +3,78 @@ import { MenuItem } from '@blueprintjs/core';
 import { MultiSelect, ItemRenderer } from '@blueprintjs/select';
 
 interface DialogMultiSelectInterface {
+  itemKey: string;
+  allItems: Array<string>;
   selectedItems: Array<string>;
-  items: Array<string>;
-  updateSelectedItems: (newItems: Array<string>) => void;
+  updateSelectedItems: (
+    itemKey: string,
+    newSelectedItems: Array<string>
+  ) => void;
 }
 
 const DialogMultiSelect = ({
+  itemKey,
+  allItems,
   selectedItems,
-  items,
   updateSelectedItems
 }: DialogMultiSelectInterface): ReactElement => {
-  const onItemSelect = (newItem: string): void => {
-    if (selectedItems.includes(newItem))
-      updateSelectedItems(selectedItems.filter(i => i !== newItem));
-    else updateSelectedItems([...selectedItems, newItem]);
+  const onItemSelect = (item: string): void => {
+    if (selectedItems.includes(item))
+      updateSelectedItems(
+        itemKey,
+        selectedItems.filter(t => t !== item)
+      );
+    else updateSelectedItems(itemKey, [...selectedItems, item]);
+  };
+  const onRemoveItem = (item: ReactNode): void => {
+    updateSelectedItems(
+      itemKey,
+      selectedItems.filter(t => t !== item)
+    );
+  };
+  const onCreatItem = (query: string) => {
+    return query;
   };
 
-  const onRemoveTag = (value: ReactNode): void => {
-    updateSelectedItems(selectedItems.filter(i => i !== value));
-  };
-
-  const renderSelectItems: ItemRenderer<string> = (item, { handleClick }) => {
+  const renderSelectItems: ItemRenderer<string> = (
+    item,
+    { modifiers, handleClick }
+  ) => {
     return (
       <MenuItem
         key={item}
         text={item}
+        active={modifiers.active}
         onClick={handleClick}
         icon={selectedItems.includes(item) ? 'small-tick' : 'blank'}
       />
     );
   };
+  const renderCreateItems = (
+    query: string,
+    active: boolean,
+    handleClick: React.MouseEventHandler<HTMLElement>
+  ) => (
+    <MenuItem
+      icon="add"
+      text={`Create "${query}" tag`}
+      active={active}
+      onClick={handleClick}
+    />
+  );
 
   return (
     <MultiSelect
       fill={true}
+      resetOnSelect={true}
+      items={allItems}
       selectedItems={selectedItems}
       itemRenderer={renderSelectItems}
-      items={items}
       onItemSelect={onItemSelect}
+      createNewItemRenderer={renderCreateItems}
+      createNewItemFromQuery={onCreatItem}
       tagRenderer={item => item}
-      tagInputProps={{ onRemove: onRemoveTag }}
+      tagInputProps={{ onRemove: onRemoveItem }}
       popoverProps={{ minimal: true }}
     />
   );

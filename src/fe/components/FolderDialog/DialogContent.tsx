@@ -1,44 +1,80 @@
-import React, { ReactElement, useState, useEffect } from 'react';
+import React, { ReactElement, useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Intent } from '@blueprintjs/core';
+import _ from 'lodash';
+import { Tags, LooseObject } from '../../../common/interfaces/commonInterfaces';
 import { RootState } from '../../../common/interfaces/feInterfaces';
-import { DIALOG } from '../../../common/variables/commonVariables';
+import { DIALOG, MESSAGE } from '../../../common/variables/commonVariables';
 import DialogSuggest from './DialogSuggest';
 import DialogMultiSelect from './DialogMultiSelect';
-import { getTags } from '../../redux/tag/tagAction';
+import { showMessage } from '../../../utility/showMessage';
+import { getTags, createTags, addTags } from '../../redux/tag/tagAction';
 
 interface DialogContentInterface {
   dialogType: string;
+  onClose: () => void;
 }
+const defaultSelectedTags = {
+  artist: [],
+  group: [],
+  parody: [],
+  character: [],
+  genre: []
+};
+const defaultSuggestion = 'none';
 
 const DialogContent = ({
-  dialogType
+  dialogType,
+  onClose
 }: DialogContentInterface): ReactElement => {
   const dispatch = useDispatch();
-  const { categories, languages } = useSelector(
+  const { categories, languages, selectedFolders } = useSelector(
     (state: RootState) => state.folder
   );
-  const { artist, group, parody, character, genre } = useSelector(
-    (state: RootState) => state.tag
-  );
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedLanguage, setSelectedLanguage] = useState('');
-  const [selectedArtists, setSelectedArtists] = useState<Array<string>>([]);
-  const [selectedGroups, setSelectedGroups] = useState<Array<string>>([]);
-  const [selectedParodies, setSelectedParodies] = useState<Array<string>>([]);
-  const [selectedCharacters, setSelectedCharacters] = useState<Array<string>>(
-    []
-  );
-  const [selectedGenres, setSelectedGenres] = useState<Array<string>>([]);
+  const { allTags } = useSelector((state: RootState) => state.tag);
+  const [selectedCategory, setSelectedCategory] = useState(defaultSuggestion);
+  const [selectedLanguage, setSelectedLanguage] = useState(defaultSuggestion);
+  const [selectedTags, setSelectedTags] = useState(defaultSelectedTags);
 
   useEffect(() => {
     getTags(dispatch);
   }, []);
 
-  const onSave = () => {
+  const updateSelectedTags = (
+    tagKey: string,
+    newSelectedTags: Array<string>
+  ) => {
+    setSelectedTags({ ...selectedTags, [tagKey]: newSelectedTags });
+  };
+
+  const transformSelectedTags = () => {
+    const defaultResult: Array<Tags> = [];
+    const result = _.reduce(
+      selectedTags,
+      (accumulator, value, key) => {
+        const tags = value.map(tag => {
+          return { tagType: key, tagName: tag };
+        });
+        accumulator.push(...tags);
+        return accumulator;
+      },
+      defaultResult
+    );
+    return result;
+  };
+  const getNewlyCreatedTags = (selectedTags: Array<Tags>) => {
+    return selectedTags.filter(
+      tag =>
+        !allTags.find(
+          t => t.tagType === tag.tagType && t.tagName === tag.tagName
+        )
+    );
+  };
+
+  const onSave = async () => {
     switch (dialogType) {
       case DIALOG.ADD_TAGS:
-        console.log(DIALOG.ADD_TAGS);
+        await addTagsToFolder();
         break;
       case DIALOG.EDIT_TAGS:
         console.log(DIALOG.EDIT_TAGS);
@@ -47,7 +83,34 @@ const DialogContent = ({
         console.log(DIALOG.REMOVE_TAGS);
         break;
     }
+    showMessage.success(MESSAGE.SUCCESS);
+    onClose();
   };
+
+  const addTagsToFolder = async () => {
+    const transformedSelectedTags = transformSelectedTags();
+    const newTags = getNewlyCreatedTags(transformedSelectedTags);
+    const hasNewTags = !_.isEmpty(newTags);
+    if (hasNewTags) await createTags(newTags);
+    const category =
+      selectedCategory === defaultSuggestion ? undefined : selectedCategory;
+    const language =
+      selectedLanguage === defaultSuggestion ? undefined : selectedLanguage;
+    await addTags(selectedFolders, transformedSelectedTags, category, language);
+  };
+
+  const allItems = useMemo(
+    () =>
+      allTags.reduce(
+        (accumulator, currentValue) => {
+          const newValue: LooseObject = { ...accumulator };
+          newValue[currentValue.tagType].push(currentValue.tagName);
+          return { ...accumulator, ...newValue };
+        },
+        { artist: [], group: [], parody: [], character: [], genre: [] }
+      ),
+    [allTags]
+  );
 
   return (
     <section className="folder-dialog_content_container">
@@ -56,7 +119,7 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_select">
           <DialogSuggest
             selectedItem={selectedCategory}
-            items={categories}
+            items={[defaultSuggestion, ...categories]}
             updateSelectedItem={setSelectedCategory}
           />
         </div>
@@ -66,7 +129,7 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_select">
           <DialogSuggest
             selectedItem={selectedLanguage}
-            items={languages}
+            items={[defaultSuggestion, ...languages]}
             updateSelectedItem={setSelectedLanguage}
           />
         </div>
@@ -75,9 +138,10 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_title">Artist</div>
         <div className="folder-dialog_content_row_tags">
           <DialogMultiSelect
-            selectedItems={selectedArtists}
-            items={artist}
-            updateSelectedItems={setSelectedArtists}
+            itemKey="artist"
+            allItems={allItems.artist}
+            selectedItems={selectedTags.artist}
+            updateSelectedItems={updateSelectedTags}
           />
         </div>
       </div>
@@ -85,9 +149,10 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_title">Group</div>
         <div className="folder-dialog_content_row_tags">
           <DialogMultiSelect
-            selectedItems={selectedGroups}
-            items={group}
-            updateSelectedItems={setSelectedGroups}
+            itemKey="group"
+            allItems={allItems.group}
+            selectedItems={selectedTags.group}
+            updateSelectedItems={updateSelectedTags}
           />
         </div>
       </div>
@@ -95,9 +160,10 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_title">Parody</div>
         <div className="folder-dialog_content_row_tags">
           <DialogMultiSelect
-            selectedItems={selectedParodies}
-            items={parody}
-            updateSelectedItems={setSelectedParodies}
+            itemKey="parody"
+            allItems={allItems.parody}
+            selectedItems={selectedTags.parody}
+            updateSelectedItems={updateSelectedTags}
           />
         </div>
       </div>
@@ -105,9 +171,10 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_title">Character</div>
         <div className="folder-dialog_content_row_tags">
           <DialogMultiSelect
-            selectedItems={selectedCharacters}
-            items={character}
-            updateSelectedItems={setSelectedCharacters}
+            itemKey="character"
+            allItems={allItems.character}
+            selectedItems={selectedTags.character}
+            updateSelectedItems={updateSelectedTags}
           />
         </div>
       </div>
@@ -115,9 +182,10 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_title">Genre</div>
         <div className="folder-dialog_content_row_tags">
           <DialogMultiSelect
-            selectedItems={selectedGenres}
-            items={genre}
-            updateSelectedItems={setSelectedGenres}
+            itemKey="genre"
+            allItems={allItems.genre}
+            selectedItems={selectedTags.genre}
+            updateSelectedItems={updateSelectedTags}
           />
         </div>
       </div>

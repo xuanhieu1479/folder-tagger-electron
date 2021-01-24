@@ -5,10 +5,10 @@ import {
 import { SETTING } from '../../../common/variables/commonVariables';
 import { UPDATE_SETTINGS } from './settingActionType';
 
-const initState = SETTING.DEFAULT;
+export const settingInitState = SETTING.DEFAULT;
 
 const statusReducer = (
-  state: SettingReducerInterface = initState,
+  state: SettingReducerInterface = settingInitState,
   action: ReducerAction
 ): SettingReducerInterface => {
   const data = action.payload || {};

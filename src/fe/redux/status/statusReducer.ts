@@ -4,12 +4,12 @@ import {
   StatusReducerInterface
 } from '../../../common/interfaces/feInterfaces';
 
-const initState = {
+export const statusInitState = {
   isLoading: false
 };
 
 const statusReducer = (
-  state: StatusReducerInterface = initState,
+  state: StatusReducerInterface = statusInitState,
   action: ReducerAction
 ): StatusReducerInterface => {
   switch (action.type) {

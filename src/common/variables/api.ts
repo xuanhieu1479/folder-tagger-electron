@@ -11,7 +11,8 @@ const MODULE = {
 const CONTROLLER_PATH = {
   GET: '/',
   ADD_ONE: '/add-one',
-  ADD_MANY: '/add-many'
+  ADD_MANY: '/add-many',
+  CREATE_MANY: '/create-many'
 };
 
 const FOLDER_API = {
@@ -29,7 +30,9 @@ const LANGUAGE_API = {
 };
 
 const TAG_API = {
-  GET: `${MODULE.TAG}${CONTROLLER_PATH.GET}`
+  GET: `${MODULE.TAG}${CONTROLLER_PATH.GET}`,
+  CREATE_MANY: `${MODULE.TAG}${CONTROLLER_PATH.CREATE_MANY}`,
+  ADD_MANY: `${MODULE.TAG}${CONTROLLER_PATH.ADD_MANY}`
 };
 
 export {
