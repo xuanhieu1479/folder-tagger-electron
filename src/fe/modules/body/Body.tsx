@@ -46,14 +46,28 @@ const Body = (): ReactElement => {
     };
 
     const isHoldingShift = event.shiftKey;
+    const isHoldingCtrl = event.ctrlKey;
     const isSelectingSameFolder = folderLocation === selectedFolders[0];
     const selectedFoldersCount = selectedFolders.length;
 
     if (!isHoldingShift) {
+      if (isHoldingCtrl) {
+        // Holding ctrl while clicking
+        if (selectedFolders.includes(folderLocation))
+          updateSelectedFolders(
+            selectedFolders.filter(
+              selectedFolder => selectedFolder !== folderLocation
+            )
+          );
+        else updateSelectedFolders([...selectedFolders, folderLocation]);
+        return;
+      }
+      // Normal click, no holding shift nor ctrl
       if (isSelectingSameFolder && selectedFoldersCount === 1)
         updateSelectedFolders([]);
       else updateSelectedFolders([folderLocation]);
     } else {
+      // Holding shift while clicking, regardless of holding ctrl or not
       if (selectedFoldersCount === 0) updateSelectedFolders([folderLocation]);
       else if (isSelectingSameFolder) updateSelectedFolders([folderLocation]);
       else {
