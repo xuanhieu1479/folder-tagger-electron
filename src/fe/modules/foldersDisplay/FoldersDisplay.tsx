@@ -5,14 +5,16 @@ import { RootState } from '../../../common/interfaces/feInterfaces';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import {
   PAGINATION,
-  DIALOG,
-  ELEMENT_ID
+  TAG_ACTION,
+  ELEMENT_ID,
+  MESSAGE
 } from '../../../common/variables/commonVariables';
 import { FolderDialog } from '../../components/commonComponents';
 import Body from '../body/Body';
 import Footer from '../footer/Footer';
 import { SELECT_FOLDERS } from '../../redux/folder/folderActionType';
 import { getFolders } from '../../redux/folder/folderAction';
+import { showMessage } from '../../../utility/showMessage';
 import './FoldersDisplay.styled.scss';
 
 interface FoldersDisplayInterface {
@@ -24,7 +26,7 @@ const defaultParams = {
 };
 const defaultFolderDialogParams = {
   isOpen: false,
-  dialogType: DIALOG.ADD_TAGS
+  dialogType: TAG_ACTION.ADD
 };
 
 const FoldersDisplay = ({
@@ -48,7 +50,16 @@ const FoldersDisplay = ({
       if (event.ctrlKey) {
         switch (event.key) {
           case 'e':
-            if (!_.isEmpty(selectedFolders)) onOpenAddTagsToFoldersDialog();
+            if (!_.isEmpty(selectedFolders)) onOpenFolderDialog(TAG_ACTION.ADD);
+            break;
+          case 's':
+            if (selectedFolders.length === 0) return;
+            if (selectedFolders.length > 1) {
+              showMessage.error(MESSAGE.CANNOT_EDIT_MANY_FOLDERS);
+              return;
+            }
+            if (selectedFolders.length === 1)
+              onOpenFolderDialog(TAG_ACTION.EDIT);
             break;
           case 't':
             openSettingDialog();
@@ -78,6 +89,7 @@ const FoldersDisplay = ({
             } else {
               updateSelectedFolders([previousFolder]);
             }
+            event.preventDefault();
             break;
           case 'ArrowRight':
             if (newlySelectedPosition === lastPosition) return;
@@ -90,13 +102,15 @@ const FoldersDisplay = ({
             } else {
               updateSelectedFolders([nextFolder]);
             }
+            event.preventDefault();
             break;
           case 'ArrowDown':
+            event.preventDefault();
             break;
           case 'ArrowUp':
+            event.preventDefault();
             break;
         }
-        event.preventDefault();
       }
     };
 
@@ -146,8 +160,8 @@ const FoldersDisplay = ({
     scrollToNewlySelectedFolder();
   };
 
-  const onOpenAddTagsToFoldersDialog = () => {
-    setFolderDialogParams({ isOpen: true, dialogType: DIALOG.ADD_TAGS });
+  const onOpenFolderDialog = (dialogType: string) => {
+    setFolderDialogParams({ isOpen: true, dialogType });
   };
   const onCloseFolderDialog = () => {
     setFolderDialogParams(defaultFolderDialogParams);

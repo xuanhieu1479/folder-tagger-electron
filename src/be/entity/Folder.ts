@@ -49,7 +49,7 @@ export default class Folder {
   @ManyToOne(() => Language, language => language.Folders)
   Language!: Language;
 
-  @ManyToMany(() => Tag, tag => tag.TagId)
+  @ManyToMany(() => Tag, tag => tag.Folders)
   @JoinTable()
   Tags!: Tag[];
 

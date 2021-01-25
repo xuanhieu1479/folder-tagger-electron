@@ -10,6 +10,7 @@ const MODULE = {
 
 const CONTROLLER_PATH = {
   GET: '/',
+  MODIFY: '/modify',
   ADD: '/add'
 };
 
@@ -28,7 +29,7 @@ const LANGUAGE_API = {
 
 const TAG_API = {
   GET: `${MODULE.TAG}${CONTROLLER_PATH.GET}`,
-  ADD: `${MODULE.TAG}${CONTROLLER_PATH.ADD}`
+  MODIFY: `${MODULE.TAG}${CONTROLLER_PATH.MODIFY}`
 };
 
 export {

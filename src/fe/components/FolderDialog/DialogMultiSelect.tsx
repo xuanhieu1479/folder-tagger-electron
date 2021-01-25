@@ -76,6 +76,7 @@ const DialogMultiSelect = ({
       tagRenderer={item => item}
       tagInputProps={{ onRemove: onRemoveItem }}
       popoverProps={{ minimal: true }}
+      openOnKeyDown={true}
     />
   );
 };

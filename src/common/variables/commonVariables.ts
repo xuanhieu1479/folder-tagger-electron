@@ -7,7 +7,7 @@ import STATUS_CODE from './statusCode';
 import ASSET from './asset';
 import APP from './app';
 import PAGINATION from './pagination';
-import DIALOG from './dialog';
+import TAG_ACTION from './tagAction';
 import SETTING from './setting';
 import SEED_DATA from './seedData';
 import ELEMENT_ID from './elementID';
@@ -23,7 +23,7 @@ export {
   ASSET,
   APP,
   PAGINATION,
-  DIALOG,
+  TAG_ACTION,
   SETTING,
   SEED_DATA,
   ELEMENT_ID

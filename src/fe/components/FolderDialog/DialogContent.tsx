@@ -4,11 +4,11 @@ import { Button, Intent } from '@blueprintjs/core';
 import _ from 'lodash';
 import { Tags, LooseObject } from '../../../common/interfaces/commonInterfaces';
 import { RootState } from '../../../common/interfaces/feInterfaces';
-import { DIALOG, MESSAGE } from '../../../common/variables/commonVariables';
+import { TAG_ACTION, MESSAGE } from '../../../common/variables/commonVariables';
 import DialogSuggest from './DialogSuggest';
 import DialogMultiSelect from './DialogMultiSelect';
 import { showMessage } from '../../../utility/showMessage';
-import { getTags, addTags } from '../../redux/tag/tagAction';
+import { getTags, modifyTagsOfFolders } from '../../redux/tag/tagAction';
 
 interface DialogContentInterface {
   dialogType: string;
@@ -21,7 +21,7 @@ const defaultSelectedTags = {
   character: [],
   genre: []
 };
-const defaultSuggestion = 'none';
+const defaultSuggestion = '';
 
 const DialogContent = ({
   dialogType,
@@ -37,16 +37,47 @@ const DialogContent = ({
   const [selectedTags, setSelectedTags] = useState(defaultSelectedTags);
 
   useEffect(() => {
+    const getSelectedFolderTags = async () => {
+      const selectedFolder = _.last(selectedFolders);
+      const selectedFolderInfo = await getTags(dispatch, selectedFolder);
+      if (typeof selectedFolderInfo === 'object') {
+        const {
+          category,
+          language,
+          tags: selectedFolderTags
+        } = selectedFolderInfo;
+        const selectedFolderCategory = category || defaultSuggestion;
+        const selectedFolderLanguage = language || defaultSuggestion;
+        const brokenDownTags = breakDownTags(selectedFolderTags);
+        setSelectedTags(brokenDownTags);
+        setSelectedCategory(selectedFolderCategory);
+        setSelectedLanguage(selectedFolderLanguage);
+      }
+    };
+
     getTags(dispatch);
+    if (dialogType === TAG_ACTION.EDIT) getSelectedFolderTags();
   }, []);
 
   const updateSelectedTags = (
     tagKey: string,
     newSelectedTags: Array<string>
   ) => {
-    setSelectedTags({ ...selectedTags, [tagKey]: newSelectedTags });
+    setSelectedTags(prevState => {
+      return { ...prevState, [tagKey]: newSelectedTags };
+    });
   };
 
+  const breakDownTags = (source: Array<Tags>) => {
+    return source.reduce(
+      (accumulator, currentValue) => {
+        const newValue: LooseObject = { ...accumulator };
+        newValue[currentValue.tagType].push(currentValue.tagName);
+        return { ...accumulator, ...newValue };
+      },
+      { artist: [], group: [], parody: [], character: [], genre: [] }
+    );
+  };
   const transformSelectedTags = () => {
     const defaultResult: Array<Tags> = [];
     const result = _.reduce(
@@ -81,14 +112,12 @@ const DialogContent = ({
 
   const onSave = async () => {
     switch (dialogType) {
-      case DIALOG.ADD_TAGS:
-        addTagsToFolder();
+      case TAG_ACTION.ADD:
+      case TAG_ACTION.EDIT:
+        upsertTagsToFolders();
         break;
-      case DIALOG.EDIT_TAGS:
-        console.log(DIALOG.EDIT_TAGS);
-        break;
-      case DIALOG.REMOVE_TAGS:
-        console.log(DIALOG.REMOVE_TAGS);
+      case TAG_ACTION.REMOVE:
+        console.log(TAG_ACTION.REMOVE);
         break;
     }
   };
@@ -97,7 +126,7 @@ const DialogContent = ({
     onClose();
   };
 
-  const addTagsToFolder = () => {
+  const upsertTagsToFolders = () => {
     const transformedSelectedTags = transformSelectedTags();
     const { existingTags, newTags } = getNewlyCreatedTags(
       transformedSelectedTags
@@ -106,28 +135,18 @@ const DialogContent = ({
       selectedCategory === defaultSuggestion ? undefined : selectedCategory;
     const language =
       selectedLanguage === defaultSuggestion ? undefined : selectedLanguage;
-    addTags(
+    modifyTagsOfFolders(
       selectedFolders,
       existingTags,
       newTags,
       category,
       language,
+      dialogType,
       onSaveSuccess
     );
   };
 
-  const allItems = useMemo(
-    () =>
-      allTags.reduce(
-        (accumulator, currentValue) => {
-          const newValue: LooseObject = { ...accumulator };
-          newValue[currentValue.tagType].push(currentValue.tagName);
-          return { ...accumulator, ...newValue };
-        },
-        { artist: [], group: [], parody: [], character: [], genre: [] }
-      ),
-    [allTags]
-  );
+  const allItems = useMemo(() => breakDownTags(allTags), [allTags]);
 
   return (
     <section className="folder-dialog_content_container">
@@ -136,7 +155,7 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_select">
           <DialogSuggest
             selectedItem={selectedCategory}
-            items={[defaultSuggestion, ...categories]}
+            items={categories}
             updateSelectedItem={setSelectedCategory}
           />
         </div>
@@ -146,7 +165,7 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_select">
           <DialogSuggest
             selectedItem={selectedLanguage}
-            items={[defaultSuggestion, ...languages]}
+            items={languages}
             updateSelectedItem={setSelectedLanguage}
           />
         </div>

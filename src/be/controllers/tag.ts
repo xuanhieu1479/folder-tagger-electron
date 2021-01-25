@@ -5,14 +5,15 @@ import { CONTROLLER_PATH } from '../../common/variables/commonVariables';
 const router = express.Router();
 const tag = new Tag();
 
-router.get(CONTROLLER_PATH.GET, async (_req: Request, res: Response) => {
-  const { tags, status, message } = await tag.get();
-  res.status(status).json({ tags, message });
+router.get(CONTROLLER_PATH.GET, async (req: Request, res: Response) => {
+  const params = req.query;
+  const { tags, category, language, status, message } = await tag.get(params);
+  res.status(status).json({ tags, category, language, message });
 });
 
-router.post(CONTROLLER_PATH.ADD, async (req: Request, res: Response) => {
+router.post(CONTROLLER_PATH.MODIFY, async (req: Request, res: Response) => {
   const params = req.body;
-  const { status, message } = await tag.addToFolders(params);
+  const { status, message } = await tag.modifyTagsOfFolders(params);
   res.status(status).json({ message });
 });
 

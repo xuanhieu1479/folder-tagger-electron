@@ -5,34 +5,48 @@ import { TAG_API } from '../../../common/variables/commonVariables';
 import { GET_TAGS } from './tagActionType';
 import { showMessage } from '../../../utility/showMessage';
 
-const getTags = async (dispatch: Dispatch): Promise<void> => {
+interface GetTagsOfOneFolderInterface {
+  tags: Array<Tags>;
+  category: string | undefined;
+  language: string | undefined;
+}
+
+const getTags = async (
+  dispatch: Dispatch,
+  folderLocation?: string
+): Promise<void | GetTagsOfOneFolderInterface> => {
   try {
-    const { data } = await axios.get(TAG_API.GET);
-    const { allTags } = data.tags;
+    const { data } = await axios.get(TAG_API.GET, {
+      params: { folderLocation }
+    });
+    const { tags, category, language } = data;
+    if (folderLocation) return { tags, category, language };
     dispatch({
       type: GET_TAGS,
-      payload: { allTags }
+      payload: { allTags: tags }
     });
   } catch (error) {
     showMessage.error(error.response.data.message);
   }
 };
 
-const addTags = async (
+const modifyTagsOfFolders = async (
   selectedFolders: Array<string>,
   existingTags: Array<Tags>,
   newTags: Array<Tags>,
   category: string | undefined,
   language: string | undefined,
+  action: string,
   onSuccess: () => void
 ): Promise<void> => {
   try {
-    await axios.post(TAG_API.ADD, {
+    await axios.post(TAG_API.MODIFY, {
       folderLocations: selectedFolders,
       existingTags,
       newTags,
       category,
-      language
+      language,
+      action
     });
     onSuccess();
   } catch (error) {
@@ -40,4 +54,4 @@ const addTags = async (
   }
 };
 
-export { getTags, addTags };
+export { getTags, modifyTagsOfFolders };
