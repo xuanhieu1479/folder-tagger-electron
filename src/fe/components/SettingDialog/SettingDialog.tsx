@@ -6,6 +6,7 @@ import {
   SettingReducerInterface,
   SettingDefaultValueInterface
 } from '../../../common/interfaces/feInterfaces';
+import { ELEMENT_ID } from '../../../common/variables/commonVariables';
 import SettingDefaultValues from './SettingDefaultValue';
 import { updateSettings } from '../../redux/setting/settingAction';
 import './SettingDialog.styled.scss';
@@ -15,10 +16,6 @@ interface FolderDialogInterface {
   onClose: () => void;
   title: string;
 }
-const tabsId = {
-  container: 'setting-dialog-tabs',
-  defaultValue: 'setting-dialog-default-value'
-};
 
 const SettingDialog = ({
   isOpen,
@@ -27,7 +24,7 @@ const SettingDialog = ({
 }: FolderDialogInterface): ReactElement => {
   const dispatch = useDispatch();
   const [selectecdTabId, setSelectedTabId] = useState<TabId>(
-    tabsId.defaultValue
+    ELEMENT_ID.SETTING_DIALOG_TABS.defaultValue
   );
   const previousSettings = useSelector((state: RootState) => state.setting);
   const [settings, setSettings] = useState<SettingReducerInterface>({
@@ -60,12 +57,12 @@ const SettingDialog = ({
     >
       <Tabs
         large={true}
-        id={tabsId.container}
+        id={ELEMENT_ID.SETTING_DIALOG_TABS.container}
         selectedTabId={selectecdTabId}
         onChange={onChangeTab}
       >
         <Tab
-          id={tabsId.defaultValue}
+          id={ELEMENT_ID.SETTING_DIALOG_TABS.defaultValue}
           title="Default Values"
           panel={
             <div className="setting-dialog_tab-panel">

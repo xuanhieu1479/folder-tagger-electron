@@ -10,6 +10,7 @@ import PAGINATION from './pagination';
 import DIALOG from './dialog';
 import SETTING from './setting';
 import SEED_DATA from './seedData';
+import ELEMENT_ID from './elementID';
 
 export * from './api';
 export {
@@ -24,5 +25,6 @@ export {
   PAGINATION,
   DIALOG,
   SETTING,
-  SEED_DATA
+  SEED_DATA,
+  ELEMENT_ID
 };

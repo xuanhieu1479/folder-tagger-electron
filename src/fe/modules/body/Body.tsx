@@ -1,13 +1,16 @@
 import React, { ReactElement, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Overlay, Spinner, Intent } from '@blueprintjs/core';
 import { RootState } from '../../../common/interfaces/feInterfaces';
+import { ELEMENT_ID } from '../../../common/variables/commonVariables';
 import { FolderCard } from '../../components/commonComponents';
-import { SELECT_FOLDERS } from '../../redux/folder/folderActionType';
 import './Body.styled.scss';
 
-const Body = (): ReactElement => {
-  const dispatch = useDispatch();
+interface BodyInterface {
+  updateSelectedFolders: (newSelectedFolders: Array<string>) => void;
+}
+
+const Body = ({ updateSelectedFolders }: BodyInterface): ReactElement => {
   const { isLoading } = useSelector((state: RootState) => state.status);
   const { foldersList, selectedFolders } = useSelector(
     (state: RootState) => state.folder
@@ -21,10 +24,7 @@ const Body = (): ReactElement => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .some((element: any): boolean => element?.id?.includes('folder-card'));
       if (!isClickingFolderCard) {
-        dispatch({
-          type: SELECT_FOLDERS,
-          payload: { selectedFolders: [] }
-        });
+        updateSelectedFolders([]);
       }
     };
 
@@ -38,13 +38,6 @@ const Body = (): ReactElement => {
     event: React.MouseEvent,
     folderLocation: string
   ): void => {
-    const updateSelectedFolders = (newSelectedFolders: Array<string>): void => {
-      dispatch({
-        type: SELECT_FOLDERS,
-        payload: { selectedFolders: newSelectedFolders }
-      });
-    };
-
     const isHoldingShift = event.shiftKey;
     const isHoldingCtrl = event.ctrlKey;
     const isSelectingSameFolder = folderLocation === selectedFolders[0];
@@ -94,7 +87,7 @@ const Body = (): ReactElement => {
     return foldersList.map((folder, index) => {
       return (
         <FolderCard
-          id={`folder-card-${index}`}
+          id={ELEMENT_ID.FOLDER_CARD(index)}
           folderLocation={folder.location}
           folderName={folder.name || ''}
           thumbnailLocation={folder.thumbnail}
