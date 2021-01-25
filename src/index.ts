@@ -17,6 +17,7 @@ if (require('electron-squirrel-startup')) {
   // eslint-disable-line global-require
   app.quit();
 }
+// Testing github shs
 
 const initWindows = (): void => {
   const startUpTimeOut = setTimeout(() => {
