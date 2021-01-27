@@ -117,7 +117,7 @@ const DialogContent = ({
         upsertTagsToFolders();
         break;
       case TAG_ACTION.REMOVE:
-        console.log(TAG_ACTION.REMOVE);
+        removeTagsFromFolders();
         break;
     }
   };
@@ -135,15 +135,25 @@ const DialogContent = ({
       selectedCategory === defaultSuggestion ? undefined : selectedCategory;
     const language =
       selectedLanguage === defaultSuggestion ? undefined : selectedLanguage;
-    modifyTagsOfFolders(
+    modifyTagsOfFolders({
       selectedFolders,
       existingTags,
       newTags,
       category,
       language,
-      dialogType,
-      onSaveSuccess
-    );
+      action: dialogType,
+      onSuccess: onSaveSuccess
+    });
+  };
+  const removeTagsFromFolders = () => {
+    const transformedSelectedTags = transformSelectedTags();
+    modifyTagsOfFolders({
+      selectedFolders,
+      existingTags: transformedSelectedTags,
+      newTags: [],
+      action: dialogType,
+      onSuccess: onSaveSuccess
+    });
   };
 
   const allItems = useMemo(() => breakDownTags(allTags), [allTags]);
@@ -156,6 +166,7 @@ const DialogContent = ({
           <DialogSuggest
             selectedItem={selectedCategory}
             items={categories}
+            isDisabled={dialogType === TAG_ACTION.REMOVE}
             updateSelectedItem={setSelectedCategory}
           />
         </div>
@@ -166,6 +177,7 @@ const DialogContent = ({
           <DialogSuggest
             selectedItem={selectedLanguage}
             items={languages}
+            isDisabled={dialogType === TAG_ACTION.REMOVE}
             updateSelectedItem={setSelectedLanguage}
           />
         </div>

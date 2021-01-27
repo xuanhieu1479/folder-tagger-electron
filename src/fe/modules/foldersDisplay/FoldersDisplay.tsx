@@ -61,6 +61,10 @@ const FoldersDisplay = ({
             if (selectedFolders.length === 1)
               onOpenFolderDialog(TAG_ACTION.EDIT);
             break;
+          case 'd':
+            if (!_.isEmpty(selectedFolders))
+              onOpenFolderDialog(TAG_ACTION.REMOVE);
+            break;
           case 't':
             openSettingDialog();
             break;
@@ -166,7 +170,7 @@ const FoldersDisplay = ({
         ELEMENT_ID.FOLDER_CARD(selectedFolderJustNowIndex)
       );
       selectedFolderJustNowElement?.scrollIntoView({
-        behavior: 'auto',
+        behavior: 'smooth',
         block: 'center',
         inline: 'center'
       });

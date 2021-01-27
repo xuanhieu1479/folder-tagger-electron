@@ -5,12 +5,14 @@ import { Suggest, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
 interface DialogSuggestInterface {
   selectedItem: string;
   items: Array<string>;
+  isDisabled?: boolean;
   updateSelectedItem: (newItem: string) => void;
 }
 
 const DialogSuggest = ({
   selectedItem,
   items,
+  isDisabled = false,
   updateSelectedItem
 }: DialogSuggestInterface): ReactElement => {
   const onItemSelect = (newItem: string) => {
@@ -39,6 +41,7 @@ const DialogSuggest = ({
     <Suggest
       items={items}
       resetOnQuery={false}
+      disabled={isDisabled}
       selectedItem={selectedItem}
       inputValueRenderer={item => item}
       itemRenderer={renderSelectItems}

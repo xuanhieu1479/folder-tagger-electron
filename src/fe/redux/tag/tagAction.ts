@@ -10,6 +10,15 @@ interface GetTagsOfOneFolderInterface {
   category: string | undefined;
   language: string | undefined;
 }
+interface ModifyTagsInterface {
+  selectedFolders: Array<string>;
+  existingTags: Array<Tags>;
+  newTags: Array<Tags>;
+  category?: string | undefined;
+  language?: string | undefined;
+  action: string;
+  onSuccess: () => void;
+}
 
 const getTags = async (
   dispatch: Dispatch,
@@ -30,15 +39,15 @@ const getTags = async (
   }
 };
 
-const modifyTagsOfFolders = async (
-  selectedFolders: Array<string>,
-  existingTags: Array<Tags>,
-  newTags: Array<Tags>,
-  category: string | undefined,
-  language: string | undefined,
-  action: string,
-  onSuccess: () => void
-): Promise<void> => {
+const modifyTagsOfFolders = async ({
+  selectedFolders,
+  existingTags,
+  newTags,
+  category,
+  language,
+  action,
+  onSuccess
+}: ModifyTagsInterface): Promise<void> => {
   try {
     await axios.post(TAG_API.MODIFY, {
       folderLocations: selectedFolders,

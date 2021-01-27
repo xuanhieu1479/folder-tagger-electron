@@ -185,7 +185,7 @@ export default class Tag {
             folder.Tags = [...foundTags, ...newlyCreatedTags];
             break;
           case TAG_ACTION.REMOVE:
-            folder.Tags = [...folder.Tags, ...foundTags];
+            _.pullAllBy(folder.Tags, foundTags, 'TagId');
             break;
         }
       }
