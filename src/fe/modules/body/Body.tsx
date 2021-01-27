@@ -22,7 +22,9 @@ const Body = ({ updateSelectedFolders }: BodyInterface): ReactElement => {
         .composedPath()
         // element is supposed to be HTMLElement not EventTarget
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .some((element: any): boolean => element?.id?.includes('folder-card'));
+        .some((element: any): boolean =>
+          RegExp(/folder-card-\d/).test(element?.id)
+        );
       if (!isClickingFolderCard) {
         updateSelectedFolders([]);
       }
@@ -99,7 +101,7 @@ const Body = ({ updateSelectedFolders }: BodyInterface): ReactElement => {
   };
 
   return (
-    <section className="body_container">
+    <section id={ELEMENT_ID.FOLDER_CARD_CONTAINER} className="body_container">
       {renderFolders()}
       <Overlay
         canEscapeKeyClose={false}

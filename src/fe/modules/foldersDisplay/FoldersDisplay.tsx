@@ -67,18 +67,34 @@ const FoldersDisplay = ({
         }
       } else {
         if (_.isEmpty(selectedFolders) || foldersList.length <= 1) return;
+        const folderCardElements = document
+          .getElementById(ELEMENT_ID.FOLDER_CARD_CONTAINER)
+          ?.querySelectorAll(`[id^=${ELEMENT_ID.FOLDER_CARD('')}]`);
+        const folderCardsOffsetTop: Array<number> = [];
+        if (folderCardElements)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          folderCardElements.forEach((element: any) =>
+            folderCardsOffsetTop.push(element.offsetTop)
+          );
+
         const isHoldingShift = event.shiftKey;
         const firstPosition = 0;
         const lastPosition = foldersList.length - 1;
-        const newlySelectedFolder = _.last(selectedFolders) || '';
+        const newlySelectedFolder = _.last(selectedFolders);
         const newlySelectedPosition = foldersList.findIndex(
           folder => folder === newlySelectedFolder
         );
         const previousFolder = foldersList[newlySelectedPosition - 1];
         const nextFolder = foldersList[newlySelectedPosition + 1];
+        const foldersPerRow = folderCardsOffsetTop.filter(
+          i => i === folderCardsOffsetTop[0]
+        ).length;
+        const upPosition = newlySelectedPosition - foldersPerRow;
+        const downPosition = newlySelectedPosition + foldersPerRow;
 
         switch (event.key) {
           case 'ArrowLeft':
+            event.preventDefault();
             if (newlySelectedPosition === firstPosition) return;
             if (isHoldingShift) {
               const isGoingBackward = selectedFolders.includes(previousFolder);
@@ -89,9 +105,9 @@ const FoldersDisplay = ({
             } else {
               updateSelectedFolders([previousFolder]);
             }
-            event.preventDefault();
             break;
           case 'ArrowRight':
+            event.preventDefault();
             if (newlySelectedPosition === lastPosition) return;
             if (isHoldingShift) {
               const isGoingBackward = selectedFolders.includes(nextFolder);
@@ -102,13 +118,16 @@ const FoldersDisplay = ({
             } else {
               updateSelectedFolders([nextFolder]);
             }
-            event.preventDefault();
             break;
           case 'ArrowDown':
             event.preventDefault();
+            if (downPosition > lastPosition) return;
+            updateSelectedFolders([foldersList[downPosition]]);
             break;
           case 'ArrowUp':
             event.preventDefault();
+            if (upPosition < firstPosition) return;
+            updateSelectedFolders([foldersList[upPosition]]);
             break;
         }
       }
