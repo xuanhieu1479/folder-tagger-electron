@@ -117,6 +117,7 @@ export default class Folder {
   };
 
   add = async (folders: Array<FolderInterface>): Promise<FolderQueryResult> => {
+    const isAddingMultipleFoldesr = folders.length > 1;
     const insertFolders: Array<Folder> = [];
     const manager = getManager();
 
@@ -125,12 +126,14 @@ export default class Folder {
     for (const folder of folders) {
       const { location, name, thumbnail } = folder;
       const folderExists = await this.isExisting(location);
-      if (folderExists)
-        return {
-          message: MESSAGE.SPECIFIC_FOLDER_ALREADY_EXISTS(location),
-          status: STATUS_CODE.DB_ERROR
-        };
-      else
+      if (folderExists) {
+        if (!isAddingMultipleFoldesr)
+          return {
+            message: MESSAGE.SPECIFIC_FOLDER_ALREADY_EXISTS(location),
+            status: STATUS_CODE.DB_ERROR
+          };
+        else continue;
+      } else
         insertFolders.push(
           manager.create(Folder, {
             FolderLocation: location,
