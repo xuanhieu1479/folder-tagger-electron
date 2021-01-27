@@ -2,7 +2,7 @@ import React, { ReactElement, ReactNode } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { MultiSelect, ItemRenderer } from '@blueprintjs/select';
 
-interface DialogMultiSelectInterface {
+interface CustomMultiSelectInterface {
   itemKey: string;
   allItems: Array<string>;
   selectedItems: Array<string>;
@@ -12,12 +12,12 @@ interface DialogMultiSelectInterface {
   ) => void;
 }
 
-const DialogMultiSelect = ({
+const CustomMultiSelect = ({
   itemKey,
   allItems,
   selectedItems,
   updateSelectedItems
-}: DialogMultiSelectInterface): ReactElement => {
+}: CustomMultiSelectInterface): ReactElement => {
   const onItemSelect = (item: string): void => {
     if (selectedItems.includes(item))
       updateSelectedItems(
@@ -81,4 +81,4 @@ const DialogMultiSelect = ({
   );
 };
 
-export default DialogMultiSelect;
+export default CustomMultiSelect;

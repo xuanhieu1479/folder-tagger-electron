@@ -5,8 +5,7 @@ import _ from 'lodash';
 import { Tags, LooseObject } from '../../../common/interfaces/commonInterfaces';
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import { TAG_ACTION, MESSAGE } from '../../../common/variables/commonVariables';
-import DialogSuggest from './DialogSuggest';
-import DialogMultiSelect from './DialogMultiSelect';
+import { CustomSuggest, CustomMultiSelect } from '../commonComponents';
 import { showMessage } from '../../../utility/showMessage';
 import { getTags, modifyTagsOfFolders } from '../../redux/tag/tagAction';
 
@@ -163,7 +162,7 @@ const DialogContent = ({
       <div className="folder-dialog_content_row">
         <div className="folder-dialog_content_row_title">Category</div>
         <div className="folder-dialog_content_row_select">
-          <DialogSuggest
+          <CustomSuggest
             selectedItem={selectedCategory}
             items={categories}
             isDisabled={dialogType === TAG_ACTION.REMOVE}
@@ -174,7 +173,7 @@ const DialogContent = ({
       <div className="folder-dialog_content_row">
         <div className="folder-dialog_content_row_title">Language</div>
         <div className="folder-dialog_content_row_select">
-          <DialogSuggest
+          <CustomSuggest
             selectedItem={selectedLanguage}
             items={languages}
             isDisabled={dialogType === TAG_ACTION.REMOVE}
@@ -185,7 +184,7 @@ const DialogContent = ({
       <div className="folder-dialog_content_row">
         <div className="folder-dialog_content_row_title">Artist</div>
         <div className="folder-dialog_content_row_tags">
-          <DialogMultiSelect
+          <CustomMultiSelect
             itemKey="artist"
             allItems={allItems.artist}
             selectedItems={selectedTags.artist}
@@ -196,7 +195,7 @@ const DialogContent = ({
       <div className="folder-dialog_content_row">
         <div className="folder-dialog_content_row_title">Group</div>
         <div className="folder-dialog_content_row_tags">
-          <DialogMultiSelect
+          <CustomMultiSelect
             itemKey="group"
             allItems={allItems.group}
             selectedItems={selectedTags.group}
@@ -207,7 +206,7 @@ const DialogContent = ({
       <div className="folder-dialog_content_row">
         <div className="folder-dialog_content_row_title">Parody</div>
         <div className="folder-dialog_content_row_tags">
-          <DialogMultiSelect
+          <CustomMultiSelect
             itemKey="parody"
             allItems={allItems.parody}
             selectedItems={selectedTags.parody}
@@ -218,7 +217,7 @@ const DialogContent = ({
       <div className="folder-dialog_content_row">
         <div className="folder-dialog_content_row_title">Character</div>
         <div className="folder-dialog_content_row_tags">
-          <DialogMultiSelect
+          <CustomMultiSelect
             itemKey="character"
             allItems={allItems.character}
             selectedItems={selectedTags.character}
@@ -229,7 +228,7 @@ const DialogContent = ({
       <div className="folder-dialog_content_row">
         <div className="folder-dialog_content_row_title">Genre</div>
         <div className="folder-dialog_content_row_tags">
-          <DialogMultiSelect
+          <CustomMultiSelect
             itemKey="genre"
             allItems={allItems.genre}
             selectedItems={selectedTags.genre}

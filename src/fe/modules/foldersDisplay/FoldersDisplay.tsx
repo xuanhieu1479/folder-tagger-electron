@@ -10,6 +10,7 @@ import {
   MESSAGE
 } from '../../../common/variables/commonVariables';
 import { FolderDialog } from '../../components/commonComponents';
+import Header from '../header/Header';
 import Body from '../body/Body';
 import Footer from '../footer/Footer';
 import { SELECT_FOLDERS } from '../../redux/folder/folderActionType';
@@ -20,7 +21,7 @@ import './FoldersDisplay.styled.scss';
 interface FoldersDisplayInterface {
   openSettingDialog: () => void;
 }
-const defaultParams = {
+const defaultParams: FolderFilterParams = {
   currentPage: 1,
   itemsPerPage: PAGINATION.ITEMS_PER_PAGE[0]
 };
@@ -33,7 +34,7 @@ const FoldersDisplay = ({
   openSettingDialog
 }: FoldersDisplayInterface): ReactElement => {
   const dispatch = useDispatch();
-  const { selectedFolders, foldersList } = useSelector(
+  const { selectedFolders, foldersList, categories } = useSelector(
     (state: RootState) => state.folder
   );
   const selectedFoldersRef = useRef(selectedFolders);
@@ -193,6 +194,11 @@ const FoldersDisplay = ({
   return (
     <>
       <section className="folder-display_container">
+        <Header
+          params={params}
+          updateParams={updateParams}
+          allCategories={categories}
+        />
         <Body updateSelectedFolders={updateSelectedFolders} />
         <Footer updateParams={updateParams} />
       </section>

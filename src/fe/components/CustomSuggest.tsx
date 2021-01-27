@@ -2,19 +2,19 @@ import React, { ReactElement } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
 
-interface DialogSuggestInterface {
+interface CustomSuggestInterface {
   selectedItem: string;
   items: Array<string>;
   isDisabled?: boolean;
   updateSelectedItem: (newItem: string) => void;
 }
 
-const DialogSuggest = ({
+const CustomSuggest = ({
   selectedItem,
   items,
   isDisabled = false,
   updateSelectedItem
-}: DialogSuggestInterface): ReactElement => {
+}: CustomSuggestInterface): ReactElement => {
   const onItemSelect = (newItem: string) => {
     updateSelectedItem(newItem);
   };
@@ -53,4 +53,4 @@ const DialogSuggest = ({
   );
 };
 
-export default DialogSuggest;
+export default CustomSuggest;

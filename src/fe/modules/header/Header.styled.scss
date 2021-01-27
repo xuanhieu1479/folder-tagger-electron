@@ -1,0 +1,19 @@
+@import '../../styles/mixin.scss';
+
+.header_container {
+  @include flex-space-between;
+  width: 100%;
+  height: 50px;
+  padding: 0 15px;
+
+  .header_category_container {
+    @include flex-space-between;
+    font-size: 16px;
+
+    div {
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
+}
