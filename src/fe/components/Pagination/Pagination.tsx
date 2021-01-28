@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react';
+import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import TotalPages from './TotalPages';
 import PaginationButtonsGroup from './PaginationButtonsGroup';
 import PaginationOptions from './PaginationOptions';
@@ -8,18 +9,16 @@ interface PaginationInterface {
   totalFolders: number;
   pagesRangeDisplayed?: number;
   currentPage: number;
-  setCurrentPage: (page: number) => void;
   itemsPerPage: number;
-  setItemsPerPage: (quantity: number) => void;
+  updateParams: (newParams: FolderFilterParams) => void;
 }
 
 const Pagination = ({
   totalFolders,
   pagesRangeDisplayed,
   currentPage,
-  setCurrentPage,
   itemsPerPage,
-  setItemsPerPage
+  updateParams
 }: PaginationInterface): ReactElement => {
   const totalPages = Math.ceil(totalFolders / itemsPerPage);
 
@@ -31,13 +30,12 @@ const Pagination = ({
           totalPages={totalPages}
           pagesRangeDisplayed={pagesRangeDisplayed}
           currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
+          updateParams={updateParams}
         />
       ) : null}
       <PaginationOptions
         itemsPerPage={itemsPerPage}
-        setItemsPerPage={setItemsPerPage}
-        setCurrentPage={setCurrentPage}
+        updateParams={updateParams}
       />
     </section>
   );

@@ -1,21 +1,22 @@
 import React, { ReactElement, ChangeEvent } from 'react';
 import { HTMLSelect } from '@blueprintjs/core';
+import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import { PAGINATION } from '../../../common/variables/commonVariables';
 
 interface PaginationOptionsInterface {
   itemsPerPage: number;
-  setItemsPerPage: (quantity: number) => void;
-  setCurrentPage: (page: number) => void;
+  updateParams: (newParams: FolderFilterParams) => void;
 }
 
 const PaginationOptions = ({
   itemsPerPage,
-  setItemsPerPage,
-  setCurrentPage
+  updateParams
 }: PaginationOptionsInterface): ReactElement => {
   const onChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
-    setCurrentPage(1);
-    setItemsPerPage(parseInt(event.target.value));
+    updateParams({
+      currentPage: PAGINATION.DEFAULT.currentPage,
+      itemsPerPage: parseInt(event.target.value)
+    });
   };
 
   return (

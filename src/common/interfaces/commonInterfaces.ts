@@ -17,6 +17,7 @@ interface Folder {
 interface FolderFilterParams {
   currentPage?: number;
   itemsPerPage?: number;
+  isRandom?: boolean;
   name?: string;
   category?: string;
   language?: string;

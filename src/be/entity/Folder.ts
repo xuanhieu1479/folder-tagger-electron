@@ -62,6 +62,7 @@ export default class Folder {
     const {
       currentPage = 1,
       itemsPerPage = PAGINATION.ITEMS_PER_PAGE[0],
+      isRandom,
       category,
       language,
       name,

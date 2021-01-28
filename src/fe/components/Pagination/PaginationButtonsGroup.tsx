@@ -1,5 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { ButtonGroup, Intent } from '@blueprintjs/core';
+import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import { PAGINATION } from '../../../common/variables/commonVariables';
 import PaginationButton from './PaginationButton';
 import './Pagination.styled.scss';
@@ -8,14 +9,14 @@ interface PaginationButtonsGroupInterface {
   totalPages: number;
   pagesRangeDisplayed?: number;
   currentPage: number;
-  setCurrentPage: (page: number) => void;
+  updateParams: (newParams: FolderFilterParams) => void;
 }
 
 const PaginationButtonsGroup = ({
   totalPages,
   pagesRangeDisplayed = PAGINATION.PAGES_RANGE_DISPLAYED,
   currentPage,
-  setCurrentPage
+  updateParams
 }: PaginationButtonsGroupInterface): ReactElement => {
   const [firstButtonInRange, setFirstButtonInRange] = useState(currentPage);
 
@@ -29,6 +30,10 @@ const PaginationButtonsGroup = ({
       setFirstButtonInRange(currentPage);
     }
   }, [currentPage]);
+
+  const updateCurrentPage = (newPage: number) => {
+    updateParams({ currentPage: newPage });
+  };
 
   const renderPaginationButtons = (): ReactElement => {
     let startPosition = firstButtonInRange;
@@ -51,7 +56,7 @@ const PaginationButtonsGroup = ({
         <PaginationButton
           key={i}
           text={i}
-          onClick={() => setCurrentPage(i)}
+          onClick={() => updateCurrentPage(i)}
           intent={i === currentPage ? Intent.PRIMARY : Intent.NONE}
         />
       );
@@ -66,12 +71,12 @@ const PaginationButtonsGroup = ({
       <PaginationButton
         text="<<"
         disabled={currentPage === 1}
-        onClick={() => setCurrentPage(1)}
+        onClick={() => updateCurrentPage(1)}
       />
       <PaginationButton
         text="<"
         disabled={currentPage === 1}
-        onClick={() => setCurrentPage(currentPage - 1)}
+        onClick={() => updateCurrentPage(currentPage - 1)}
       />
       <div className="footer_pagination_page-button_container">
         {renderPaginationButtons()}
@@ -79,12 +84,12 @@ const PaginationButtonsGroup = ({
       <PaginationButton
         text=">"
         disabled={currentPage === totalPages}
-        onClick={() => setCurrentPage(currentPage + 1)}
+        onClick={() => updateCurrentPage(currentPage + 1)}
       />
       <PaginationButton
         text=">>"
         disabled={currentPage === totalPages}
-        onClick={() => setCurrentPage(totalPages)}
+        onClick={() => updateCurrentPage(totalPages)}
       />
     </ButtonGroup>
   );

@@ -21,10 +21,6 @@ import './FoldersDisplay.styled.scss';
 interface FoldersDisplayInterface {
   openSettingDialog: () => void;
 }
-const defaultParams: FolderFilterParams = {
-  currentPage: 1,
-  itemsPerPage: PAGINATION.ITEMS_PER_PAGE[0]
-};
 const defaultFolderDialogParams = {
   isOpen: false,
   dialogType: TAG_ACTION.ADD
@@ -39,7 +35,7 @@ const FoldersDisplay = ({
   );
   const selectedFoldersRef = useRef(selectedFolders);
   const foldersListRef = useRef(foldersList);
-  const [params, setParams] = useState(defaultParams);
+  const [params, setParams] = useState(PAGINATION.DEFAULT);
   const [folderDialogParams, setFolderDialogParams] = useState(
     defaultFolderDialogParams
   );
@@ -200,7 +196,7 @@ const FoldersDisplay = ({
           allCategories={categories}
         />
         <Body updateSelectedFolders={updateSelectedFolders} />
-        <Footer updateParams={updateParams} />
+        <Footer params={params} updateParams={updateParams} />
       </section>
       <FolderDialog onClose={onCloseFolderDialog} {...folderDialogParams} />
     </>
