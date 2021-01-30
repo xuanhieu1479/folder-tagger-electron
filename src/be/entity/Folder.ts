@@ -6,13 +6,15 @@ import {
   JoinTable,
   getRepository,
   Column,
-  getManager
+  getManager,
+  Brackets
 } from 'typeorm';
+import _ from 'lodash';
 import { Category, Language, Tag } from './entity';
 import {
   MESSAGE,
   STATUS_CODE,
-  PAGINATION
+  SEARCH
 } from '../../common/variables/commonVariables';
 import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
 import {
@@ -59,42 +61,78 @@ export default class Folder {
   };
 
   get = async (params: FolderFilterParams): Promise<FolderQueryResult> => {
-    const {
-      currentPage = 1,
-      itemsPerPage = PAGINATION.ITEMS_PER_PAGE[0],
-      isRandom,
-      category,
-      language,
-      name,
-      tag
-    } = params;
+    const { currentPage, itemsPerPage, isRandom, category } = params;
+    const tags =
+      typeof params.tags === 'string' ? JSON.parse(params.tags) : undefined;
     const skipQuantity = (currentPage - 1) * itemsPerPage;
-
-    const totalFolders = await getRepository(Folder).count();
-    if (skipQuantity > totalFolders) {
-      return {
-        folders: {
-          foldersList: [],
-          totalFolders: 0
-        },
-        message: MESSAGE.INVALID_PARAMS,
-        status: STATUS_CODE.INVALID_DATA
-      };
-    }
 
     const query = getRepository(Folder)
       .createQueryBuilder('folder')
       .select('folder.FolderLocation', 'location')
       .addSelect('folder.FolderName', 'name')
       .addSelect('folder.FolderThumbnail', 'thumbnail')
-      .offset(skipQuantity)
-      .limit(itemsPerPage);
+      .distinct();
     if (category) query.andWhere('folder.Category = :category', { category });
-    if (language) query.andWhere('folder.Language = :language', { language });
-    if (name) query.andWhere('folder.FolderName = :name', { name });
+    if (tags?.character || tags?.genre || tags?.parody || tags?.wildcard)
+      query.innerJoin('folder.Tags', 'tag');
+    _.forEach(tags, (value, key) => {
+      const wildcardValue = typeof value === 'string' ? `%${value}%` : '';
+      switch (key) {
+        case 'language':
+          query.andWhere('folder.Language LIKE :language', {
+            language: wildcardValue
+          });
+          break;
+        case 'name':
+          value.map((v: string, index: number) => {
+            const queryString = `folder.FolderName LIKE :${key}_${index}`;
+            if (v.length === SEARCH.MINIMUM_LETTERS)
+              query.andWhere(queryString, { [`${key}_${index}`]: `% ${v} %` });
+            else query.andWhere(queryString, { [`${key}_${index}`]: `%${v}%` });
+          });
+          break;
+        case 'wildcard':
+          break;
+        default:
+          query.andWhere(`tag.TagType = :${key}`, { [key]: key });
+          query.andWhere(
+            new Brackets(q => {
+              value.map((v: string, index: number) => {
+                const query = `tag.TagName LIKE :${key}_${index}`;
+                const normalParameters = { [`${key}_${index}`]: `%${v}%` };
+                const minimumLettersParameters = {
+                  [`${key}_${index}`]: `% ${v} %`
+                };
+                if (v.length === SEARCH.MINIMUM_LETTERS) {
+                  if (index === 0) q.andWhere(query, minimumLettersParameters);
+                  else q.orWhere(query, minimumLettersParameters);
+                } else {
+                  if (index === 0) q.andWhere(query, normalParameters);
+                  else q.orWhere(query, normalParameters);
+                }
+              });
+            })
+          );
+          break;
+      }
+    });
 
     try {
-      const result = await query.getRawMany();
+      const totalFolders = await query.getCount();
+      if (skipQuantity > totalFolders) {
+        return {
+          folders: {
+            foldersList: [],
+            totalFolders: 0
+          },
+          message: MESSAGE.INVALID_PARAMS,
+          status: STATUS_CODE.INVALID_DATA
+        };
+      }
+      const result = await query
+        .offset(skipQuantity)
+        .limit(itemsPerPage)
+        .getRawMany();
       return {
         folders: {
           foldersList: result,

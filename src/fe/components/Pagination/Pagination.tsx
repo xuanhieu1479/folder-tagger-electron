@@ -10,7 +10,7 @@ interface PaginationInterface {
   pagesRangeDisplayed?: number;
   currentPage: number;
   itemsPerPage: number;
-  updateParams: (newParams: FolderFilterParams) => void;
+  updateParams: (newParams: Partial<FolderFilterParams>) => void;
 }
 
 const Pagination = ({

@@ -1,12 +1,4 @@
 /**
- * General interfaces
- */
-interface LooseObject {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
-
-/**
  * Folder interfaces
  */
 interface Folder {
@@ -15,18 +7,18 @@ interface Folder {
   thumbnail?: string;
 }
 interface FolderFilterParams {
-  currentPage?: number;
-  itemsPerPage?: number;
+  currentPage: number;
+  itemsPerPage: number;
   isRandom?: boolean;
-  name?: string;
   category?: string;
-  language?: string;
-  tag?: [
-    {
-      tagType: string;
-      tagName: string;
-    }
-  ];
+  tags?: {
+    language?: string;
+    name?: Array<string>;
+    parody?: Array<string>;
+    character?: Array<string>;
+    genre?: Array<string>;
+    wildcard?: Array<string>;
+  };
 }
 
 /**
@@ -37,4 +29,4 @@ interface Tags {
   tagName: string;
 }
 
-export { LooseObject, Folder, FolderFilterParams, Tags };
+export { Folder, FolderFilterParams, Tags };

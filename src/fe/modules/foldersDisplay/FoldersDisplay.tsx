@@ -153,7 +153,7 @@ const FoldersDisplay = ({
     foldersListRef.current = foldersList;
   }, [foldersList]);
 
-  const updateParams = (newParams: FolderFilterParams): void => {
+  const updateParams = (newParams: Partial<FolderFilterParams>): void => {
     setParams({ ...params, ...newParams });
   };
   const updateSelectedFolders = (newSelectedFolders: Array<string>): void => {

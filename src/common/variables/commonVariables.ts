@@ -11,6 +11,7 @@ import TAG_ACTION from './tagAction';
 import SETTING from './setting';
 import SEED_DATA from './seedData';
 import ELEMENT_ID from './elementID';
+import SEARCH from './search';
 
 export * from './api';
 export {
@@ -26,5 +27,6 @@ export {
   TAG_ACTION,
   SETTING,
   SEED_DATA,
-  ELEMENT_ID
+  ELEMENT_ID,
+  SEARCH
 };

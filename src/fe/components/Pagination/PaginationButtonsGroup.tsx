@@ -9,7 +9,7 @@ interface PaginationButtonsGroupInterface {
   totalPages: number;
   pagesRangeDisplayed?: number;
   currentPage: number;
-  updateParams: (newParams: FolderFilterParams) => void;
+  updateParams: (newParams: Partial<FolderFilterParams>) => void;
 }
 
 const PaginationButtonsGroup = ({
@@ -41,7 +41,7 @@ const PaginationButtonsGroup = ({
 
     if (pagesRangeDisplayed > totalPages) {
       startPosition = 1;
-      finishPosition = totalPages;
+      finishPosition = totalPages + 1;
     }
     // In case the pages left when component first mounted
     // are not enough for pagesRangeDisplayed

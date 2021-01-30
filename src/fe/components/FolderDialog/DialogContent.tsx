@@ -2,7 +2,7 @@ import React, { ReactElement, useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Intent } from '@blueprintjs/core';
 import _ from 'lodash';
-import { Tags, LooseObject } from '../../../common/interfaces/commonInterfaces';
+import { Tags } from '../../../common/interfaces/commonInterfaces';
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import { TAG_ACTION, MESSAGE } from '../../../common/variables/commonVariables';
 import { CustomSuggest, CustomMultiSelect } from '../commonComponents';
@@ -13,6 +13,13 @@ interface DialogContentInterface {
   dialogType: string;
   onClose: () => void;
 }
+type BreakDownTagsType =
+  | 'artist'
+  | 'group'
+  | 'parody'
+  | 'character'
+  | 'genre'
+  | string;
 const defaultSelectedTags = {
   artist: [],
   group: [],
@@ -70,7 +77,9 @@ const DialogContent = ({
   const breakDownTags = (source: Array<Tags>) => {
     return source.reduce(
       (accumulator, currentValue) => {
-        const newValue: LooseObject = { ...accumulator };
+        const newValue: Record<BreakDownTagsType, Array<string>> = {
+          ...accumulator
+        };
         newValue[currentValue.tagType].push(currentValue.tagName);
         return { ...accumulator, ...newValue };
       },

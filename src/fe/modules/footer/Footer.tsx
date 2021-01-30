@@ -8,7 +8,7 @@ import './Footer.styled.scss';
 
 interface FooterInterface {
   params: FolderFilterParams;
-  updateParams: (newParams: FolderFilterParams) => void;
+  updateParams: (newParams: Partial<FolderFilterParams>) => void;
 }
 
 const Footer = ({ params, updateParams }: FooterInterface): ReactElement => {

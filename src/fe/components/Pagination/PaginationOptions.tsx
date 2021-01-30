@@ -5,7 +5,7 @@ import { PAGINATION } from '../../../common/variables/commonVariables';
 
 interface PaginationOptionsInterface {
   itemsPerPage: number;
-  updateParams: (newParams: FolderFilterParams) => void;
+  updateParams: (newParams: Partial<FolderFilterParams>) => void;
 }
 
 const PaginationOptions = ({
