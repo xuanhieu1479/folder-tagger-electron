@@ -30,7 +30,7 @@ const FoldersDisplay = ({
   openSettingDialog
 }: FoldersDisplayInterface): ReactElement => {
   const dispatch = useDispatch();
-  const { selectedFolders, foldersList, categories } = useSelector(
+  const { selectedFolders, foldersList, categories, languages } = useSelector(
     (state: RootState) => state.folder
   );
   const selectedFoldersRef = useRef(selectedFolders);
@@ -141,6 +141,9 @@ const FoldersDisplay = ({
   useEffect((): void => {
     const getNewFolders = async () => {
       await getFolders(dispatch, params);
+      document
+        .getElementById(ELEMENT_ID.FOLDER_CARD_CONTAINER)
+        ?.scrollTo({ top: 0 });
     };
 
     getNewFolders();
@@ -194,6 +197,7 @@ const FoldersDisplay = ({
           params={params}
           updateParams={updateParams}
           allCategories={categories}
+          allLanguages={languages}
         />
         <Body updateSelectedFolders={updateSelectedFolders} />
         <Footer params={params} updateParams={updateParams} />

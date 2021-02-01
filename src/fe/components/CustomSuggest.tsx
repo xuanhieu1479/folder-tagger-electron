@@ -6,6 +6,7 @@ interface CustomSuggestInterface {
   selectedItem: string;
   items: Array<string>;
   isDisabled?: boolean;
+  className?: string;
   updateSelectedItem: (newItem: string) => void;
 }
 
@@ -13,6 +14,7 @@ const CustomSuggest = ({
   selectedItem,
   items,
   isDisabled = false,
+  className,
   updateSelectedItem
 }: CustomSuggestInterface): ReactElement => {
   const onItemSelect = (newItem: string) => {
@@ -42,11 +44,16 @@ const CustomSuggest = ({
       items={items}
       resetOnQuery={false}
       disabled={isDisabled}
+      className={className}
       selectedItem={selectedItem}
       inputValueRenderer={item => item}
       itemRenderer={renderSelectItems}
       itemPredicate={filterItems}
-      popoverProps={{ minimal: true }}
+      popoverProps={{
+        minimal: true,
+        usePortal: false,
+        popoverClassName: className
+      }}
       onItemSelect={onItemSelect}
       noResults={<MenuItem disabled={true} text="No results." />}
     />

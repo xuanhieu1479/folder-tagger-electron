@@ -6,19 +6,32 @@
   height: 50px;
   padding: 0 15px;
 
-  .header_category_container {
+  .header_select_container {
     @include flex-space-between;
     font-size: 16px;
 
-    .header_category_label {
+    .header_select_label {
+      margin-right: 5px;
+    }
+    .header_select-category {
+      width: 80px;
       margin-right: 10px;
     }
+    .header_select-language {
+      width: 100px;
+    }
+    .header_select-category,
+    .header_select-language {
+      ul {
+        min-width: unset;
+      }
+    }
   }
-  .header_category_keyword-input {
+  .header_keyword-input {
     flex: 1;
     margin: 0 25px;
   }
-  .header_category_action-buttons {
+  .header_action-buttons {
     @include flex-space-between;
 
     button {

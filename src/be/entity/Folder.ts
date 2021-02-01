@@ -61,7 +61,7 @@ export default class Folder {
   };
 
   get = async (params: FolderFilterParams): Promise<FolderQueryResult> => {
-    const { currentPage, itemsPerPage, isRandom, category } = params;
+    const { currentPage, itemsPerPage, isRandom, category, language } = params;
     const tags =
       typeof params.tags === 'string' ? JSON.parse(params.tags) : undefined;
     const skipQuantity = (currentPage - 1) * itemsPerPage;
@@ -70,49 +70,102 @@ export default class Folder {
       .createQueryBuilder('folder')
       .select('folder.FolderLocation', 'location')
       .addSelect('folder.FolderName', 'name')
-      .addSelect('folder.FolderThumbnail', 'thumbnail')
-      .distinct();
+      .addSelect('folder.FolderThumbnail', 'thumbnail');
     if (category) query.andWhere('folder.Category = :category', { category });
-    if (tags?.character || tags?.genre || tags?.parody || tags?.wildcard)
-      query.innerJoin('folder.Tags', 'tag');
-    _.forEach(tags, (value, key) => {
-      const wildcardValue = typeof value === 'string' ? `%${value}%` : '';
-      switch (key) {
-        case 'language':
-          query.andWhere('folder.Language LIKE :language', {
-            language: wildcardValue
+    if (language) query.andWhere('folder.Language = :language', { language });
+
+    // Get records that all match conditions.
+    // REFERENCE: https://stackoverflow.com/a/4768499/12183494
+    const createDynamicQueriesForTags = (
+      tagsArray: Array<string>,
+      tagKey: string,
+      isWildcard: boolean
+    ) => {
+      tagsArray.forEach((v: string, index: number) => {
+        query.andWhere(q => {
+          const subQuery = q
+            .subQuery()
+            .select('folder.FolderLocation')
+            .from(Folder, 'folder');
+          if (isWildcard) {
+            subQuery.leftJoin('folder.Tags', 'tag');
+            if (v.length >= SEARCH.MINIMUM_LETTERS) {
+              subQuery.where(`folder.FolderName LIKE :${tagKey}_${index}_0`);
+              subQuery.orWhere(`tag.TagName LIKE :${tagKey}_${index}_0`);
+            } else {
+              subQuery.where(
+                new Brackets(sq => {
+                  sq.orWhere(`folder.FolderName LIKE :${tagKey}_${index}_1`);
+                  sq.orWhere(`folder.FolderName LIKE :${tagKey}_${index}_2`);
+                  sq.orWhere(`folder.FolderName LIKE :${tagKey}_${index}_3`);
+                })
+              );
+              subQuery.orWhere(
+                new Brackets(sq => {
+                  sq.orWhere(`tag.TagName LIKE :${tagKey}_${index}_1`);
+                  sq.orWhere(`tag.TagName LIKE :${tagKey}_${index}_2`);
+                  sq.orWhere(`tag.TagName LIKE :${tagKey}_${index}_3`);
+                })
+              );
+            }
+          } else {
+            subQuery.innerJoin('folder.Tags', 'tag');
+            subQuery.where(`tag.TagType = :${tagKey}`, {
+              [tagKey]: tagKey
+            });
+            if (v.length >= SEARCH.MINIMUM_LETTERS) {
+              subQuery.andWhere(`tag.TagName LIKE :${tagKey}_${index}_0`);
+            } else {
+              subQuery.andWhere(
+                new Brackets(sq => {
+                  sq.orWhere(`tag.TagName LIKE :${tagKey}_${index}_1`);
+                  sq.orWhere(`tag.TagName LIKE :${tagKey}_${index}_2`);
+                  sq.orWhere(`tag.TagName LIKE :${tagKey}_${index}_3`);
+                })
+              );
+            }
+          }
+          subQuery.setParameters({
+            [`${tagKey}_${index}_0`]: `%${v}%`,
+            [`${tagKey}_${index}_1`]: `%${v} %`,
+            [`${tagKey}_${index}_2`]: `% ${v}%`,
+            [`${tagKey}_${index}_3`]: `% ${v} %`
           });
-          break;
+          return 'folder.FolderLocation IN ' + subQuery.getQuery();
+        });
+      });
+    };
+
+    _.forEach(tags, async (value, key) => {
+      switch (key) {
         case 'name':
-          value.map((v: string, index: number) => {
-            const queryString = `folder.FolderName LIKE :${key}_${index}`;
-            if (v.length === SEARCH.MINIMUM_LETTERS)
-              query.andWhere(queryString, { [`${key}_${index}`]: `% ${v} %` });
-            else query.andWhere(queryString, { [`${key}_${index}`]: `%${v}%` });
+          value.forEach((v: string, index: number) => {
+            const queryString = (tagKey: string) =>
+              `folder.FolderName LIKE :${tagKey}`;
+            if (v.length >= SEARCH.MINIMUM_LETTERS) {
+              query.andWhere(queryString(`${key}_${index}_0`));
+            } else {
+              query.andWhere(
+                new Brackets(q => {
+                  q.orWhere(queryString(`${key}_${index}_1`));
+                  q.orWhere(queryString(`${key}_${index}_2`));
+                  q.orWhere(queryString(`${key}_${index}_3`));
+                })
+              );
+            }
+            query.setParameters({
+              [`${key}_${index}_0`]: `%${v}%`,
+              [`${key}_${index}_1`]: `%${v} %`,
+              [`${key}_${index}_2`]: `% ${v}%`,
+              [`${key}_${index}_3`]: `% ${v} %`
+            });
           });
           break;
         case 'wildcard':
+          createDynamicQueriesForTags(value, key, true);
           break;
         default:
-          query.andWhere(`tag.TagType = :${key}`, { [key]: key });
-          query.andWhere(
-            new Brackets(q => {
-              value.map((v: string, index: number) => {
-                const query = `tag.TagName LIKE :${key}_${index}`;
-                const normalParameters = { [`${key}_${index}`]: `%${v}%` };
-                const minimumLettersParameters = {
-                  [`${key}_${index}`]: `% ${v} %`
-                };
-                if (v.length === SEARCH.MINIMUM_LETTERS) {
-                  if (index === 0) q.andWhere(query, minimumLettersParameters);
-                  else q.orWhere(query, minimumLettersParameters);
-                } else {
-                  if (index === 0) q.andWhere(query, normalParameters);
-                  else q.orWhere(query, normalParameters);
-                }
-              });
-            })
-          );
+          createDynamicQueriesForTags(value, key, false);
           break;
       }
     });

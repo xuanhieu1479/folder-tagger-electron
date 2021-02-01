@@ -10,15 +10,16 @@ interface HeaderInterface {
   params: FolderFilterParams;
   updateParams: (newParams: Partial<FolderFilterParams>) => void;
   allCategories: Array<string>;
+  allLanguages: Array<string>;
 }
 type TagKeyType =
-  | 'language'
   | 'name'
+  | 'artist'
+  | 'group'
   | 'parody'
   | 'character'
   | 'genre'
-  | 'wildcard'
-  | string;
+  | 'wildcard';
 const allOption = 'all';
 const {
   COMMON_TERMS,
@@ -33,13 +34,19 @@ const alternativeEndOfTagsRegex = `(${TAG_KEYS.map(
 const Header = ({
   params,
   updateParams,
-  allCategories
+  allCategories,
+  allLanguages
 }: HeaderInterface): ReactElement => {
   const [searchKeywords, setSearchKeywords] = useState('');
 
   const onChangeCategory = (newCategory: string) => {
     updateParams({
       category: newCategory === allOption ? undefined : newCategory
+    });
+  };
+  const onChangeLanguage = (newLanguage: string) => {
+    updateParams({
+      language: newLanguage === allOption ? undefined : newLanguage
     });
   };
   const onChangeSearchKeywords = (event: React.FormEvent<HTMLInputElement>) => {
@@ -79,7 +86,7 @@ const Header = ({
 
   const generateTagsFromSearchKeywords = () => {
     let searchQuery = searchKeywords;
-    const tags: Record<TagKeyType, string | Array<string>> = {};
+    const tags: Partial<Record<TagKeyType, Array<string>>> = {};
     const getTagsByTagKeyFromSearchKeywords = (tagKey: string) => {
       const tagKeyRegex = `${tagKey}:`;
       const searchRegex = new RegExp(
@@ -89,10 +96,14 @@ const Header = ({
       searchQuery = searchQuery
         .replace(searchRegex, match => {
           switch (tagKey) {
-            case 'language':
-              tags[tagKey] = match;
+            case 'parody':
+            case 'character':
+              tags[tagKey] = sanitizeSearchKeywords(match, 2);
               break;
-            default:
+            case 'name':
+            case 'artist':
+            case 'group':
+            case 'genre':
               tags[tagKey] = sanitizeSearchKeywords(match);
               break;
           }
@@ -111,22 +122,30 @@ const Header = ({
 
   return (
     <header className="header_container">
-      <section className="header_category_container">
-        <div className="header_category_label">Category:</div>
+      <section className="header_select_container">
+        <div className="header_select_label">Category:</div>
         <CustomSuggest
           selectedItem={params.category || allOption}
           items={[allOption, ...allCategories]}
+          className="header_select-category"
           updateSelectedItem={onChangeCategory}
+        />
+        <div className="header_select_label">Language:</div>
+        <CustomSuggest
+          selectedItem={params.language || allOption}
+          items={[allOption, ...allLanguages]}
+          className="header_select-language"
+          updateSelectedItem={onChangeLanguage}
         />
       </section>
       <InputGroup
-        className="header_category_keyword-input"
+        className="header_keyword-input"
         placeholder="Search Keywords"
         value={searchKeywords}
         onChange={onChangeSearchKeywords}
         onKeyDown={onPressEnter}
       />
-      <div className="header_category_action-buttons">
+      <div className="header_action-buttons">
         <Button intent={Intent.PRIMARY} onClick={onRandomize}>
           Randomize
         </Button>

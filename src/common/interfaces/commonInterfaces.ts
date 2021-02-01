@@ -11,9 +11,11 @@ interface FolderFilterParams {
   itemsPerPage: number;
   isRandom?: boolean;
   category?: string;
+  language?: string;
   tags?: {
-    language?: string;
     name?: Array<string>;
+    artist?: Array<string>;
+    group?: Array<string>;
     parody?: Array<string>;
     character?: Array<string>;
     genre?: Array<string>;
