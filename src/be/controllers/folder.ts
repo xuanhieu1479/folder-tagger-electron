@@ -20,10 +20,12 @@ router.get(CONTROLLER_PATH.GET, async (req: Request, res: Response) => {
     typeof params.itemsPerPage === 'string'
       ? parseInt(params.itemsPerPage)
       : PAGINATION.DEFAULT.itemsPerPage;
+  const isRandom = params.isRandom === 'true';
   const { folders, status, message } = await folder.get({
     ...params,
     currentPage,
-    itemsPerPage
+    itemsPerPage,
+    isRandom
   });
   res.status(status).json({ folders, message });
 });

@@ -58,13 +58,11 @@ const Header = ({
 
   const onSearch = () => {
     const tags = generateTagsFromSearchKeywords();
-    updateParams({ tags, ...PAGINATION.DEFAULT });
+    updateParams({ tags, isRandom: false, ...PAGINATION.DEFAULT });
   };
   const onRandomize = () => {
-    // updateParams({
-    //   currentPage: PAGINATION.DEFAULT.currentPage,
-    //   isRandom: true
-    // });
+    const tags = generateTagsFromSearchKeywords();
+    updateParams({ tags, isRandom: true, ...PAGINATION.DEFAULT });
   };
 
   const sanitizeSearchKeywords = (

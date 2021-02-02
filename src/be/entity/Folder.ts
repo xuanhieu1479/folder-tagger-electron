@@ -71,6 +71,7 @@ export default class Folder {
       .select('folder.FolderLocation', 'location')
       .addSelect('folder.FolderName', 'name')
       .addSelect('folder.FolderThumbnail', 'thumbnail');
+    if (isRandom === true) query.addOrderBy('RANDOM()');
     if (category) query.andWhere('folder.Category = :category', { category });
     if (language) query.andWhere('folder.Language = :language', { language });
 
