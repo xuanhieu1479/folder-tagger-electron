@@ -74,14 +74,31 @@ export default class Folder {
     if (category) query.andWhere('folder.Category = :category', { category });
     if (language) query.andWhere('folder.Language = :language', { language });
 
-    // Get records that all match conditions.
+    // Get records that match all conditions.
     // REFERENCE: https://stackoverflow.com/a/4768499/12183494
     const createDynamicQueriesForTags = (
       tagsArray: Array<string>,
       tagKey: string,
       isWildcard: boolean
     ) => {
-      tagsArray.forEach((v: string, index: number) => {
+      tagsArray.forEach((tagValue: string, tagPosition: number) => {
+        const isTagIncluded = tagValue[0] !== SEARCH.EXCLUDE_TAGS_CHARACTER;
+        const tagName = isTagIncluded ? tagValue : tagValue.substring(1);
+        const isTagAboveMinimumLetters =
+          tagName.length >= SEARCH.MINIMUM_LETTERS;
+        const parameterKey = (index: number) =>
+          `${tagKey}_${tagPosition}_${index}`;
+        const folderQueryString = (index: number) =>
+          `folder.FolderName ${isTagIncluded ? '' : 'NOT '}LIKE :${parameterKey(
+            index
+          )}`;
+        const tagQueryString = (index: number) => {
+          if (isTagIncluded) return `tag.TagName LIKE :${parameterKey(index)}`;
+          else
+            return `(tag.TagName IS NULL OR tag.TagName NOT LIKE :${parameterKey(
+              index
+            )})`;
+        };
         query.andWhere(q => {
           const subQuery = q
             .subQuery()
@@ -89,22 +106,43 @@ export default class Folder {
             .from(Folder, 'folder');
           if (isWildcard) {
             subQuery.leftJoin('folder.Tags', 'tag');
-            if (v.length >= SEARCH.MINIMUM_LETTERS) {
-              subQuery.where(`folder.FolderName LIKE :${tagKey}_${index}_0`);
-              subQuery.orWhere(`tag.TagName LIKE :${tagKey}_${index}_0`);
-            } else {
+            if (isTagAboveMinimumLetters && isTagIncluded) {
+              subQuery.where(folderQueryString(0));
+              subQuery.orWhere(tagQueryString(0));
+            }
+            if (isTagAboveMinimumLetters && !isTagIncluded) {
+              subQuery.where(folderQueryString(0));
+              subQuery.andWhere(tagQueryString(0));
+            }
+            if (!isTagAboveMinimumLetters && isTagIncluded) {
               subQuery.where(
                 new Brackets(sq => {
-                  sq.orWhere(`folder.FolderName LIKE :${tagKey}_${index}_1`);
-                  sq.orWhere(`folder.FolderName LIKE :${tagKey}_${index}_2`);
-                  sq.orWhere(`folder.FolderName LIKE :${tagKey}_${index}_3`);
+                  sq.orWhere(folderQueryString(1));
+                  sq.orWhere(folderQueryString(2));
+                  sq.orWhere(folderQueryString(3));
                 })
               );
               subQuery.orWhere(
                 new Brackets(sq => {
-                  sq.orWhere(`tag.TagName LIKE :${tagKey}_${index}_1`);
-                  sq.orWhere(`tag.TagName LIKE :${tagKey}_${index}_2`);
-                  sq.orWhere(`tag.TagName LIKE :${tagKey}_${index}_3`);
+                  sq.orWhere(tagQueryString(1));
+                  sq.orWhere(tagQueryString(2));
+                  sq.orWhere(tagQueryString(3));
+                })
+              );
+            }
+            if (!isTagAboveMinimumLetters && !isTagIncluded) {
+              subQuery.where(
+                new Brackets(sq => {
+                  sq.andWhere(folderQueryString(1));
+                  sq.andWhere(folderQueryString(2));
+                  sq.andWhere(folderQueryString(3));
+                })
+              );
+              subQuery.andWhere(
+                new Brackets(sq => {
+                  sq.andWhere(tagQueryString(1));
+                  sq.andWhere(tagQueryString(2));
+                  sq.andWhere(tagQueryString(3));
                 })
               );
             }
@@ -113,23 +151,33 @@ export default class Folder {
             subQuery.where(`tag.TagType = :${tagKey}`, {
               [tagKey]: tagKey
             });
-            if (v.length >= SEARCH.MINIMUM_LETTERS) {
-              subQuery.andWhere(`tag.TagName LIKE :${tagKey}_${index}_0`);
-            } else {
+            if (isTagAboveMinimumLetters) {
+              subQuery.andWhere(tagQueryString(0));
+            }
+            if (!isTagAboveMinimumLetters && isTagIncluded) {
+              subQuery.orWhere(
+                new Brackets(sq => {
+                  sq.orWhere(tagQueryString(1));
+                  sq.orWhere(tagQueryString(2));
+                  sq.orWhere(tagQueryString(3));
+                })
+              );
+            }
+            if (!isTagAboveMinimumLetters && !isTagIncluded) {
               subQuery.andWhere(
                 new Brackets(sq => {
-                  sq.orWhere(`tag.TagName LIKE :${tagKey}_${index}_1`);
-                  sq.orWhere(`tag.TagName LIKE :${tagKey}_${index}_2`);
-                  sq.orWhere(`tag.TagName LIKE :${tagKey}_${index}_3`);
+                  sq.andWhere(tagQueryString(1));
+                  sq.andWhere(tagQueryString(2));
+                  sq.andWhere(tagQueryString(3));
                 })
               );
             }
           }
           subQuery.setParameters({
-            [`${tagKey}_${index}_0`]: `%${v}%`,
-            [`${tagKey}_${index}_1`]: `%${v} %`,
-            [`${tagKey}_${index}_2`]: `% ${v}%`,
-            [`${tagKey}_${index}_3`]: `% ${v} %`
+            [parameterKey(0)]: `%${tagName}%`,
+            [parameterKey(1)]: `%${tagName} %`,
+            [parameterKey(2)]: `% ${tagName}%`,
+            [parameterKey(3)]: `% ${tagName} %`
           });
           return 'folder.FolderLocation IN ' + subQuery.getQuery();
         });
@@ -139,25 +187,40 @@ export default class Folder {
     _.forEach(tags, async (value, key) => {
       switch (key) {
         case 'name':
-          value.forEach((v: string, index: number) => {
-            const queryString = (tagKey: string) =>
-              `folder.FolderName LIKE :${tagKey}`;
-            if (v.length >= SEARCH.MINIMUM_LETTERS) {
-              query.andWhere(queryString(`${key}_${index}_0`));
-            } else {
+          value.forEach((tagValue: string, tagPosition: number) => {
+            const isTagIncluded = tagValue[0] !== SEARCH.EXCLUDE_TAGS_CHARACTER;
+            const tagName = isTagIncluded ? tagValue : tagValue.substring(1);
+            const isTagAboveMinimumLetters =
+              tagName.length >= SEARCH.MINIMUM_LETTERS;
+            const parameterKey = (index: number) =>
+              `${key}_${tagPosition}_${index}`;
+            const queryString = (index: number) =>
+              `folder.FolderName ${
+                isTagIncluded ? '' : 'NOT '
+              }LIKE :${parameterKey(index)}`;
+
+            if (isTagAboveMinimumLetters) query.andWhere(queryString(0));
+            if (!isTagAboveMinimumLetters && isTagIncluded)
               query.andWhere(
                 new Brackets(q => {
-                  q.orWhere(queryString(`${key}_${index}_1`));
-                  q.orWhere(queryString(`${key}_${index}_2`));
-                  q.orWhere(queryString(`${key}_${index}_3`));
+                  q.orWhere(queryString(1));
+                  q.orWhere(queryString(2));
+                  q.orWhere(queryString(3));
                 })
               );
-            }
+            if (!isTagAboveMinimumLetters && !isTagIncluded)
+              query.andWhere(
+                new Brackets(q => {
+                  q.andWhere(queryString(1));
+                  q.andWhere(queryString(2));
+                  q.andWhere(queryString(3));
+                })
+              );
             query.setParameters({
-              [`${key}_${index}_0`]: `%${v}%`,
-              [`${key}_${index}_1`]: `%${v} %`,
-              [`${key}_${index}_2`]: `% ${v}%`,
-              [`${key}_${index}_3`]: `% ${v} %`
+              [parameterKey(0)]: `%${tagName}%`,
+              [parameterKey(1)]: `%${tagName} %`,
+              [parameterKey(2)]: `% ${tagName}%`,
+              [parameterKey(3)]: `% ${tagName} %`
             });
           });
           break;
