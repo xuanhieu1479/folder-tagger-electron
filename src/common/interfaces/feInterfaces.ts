@@ -15,6 +15,7 @@ interface ReducerAction {
 
 interface StatusReducerInterface {
   isLoading: boolean;
+  isDialogOpen: boolean;
 }
 interface FolderReducerInterface {
   selectedFolders: Array<string>;

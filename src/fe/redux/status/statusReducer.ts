@@ -1,11 +1,17 @@
-import { START_LOADING, FINISH_LOADING } from './statusActionType';
+import {
+  START_LOADING,
+  FINISH_LOADING,
+  OPEN_DIALOG,
+  CLOSE_DIALOG
+} from './statusActionType';
 import {
   ReducerAction,
   StatusReducerInterface
 } from '../../../common/interfaces/feInterfaces';
 
 export const statusInitState = {
-  isLoading: false
+  isLoading: false,
+  isDialogOpen: false
 };
 
 const statusReducer = (
@@ -17,6 +23,10 @@ const statusReducer = (
       return { ...state, isLoading: true };
     case FINISH_LOADING:
       return { ...state, isLoading: false };
+    case OPEN_DIALOG:
+      return { ...state, isDialogOpen: true };
+    case CLOSE_DIALOG:
+      return { ...state, isDialogOpen: false };
     default:
       return state;
   }

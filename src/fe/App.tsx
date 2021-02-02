@@ -4,6 +4,7 @@ import axiosConfig from './config/axiosConfig';
 import { initIpcEventListeners, clearIpcEventListerners } from './app/ipcEvent';
 import { SettingDialog } from './components/commonComponents';
 import FoldersDisplay from './modules/foldersDisplay/FoldersDisplay';
+import { onOpenDialog, onCloseDialog } from './redux/status/statusAction';
 import { getCategories, getLanguages } from './redux/folder/folderAction';
 import { getSettings } from './redux/setting/settingAction';
 
@@ -26,9 +27,11 @@ const App = (): ReactElement => {
 
   const onOpenSettingDialog = () => {
     setIsSettingDialogOpen(true);
+    onOpenDialog(dispatch);
   };
   const onCloseSettingDialog = () => {
     setIsSettingDialogOpen(false);
+    onCloseDialog(dispatch);
   };
 
   return (

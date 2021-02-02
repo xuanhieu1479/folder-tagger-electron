@@ -13,6 +13,7 @@ import { FolderDialog } from '../../components/commonComponents';
 import Header from '../header/Header';
 import Body from '../body/Body';
 import Footer from '../footer/Footer';
+import { onOpenDialog, onCloseDialog } from '../../redux/status/statusAction';
 import { SELECT_FOLDERS } from '../../redux/folder/folderActionType';
 import { getFolders } from '../../redux/folder/folderAction';
 import { showMessage } from '../../../utility/showMessage';
@@ -33,8 +34,10 @@ const FoldersDisplay = ({
   const { selectedFolders, foldersList, categories, languages } = useSelector(
     (state: RootState) => state.folder
   );
+  const { isDialogOpen } = useSelector((state: RootState) => state.status);
   const selectedFoldersRef = useRef(selectedFolders);
   const foldersListRef = useRef(foldersList);
+  const isDialogOpenRef = useRef(isDialogOpen);
   const [params, setParams] = useState(PAGINATION.DEFAULT);
   const [folderDialogParams, setFolderDialogParams] = useState(
     defaultFolderDialogParams
@@ -42,9 +45,12 @@ const FoldersDisplay = ({
 
   useEffect(() => {
     const keyDownListerner = (event: KeyboardEvent) => {
+      const isDialogOpen = isDialogOpenRef.current;
       const selectedFolders = selectedFoldersRef.current;
       const foldersList = foldersListRef.current.map(folder => folder.location);
+
       if (event.ctrlKey) {
+        if (isDialogOpen) return;
         switch (event.key) {
           case 'e':
             if (!_.isEmpty(selectedFolders)) onOpenFolderDialog(TAG_ACTION.ADD);
@@ -96,6 +102,7 @@ const FoldersDisplay = ({
         switch (event.key) {
           case 'ArrowLeft':
             event.preventDefault();
+            if (isDialogOpen) return;
             if (newlySelectedPosition === firstPosition) return;
             if (isHoldingShift) {
               const isGoingBackward = selectedFolders.includes(previousFolder);
@@ -109,6 +116,7 @@ const FoldersDisplay = ({
             break;
           case 'ArrowRight':
             event.preventDefault();
+            if (isDialogOpen) return;
             if (newlySelectedPosition === lastPosition) return;
             if (isHoldingShift) {
               const isGoingBackward = selectedFolders.includes(nextFolder);
@@ -122,11 +130,13 @@ const FoldersDisplay = ({
             break;
           case 'ArrowDown':
             event.preventDefault();
+            if (isDialogOpen) return;
             if (downPosition > lastPosition) return;
             updateSelectedFolders([foldersList[downPosition]]);
             break;
           case 'ArrowUp':
             event.preventDefault();
+            if (isDialogOpen) return;
             if (upPosition < firstPosition) return;
             updateSelectedFolders([foldersList[upPosition]]);
             break;
@@ -151,10 +161,9 @@ const FoldersDisplay = ({
 
   useEffect(() => {
     selectedFoldersRef.current = selectedFolders;
-  }, [selectedFolders]);
-  useEffect(() => {
     foldersListRef.current = foldersList;
-  }, [foldersList]);
+    isDialogOpenRef.current = isDialogOpen;
+  }, [selectedFolders, foldersList, isDialogOpen]);
 
   const updateParams = (newParams: Partial<FolderFilterParams>): void => {
     setParams({ ...params, ...newParams });
@@ -185,9 +194,11 @@ const FoldersDisplay = ({
 
   const onOpenFolderDialog = (dialogType: string) => {
     setFolderDialogParams({ isOpen: true, dialogType });
+    onOpenDialog(dispatch);
   };
   const onCloseFolderDialog = () => {
     setFolderDialogParams(defaultFolderDialogParams);
+    onCloseDialog(dispatch);
   };
 
   return (
