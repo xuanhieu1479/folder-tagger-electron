@@ -27,9 +27,21 @@
       }
     }
   }
-  .header_keyword-input {
+  .header_keyword-input_container {
+    @include flex-space-between;
     flex: 1;
     margin: 0 25px;
+
+    .header_keyword-input {
+      flex: 1;
+      margin: 0 10px;
+    }
+    .header_keyword-icon {
+      cursor: help;
+    }
+    .header_keyword-icon_tooltip {
+      @include flex-vertical-space-between;
+    }
   }
   .header_action-buttons {
     @include flex-space-between;

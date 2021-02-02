@@ -74,6 +74,31 @@ export default class Folder {
     if (category) query.andWhere('folder.Category = :category', { category });
     if (language) query.andWhere('folder.Language = :language', { language });
 
+    const querySpecialTags = (tag: string) => {
+      query.andWhere(q => {
+        const subQuery = q
+          .subQuery()
+          .select('folder.FolderLocation')
+          .from(Folder, 'folder')
+          .leftJoin('folder.Tags', 'tag');
+        switch (tag) {
+          case SEARCH.SPECIAL_TAGS.NO_ARTIST:
+            subQuery.where('tag.TagType = :artist', { artist: 'artist' });
+            break;
+          case SEARCH.SPECIAL_TAGS.NO_GROUP:
+            subQuery.where('tag.TagType = :group', { group: 'group' });
+            break;
+          case SEARCH.SPECIAL_TAGS.NO_TAG:
+            subQuery.where(
+              'tag.TagType = :parody OR tag.TagType = :character OR tag.TagType = :genre',
+              { parody: 'parody', character: 'character', genre: 'genre' }
+            );
+            break;
+        }
+        return 'folder.FolderLocation NOT IN ' + subQuery.getQuery();
+      });
+    };
+
     // Get records that match all conditions.
     // REFERENCE: https://stackoverflow.com/a/4768499/12183494
     const createDynamicQueriesForTags = (
@@ -82,6 +107,10 @@ export default class Folder {
       isWildcard: boolean
     ) => {
       tagsArray.forEach((tagValue: string, tagPosition: number) => {
+        if (Object.values(SEARCH.SPECIAL_TAGS).includes(tagValue)) {
+          querySpecialTags(tagValue);
+          return;
+        }
         const isTagIncluded = tagValue[0] !== SEARCH.EXCLUDE_TAGS_CHARACTER;
         const tagName = isTagIncluded ? tagValue : tagValue.substring(1);
         const isTagAboveMinimumLetters =

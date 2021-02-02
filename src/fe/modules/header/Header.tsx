@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react';
 import _ from 'lodash';
-import { InputGroup, Button, Intent } from '@blueprintjs/core';
+import { InputGroup, Button, Intent, Icon, Tooltip } from '@blueprintjs/core';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import { PAGINATION, SEARCH } from '../../../common/variables/commonVariables';
 import { CustomSuggest } from '../../components/commonComponents';
@@ -138,13 +138,31 @@ const Header = ({
           updateSelectedItem={onChangeLanguage}
         />
       </section>
-      <InputGroup
-        className="header_keyword-input"
-        placeholder="Search Keywords"
-        value={searchKeywords}
-        onChange={onChangeSearchKeywords}
-        onKeyDown={onPressEnter}
-      />
+      <section className="header_keyword-input_container">
+        <InputGroup
+          className="header_keyword-input"
+          placeholder="Search Keywords"
+          value={searchKeywords}
+          onChange={onChangeSearchKeywords}
+          onKeyDown={onPressEnter}
+        />
+        <Tooltip
+          intent={Intent.PRIMARY}
+          content={
+            <div className="header_keyword-icon_tooltip">
+              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_ARTIST}" to get folders that have no artist.`}</div>
+              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_GROUP}" to get folders that have no group.`}</div>
+              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_TAG}" to get folders that have no tag (except artist and group).`}</div>
+            </div>
+          }
+        >
+          <Icon
+            icon="help"
+            intent={Intent.PRIMARY}
+            className="header_keyword-icon"
+          />
+        </Tooltip>
+      </section>
       <div className="header_action-buttons">
         <Button intent={Intent.PRIMARY} onClick={onRandomize}>
           Randomize
