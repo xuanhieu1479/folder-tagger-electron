@@ -1,7 +1,6 @@
-import fs from 'fs';
 import moment from 'moment';
 import { LOG, DATE_TIME } from '../common/variables/commonVariables';
-import { initDirectory } from '../utilities/utilityFunctions';
+import { initDirectory, writeToFile } from '../utilities/utilityFunctions';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const logErrors = (error: Error | any, origin: Promise<any> | string): void => {
@@ -12,13 +11,7 @@ const logErrors = (error: Error | any, origin: Promise<any> | string): void => {
   const errorMessage = `${moment().format(
     DATE_TIME.TIME_LOG_FORMAT
   )}\n\nError: ${error}\n\nOrigin: ${origin}\n\n${seperator}\n`;
-
-  if (!fs.existsSync(logFilePath)) {
-    fs.appendFileSync(logFilePath, errorMessage);
-  } else {
-    const existingLogs = fs.readFileSync(logFilePath);
-    fs.writeFileSync(logFilePath, errorMessage + existingLogs);
-  }
+  writeToFile(logFilePath, errorMessage, true);
 };
 
 const initLogging = (): void => {

@@ -2,7 +2,7 @@ import { remote } from 'electron';
 import React, { ReactElement, MouseEvent } from 'react';
 import { Card, Tooltip } from '@blueprintjs/core';
 import { ASSET } from '../../common/variables/commonVariables';
-import { showMessage } from '../../utilities/utilityFunctions';
+import { showMessage } from '../../utilities/feUtilities';
 import './styles/FolderCard.styled.scss';
 
 const { app } = remote;

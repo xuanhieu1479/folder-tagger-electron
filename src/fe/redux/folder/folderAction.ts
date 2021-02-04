@@ -11,7 +11,7 @@ import {
   TransferDataInterface
 } from '../../../common/interfaces/commonInterfaces';
 import { GET_FOLDERS, GET_CATEGORIES, GET_LANGUAGES } from './folderActionType';
-import { showMessage } from '../../../utilities/utilityFunctions';
+import { showMessage } from '../../../utilities/feUtilities';
 import { startLoading, finishLoading } from '../status/statusAction';
 
 const getFolders = async (

@@ -6,7 +6,7 @@ import { Tags } from '../../../common/interfaces/commonInterfaces';
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import { TAG_ACTION, MESSAGE } from '../../../common/variables/commonVariables';
 import { CustomSuggest, CustomMultiSelect } from '../commonComponents';
-import { showMessage } from '../../../utilities/utilityFunctions';
+import { showMessage } from '../../../utilities/feUtilities';
 import { getTags, modifyTagsOfFolders } from '../../redux/tag/tagAction';
 
 interface DialogContentInterface {

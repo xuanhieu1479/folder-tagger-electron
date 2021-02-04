@@ -1,8 +1,15 @@
 import {
   initDirectory,
+  fileExists,
+  writeToFile,
   getFolderName,
   getFolderThumbnail
 } from './directoryUtilities';
-import { showMessage } from './showMessage';
 
-export { initDirectory, getFolderName, getFolderThumbnail, showMessage };
+export {
+  initDirectory,
+  fileExists,
+  writeToFile,
+  getFolderName,
+  getFolderThumbnail
+};

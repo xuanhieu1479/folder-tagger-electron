@@ -1,4 +1,3 @@
-import fs from 'fs';
 import {
   Entity,
   PrimaryColumn,
@@ -26,9 +25,11 @@ import {
 } from '../../common/variables/commonVariables';
 import { logErrors } from '../logging';
 import {
+  fileExists,
   getFolderName,
   getFolderThumbnail,
-  initDirectory
+  initDirectory,
+  writeToFile
 } from '../../utilities/utilityFunctions';
 
 interface FolderQueryResult extends QueryResultInterface {
@@ -443,7 +444,7 @@ export default class Folder {
         if (folderHasTags) failedFolders.push(folder);
         else await updateOrCreateFolders(folderInDatabase);
       } else {
-        if (!fs.existsSync(FolderLocation)) failedFolders.push(folder);
+        if (!fileExists(FolderLocation)) failedFolders.push(folder);
         else {
           const newFolder = manager.create(Folder, {
             FolderLocation,
@@ -464,7 +465,7 @@ export default class Folder {
         const failedDataName = `${new Date().getTime()}-FAILED-DATA.json`;
         const failedDataPath = `${BACKUP.DIRECTORY}/${failedDataName}`;
         initDirectory(BACKUP.DIRECTORY);
-        fs.appendFileSync(failedDataPath, JSON.stringify(failedFolders));
+        writeToFile(failedDataPath, JSON.stringify(failedFolders));
       });
       return {
         message: MESSAGE.SUCCESS,

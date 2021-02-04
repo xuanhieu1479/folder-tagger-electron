@@ -6,12 +6,14 @@ import { SETTING } from '../../../common/variables/commonVariables';
 import { UPDATE_SETTINGS } from './settingActionType';
 import {
   initDirectory,
-  showMessage
+  writeToFile,
+  fileExists
 } from '../../../utilities/utilityFunctions';
+import { showMessage } from '../../../utilities/feUtilities';
 
 const getSettings = (dispatch: Dispatch): void => {
   try {
-    if (!fs.existsSync(SETTING.PATH)) {
+    if (!fileExists(SETTING.PATH)) {
       updateSettings(dispatch);
     } else {
       const data = ini.parse(fs.readFileSync(SETTING.PATH).toString());
@@ -30,16 +32,11 @@ const updateSettings = (
   dispatch: Dispatch,
   settings?: SettingReducerInterface
 ): void => {
-  const resetSettings = settings === undefined;
   try {
+    const payload = settings || SETTING.DEFAULT;
     initDirectory(SETTING.DIRECTORY);
-    if (resetSettings) {
-      fs.writeFileSync(SETTING.PATH, ini.encode(SETTING.DEFAULT));
-      dispatch({ type: UPDATE_SETTINGS, payload: SETTING.DEFAULT });
-    } else {
-      fs.writeFileSync(SETTING.PATH, ini.encode(settings));
-      dispatch({ type: UPDATE_SETTINGS, payload: settings });
-    }
+    writeToFile(SETTING.PATH, ini.encode(payload));
+    dispatch({ type: UPDATE_SETTINGS, payload });
   } catch (error) {
     showMessage.error(error);
   }
