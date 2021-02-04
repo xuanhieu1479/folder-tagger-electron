@@ -110,3 +110,6 @@ temp/
 # Setting
 /Setting/
 *.ini
+
+# Backup
+/Backup/

@@ -11,12 +11,14 @@ const MODULE = {
 const CONTROLLER_PATH = {
   GET: '/',
   MODIFY: '/modify',
-  ADD: '/add'
+  ADD: '/add',
+  IMPORT: '/import'
 };
 
 const FOLDER_API = {
   GET: `${MODULE.FOLDER}${CONTROLLER_PATH.GET}`,
-  ADD: `${MODULE.FOLDER}${CONTROLLER_PATH.ADD}`
+  ADD: `${MODULE.FOLDER}${CONTROLLER_PATH.ADD}`,
+  IMPORT: `${MODULE.FOLDER}${CONTROLLER_PATH.IMPORT}`
 };
 
 const CATEGORY_API = {

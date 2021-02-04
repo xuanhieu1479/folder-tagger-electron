@@ -3,9 +3,13 @@ import axios from 'axios';
 import {
   FOLDER_API,
   CATEGORY_API,
-  LANGUAGE_API
+  LANGUAGE_API,
+  MESSAGE
 } from '../../../common/variables/commonVariables';
-import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
+import {
+  FolderFilterParams,
+  TransferDataInterface
+} from '../../../common/interfaces/commonInterfaces';
 import { GET_FOLDERS, GET_CATEGORIES, GET_LANGUAGES } from './folderActionType';
 import { showMessage } from '../../../utility/showMessage';
 import { startLoading, finishLoading } from '../status/statusAction';
@@ -46,6 +50,21 @@ const addFolders = async (
   }
 };
 
+const importFolders = async (
+  dispatch: Dispatch,
+  json: Array<TransferDataInterface>
+): Promise<void> => {
+  try {
+    startLoading(dispatch);
+    await axios.post(FOLDER_API.IMPORT, { json });
+    showMessage.success(MESSAGE.SUCCESS);
+  } catch (error) {
+    showMessage.error(error.response.data.message);
+  } finally {
+    finishLoading(dispatch);
+  }
+};
+
 const getCategories = async (dispatch: Dispatch): Promise<void> => {
   try {
     const { data } = await axios.get(CATEGORY_API.GET);
@@ -66,4 +85,4 @@ const getLanguages = async (dispatch: Dispatch): Promise<void> => {
   }
 };
 
-export { getFolders, addFolders, getCategories, getLanguages };
+export { getFolders, addFolders, importFolders, getCategories, getLanguages };

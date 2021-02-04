@@ -1,3 +1,4 @@
+import fs from 'fs';
 import {
   Entity,
   PrimaryColumn,
@@ -10,18 +11,21 @@ import {
   Brackets
 } from 'typeorm';
 import _ from 'lodash';
-import { Category, Language, Tag } from './entity';
+import { Category, Language, Tag, TagType } from './entity';
+import {
+  Folder as FolderInterface,
+  FolderFilterParams,
+  TransferDataInterface
+} from '../../common/interfaces/commonInterfaces';
+import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
 import {
   MESSAGE,
   STATUS_CODE,
-  SEARCH
+  SEARCH,
+  BACKUP
 } from '../../common/variables/commonVariables';
-import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
-import {
-  Folder as FolderInterface,
-  FolderFilterParams
-} from '../../common/interfaces/commonInterfaces';
 import { logErrors } from '../logging';
+import { getFolderName, getFolderThumbnail } from '../../utility/folderUtility';
 
 interface FolderQueryResult extends QueryResultInterface {
   folders?: {
@@ -29,6 +33,8 @@ interface FolderQueryResult extends QueryResultInterface {
     totalFolders: number;
   };
 }
+
+const getTagId = (tagType: string, tagName: string) => `${tagType}-${tagName}`;
 
 @Entity({ name: 'Folders' })
 export default class Folder {
@@ -71,7 +77,7 @@ export default class Folder {
       .select('folder.FolderLocation', 'location')
       .addSelect('folder.FolderName', 'name')
       .addSelect('folder.FolderThumbnail', 'thumbnail');
-    if (isRandom === true) query.addOrderBy('RANDOM()');
+    if (isRandom) query.addOrderBy('RANDOM()');
     if (category) query.andWhere('folder.Category = :category', { category });
     if (language) query.andWhere('folder.Language = :language', { language });
 
@@ -336,6 +342,131 @@ export default class Folder {
       };
     } catch (error) {
       console.error('ADD FOLDERS ERROR: ', error);
+      logErrors(error.message, error.stack);
+      return {
+        message: error.message,
+        status: STATUS_CODE.DB_ERROR
+      };
+    }
+  };
+
+  /**
+   * Using folderName instead of folderLocation for checking
+   * due to folders might be moved.
+   * There is an edge case that folderName will be duplicate
+   * but since it's kinda complicated we need to handle it manually.
+   */
+  import = async (
+    json: Array<TransferDataInterface>
+  ): Promise<QueryResultInterface> => {
+    const manager = getManager();
+    const folderRepository = getRepository(Folder);
+    const tagRepository = getRepository(Tag);
+    const allCategories = await getRepository(Category).find();
+    const allLanguages = await getRepository(Language).find();
+    const allTagTypes = await getRepository(TagType).find();
+    const upsertFolders: Array<Folder> = [];
+    const failedFolders: Array<TransferDataInterface> = [];
+    const insertTags: Array<Tag> = [];
+
+    const getFolderInDB = async (folderName: string) => {
+      return await folderRepository
+        .createQueryBuilder('folder')
+        .where('folder.FolderName = :folderName', { folderName })
+        .getOne();
+    };
+    const checkFolderHasTags = async (folderName: string) => {
+      return (
+        (await folderRepository
+          .createQueryBuilder('folder')
+          .where('folder.FolderName = :folderName', { folderName })
+          .innerJoin('folder.Tags', 'tag')
+          .getOne()) !== undefined
+      );
+    };
+    const getTagInDB = async (tagType: string, tagName: string) => {
+      return await tagRepository.findOne(getTagId(tagType, tagName));
+    };
+
+    for (const folder of json) {
+      const { FolderLocation, FolderName, Category, Language, Tags } = folder;
+      const folderInDatabase = await getFolderInDB(FolderName);
+      const categoryInDatabase = allCategories.find(
+        category => category.Category === Category
+      );
+      const languageInDatabase = allLanguages.find(
+        language => language.Language === Language
+      );
+      const updateOrCreateFolders = async (folder: Folder) => {
+        const folderTags: Array<Tag> = [];
+        const transferTags: Record<string, Array<string>> = { ...Tags };
+        const getFolderTags = async () => {
+          for (const tagType of Object.keys(transferTags)) {
+            const tagTypeInDatabase = allTagTypes.find(
+              t => t.TagType === tagType
+            );
+            for (const tagName of transferTags[tagType]) {
+              const tag = await getTagInDB(tagType, tagName);
+              if (tag !== undefined) folderTags.push(tag);
+              else {
+                const newTag = manager.create(Tag, {
+                  TagId: getTagId(tagType, tagName),
+                  TagName: tagName,
+                  TagType: tagTypeInDatabase
+                });
+                const isNewTagDuplicate =
+                  insertTags.find(
+                    upsertTag => upsertTag.TagId === newTag.TagId
+                  ) !== undefined;
+                if (!isNewTagDuplicate) insertTags.push(newTag);
+                folderTags.push(newTag);
+              }
+            }
+          }
+        };
+        await getFolderTags();
+
+        if (categoryInDatabase !== undefined)
+          folder.Category = categoryInDatabase;
+        if (languageInDatabase !== undefined)
+          folder.Language = languageInDatabase;
+        folder.Tags = [...folderTags];
+        upsertFolders.push(folder);
+      };
+
+      if (folderInDatabase !== undefined) {
+        const folderHasTags = await checkFolderHasTags(FolderName);
+        if (folderHasTags) failedFolders.push(folder);
+        else await updateOrCreateFolders(folderInDatabase);
+      } else {
+        if (!fs.existsSync(FolderLocation)) failedFolders.push(folder);
+        else {
+          const newFolder = manager.create(Folder, {
+            FolderLocation,
+            FolderName: getFolderName(FolderLocation),
+            FolderThumbnail: getFolderThumbnail(FolderLocation)
+          });
+          await updateOrCreateFolders(newFolder);
+        }
+      }
+    }
+
+    try {
+      await manager.transaction(async transactionManager => {
+        if (!_.isEmpty(insertTags))
+          await transactionManager.insert(Tag, insertTags);
+        // Sqlite maximum depth is 1000
+        await transactionManager.save(upsertFolders, { chunk: 500 });
+        const failedDataName = `${new Date().getTime()}-Failed-Data.json`;
+        const failedDataPath = `${BACKUP.DIRECTORY}/${failedDataName}`;
+        fs.appendFileSync(failedDataPath, JSON.stringify(failedFolders));
+      });
+      return {
+        message: MESSAGE.SUCCESS,
+        status: STATUS_CODE.SUCCESS
+      };
+    } catch (error) {
+      console.error('IMPORT FOLDERS ERROR: ', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,

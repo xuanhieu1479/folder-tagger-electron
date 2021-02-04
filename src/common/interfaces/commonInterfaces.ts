@@ -22,6 +22,19 @@ interface FolderFilterParams {
     wildcard?: Array<string>;
   };
 }
+interface TransferDataInterface {
+  FolderLocation: string;
+  FolderName: string;
+  Category: string;
+  Language: string;
+  Tags: {
+    artist: Array<string>;
+    group: Array<string>;
+    parody: Array<string>;
+    character: Array<string>;
+    genre: Array<string>;
+  };
+}
 
 /**
  * Tag interfaces
@@ -31,4 +44,4 @@ interface Tags {
   tagName: string;
 }
 
-export { Folder, FolderFilterParams, Tags };
+export { Folder, FolderFilterParams, TransferDataInterface, Tags };

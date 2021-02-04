@@ -3,6 +3,7 @@ import {
   onAddFolder,
   onAddParentFolder,
   onOpenSetting,
+  onImportData,
   onOpenDevtool,
   onReload
 } from './menuActions/menuActions';
@@ -27,6 +28,15 @@ const menuTemplate = [
       {
         label: 'Open setting',
         click: onOpenSetting
+      }
+    ]
+  },
+  {
+    label: 'Backup',
+    submenu: [
+      {
+        label: 'Import Data',
+        click: onImportData
       }
     ]
   },

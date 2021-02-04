@@ -45,4 +45,10 @@ router.post(CONTROLLER_PATH.ADD, async (req: Request, res: Response) => {
   res.status(status).json({ message });
 });
 
+router.post(CONTROLLER_PATH.IMPORT, async (req: Request, res: Response) => {
+  const { json } = req.body;
+  const { status, message } = await folder.import(json);
+  res.status(status).json({ message });
+});
+
 export default router;

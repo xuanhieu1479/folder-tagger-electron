@@ -12,6 +12,7 @@ import SETTING from './setting';
 import SEED_DATA from './seedData';
 import ELEMENT_ID from './elementID';
 import SEARCH from './search';
+import BACKUP from './backup';
 
 export * from './api';
 export {
@@ -28,5 +29,6 @@ export {
   SETTING,
   SEED_DATA,
   ELEMENT_ID,
-  SEARCH
+  SEARCH,
+  BACKUP
 };

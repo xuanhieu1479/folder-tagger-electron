@@ -9,7 +9,7 @@ import tagRouter from './tag';
 
 const initRouter = (app: Express): void => {
   app.use(cors());
-  app.use(bodyParser.json());
+  app.use(bodyParser.json({ limit: '10mb' }));
   app.get('/', (_req: Request, res: Response) => {
     res.send('Server is running!');
   });
