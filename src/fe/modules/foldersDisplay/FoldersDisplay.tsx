@@ -48,32 +48,31 @@ const FoldersDisplay = ({
       const isDialogOpen = isDialogOpenRef.current;
       const selectedFolders = selectedFoldersRef.current;
       const foldersList = foldersListRef.current.map(folder => folder.location);
+      const isHoldingCtrl = event.ctrlKey;
+      const hasNoSelectedFolders = selectedFolders.length === 0;
+      const hasOneSelectedFolder = selectedFolders.length === 1;
+      const hasSeveralSelectedFolders = selectedFolders.length > 1;
 
-      if (event.ctrlKey) {
+      if (isHoldingCtrl) {
         if (isDialogOpen) return;
         switch (event.key) {
           case 'e':
-            if (!_.isEmpty(selectedFolders)) onOpenFolderDialog(TAG_ACTION.ADD);
+            if (!hasNoSelectedFolders) onOpenFolderDialog(TAG_ACTION.ADD);
             break;
           case 's':
-            if (selectedFolders.length === 0) return;
-            if (selectedFolders.length > 1) {
+            if (hasOneSelectedFolder) onOpenFolderDialog(TAG_ACTION.EDIT);
+            if (hasSeveralSelectedFolders)
               showMessage.error(MESSAGE.CANNOT_EDIT_MANY_FOLDERS);
-              return;
-            }
-            if (selectedFolders.length === 1)
-              onOpenFolderDialog(TAG_ACTION.EDIT);
             break;
           case 'd':
-            if (!_.isEmpty(selectedFolders))
-              onOpenFolderDialog(TAG_ACTION.REMOVE);
+            if (!hasNoSelectedFolders) onOpenFolderDialog(TAG_ACTION.REMOVE);
             break;
           case 't':
             openSettingDialog();
             break;
         }
       } else {
-        if (_.isEmpty(selectedFolders) || foldersList.length <= 1) return;
+        if (hasNoSelectedFolders || foldersList.length <= 1) return;
         const folderCardElements = document
           .getElementById(ELEMENT_ID.FOLDER_CARD_CONTAINER)
           ?.querySelectorAll(`[id^=${ELEMENT_ID.FOLDER_CARD('')}]`);
@@ -98,47 +97,44 @@ const FoldersDisplay = ({
         ).length;
         const upPosition = newlySelectedPosition - foldersPerRow;
         const downPosition = newlySelectedPosition + foldersPerRow;
+        const selectedFolderIsAtTheStart =
+          newlySelectedPosition === firstPosition;
+        const selectedFolderIsAtTheEnd = newlySelectedPosition === lastPosition;
+        const selectedFolderIsAtTheTopRow = upPosition < firstPosition;
+        const selectedFolderIsAtTheBottomRow = downPosition > lastPosition;
 
         switch (event.key) {
           case 'ArrowLeft':
             event.preventDefault();
-            if (isDialogOpen) return;
-            if (newlySelectedPosition === firstPosition) return;
+            if (isDialogOpen || selectedFolderIsAtTheStart) return;
             if (isHoldingShift) {
               const isGoingBackward = selectedFolders.includes(previousFolder);
               const newSelectedFolders = isGoingBackward
                 ? selectedFolders.filter(f => f !== newlySelectedFolder)
                 : [...selectedFolders, previousFolder];
               updateSelectedFolders(newSelectedFolders);
-            } else {
-              updateSelectedFolders([previousFolder]);
-            }
+            } else updateSelectedFolders([previousFolder]);
             break;
           case 'ArrowRight':
             event.preventDefault();
-            if (isDialogOpen) return;
-            if (newlySelectedPosition === lastPosition) return;
+            if (isDialogOpen || selectedFolderIsAtTheEnd) return;
             if (isHoldingShift) {
               const isGoingBackward = selectedFolders.includes(nextFolder);
               const newSelectedFolders = isGoingBackward
                 ? selectedFolders.filter(f => f !== newlySelectedFolder)
                 : [...selectedFolders, nextFolder];
               updateSelectedFolders(newSelectedFolders);
-            } else {
-              updateSelectedFolders([nextFolder]);
-            }
-            break;
-          case 'ArrowDown':
-            event.preventDefault();
-            if (isDialogOpen) return;
-            if (downPosition > lastPosition) return;
-            updateSelectedFolders([foldersList[downPosition]]);
+            } else updateSelectedFolders([nextFolder]);
             break;
           case 'ArrowUp':
             event.preventDefault();
-            if (isDialogOpen) return;
-            if (upPosition < firstPosition) return;
+            if (isDialogOpen || selectedFolderIsAtTheTopRow) return;
             updateSelectedFolders([foldersList[upPosition]]);
+            break;
+          case 'ArrowDown':
+            event.preventDefault();
+            if (isDialogOpen || selectedFolderIsAtTheBottomRow) return;
+            updateSelectedFolders([foldersList[downPosition]]);
             break;
         }
       }

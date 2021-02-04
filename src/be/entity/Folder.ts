@@ -118,8 +118,10 @@ export default class Folder {
       tagKey: string,
       isWildcard: boolean
     ) => {
+      const isSpecialTag = (tag: string) =>
+        Object.values(SEARCH.SPECIAL_TAGS).includes(tag);
       tagsArray.forEach((tagValue: string, tagPosition: number) => {
-        if (Object.values(SEARCH.SPECIAL_TAGS).includes(tagValue)) {
+        if (isSpecialTag(tagValue)) {
           querySpecialTags(tagValue);
           return;
         }
@@ -323,12 +325,11 @@ export default class Folder {
       const { location, name, thumbnail } = folder;
       const folderExists = await this.isExisting(location);
       if (folderExists) {
-        if (!isAddingMultipleFoldesr)
-          return {
-            message: MESSAGE.SPECIFIC_FOLDER_ALREADY_EXISTS(location),
-            status: STATUS_CODE.DB_ERROR
-          };
-        else continue;
+        if (isAddingMultipleFoldesr) continue;
+        return {
+          message: MESSAGE.SPECIFIC_FOLDER_ALREADY_EXISTS(location),
+          status: STATUS_CODE.DB_ERROR
+        };
       } else
         insertFolders.push(
           manager.create(Folder, {
@@ -371,8 +372,8 @@ export default class Folder {
     const allLanguages = await getRepository(Language).find();
     const allTagTypes = await getRepository(TagType).find();
     const upsertFolders: Array<Folder> = [];
-    const failedFolders: Array<TransferDataInterface> = [];
-    const insertTags: Array<Tag> = [];
+    const failedToImportFolders: Array<TransferDataInterface> = [];
+    const newTags: Array<Tag> = [];
 
     const getFolderInDB = async (folderName: string) => {
       return await folderRepository
@@ -395,11 +396,11 @@ export default class Folder {
 
     for (const folder of json) {
       const { FolderLocation, FolderName, Category, Language, Tags } = folder;
-      const folderInDatabase = await getFolderInDB(FolderName);
-      const categoryInDatabase = allCategories.find(
+      const folderAlreadyInDB = await getFolderInDB(FolderName);
+      const categoryAlreadyInDB = allCategories.find(
         category => category.Category === Category
       );
-      const languageInDatabase = allLanguages.find(
+      const languageAlreadyInDB = allLanguages.find(
         language => language.Language === Language
       );
       const updateOrCreateFolders = async (folder: Folder) => {
@@ -411,8 +412,8 @@ export default class Folder {
               t => t.TagType === tagType
             );
             for (const tagName of transferTags[tagType]) {
-              const tag = await getTagInDB(tagType, tagName);
-              if (tag !== undefined) folderTags.push(tag);
+              const tagAlreadyInDB = await getTagInDB(tagType, tagName);
+              if (tagAlreadyInDB) folderTags.push(tagAlreadyInDB);
               else {
                 const newTag = manager.create(Tag, {
                   TagId: getTagId(tagType, tagName),
@@ -420,10 +421,10 @@ export default class Folder {
                   TagType: tagTypeInDatabase
                 });
                 const isNewTagDuplicate =
-                  insertTags.find(
+                  newTags.find(
                     upsertTag => upsertTag.TagId === newTag.TagId
                   ) !== undefined;
-                if (!isNewTagDuplicate) insertTags.push(newTag);
+                if (!isNewTagDuplicate) newTags.push(newTag);
                 folderTags.push(newTag);
               }
             }
@@ -431,20 +432,18 @@ export default class Folder {
         };
         await getFolderTags();
 
-        if (categoryInDatabase !== undefined)
-          folder.Category = categoryInDatabase;
-        if (languageInDatabase !== undefined)
-          folder.Language = languageInDatabase;
+        if (categoryAlreadyInDB) folder.Category = categoryAlreadyInDB;
+        if (languageAlreadyInDB) folder.Language = languageAlreadyInDB;
         folder.Tags = [...folderTags];
         upsertFolders.push(folder);
       };
 
-      if (folderInDatabase !== undefined) {
+      if (folderAlreadyInDB) {
         const folderHasTags = await checkFolderHasTags(FolderName);
-        if (folderHasTags) failedFolders.push(folder);
-        else await updateOrCreateFolders(folderInDatabase);
+        if (folderHasTags) failedToImportFolders.push(folder);
+        else await updateOrCreateFolders(folderAlreadyInDB);
       } else {
-        if (!fileExists(FolderLocation)) failedFolders.push(folder);
+        if (!fileExists(FolderLocation)) failedToImportFolders.push(folder);
         else {
           const newFolder = manager.create(Folder, {
             FolderLocation,
@@ -458,14 +457,13 @@ export default class Folder {
 
     try {
       await manager.transaction(async transactionManager => {
-        if (!_.isEmpty(insertTags))
-          await transactionManager.insert(Tag, insertTags);
+        if (!_.isEmpty(newTags)) await transactionManager.insert(Tag, newTags);
         // Sqlite maximum depth is 1000
         await transactionManager.save(upsertFolders, { chunk: 500 });
         const failedDataName = `${new Date().getTime()}-FAILED-DATA.json`;
         const failedDataPath = `${BACKUP.DIRECTORY}/${failedDataName}`;
         initDirectory(BACKUP.DIRECTORY);
-        writeToFile(failedDataPath, JSON.stringify(failedFolders));
+        writeToFile(failedDataPath, JSON.stringify(failedToImportFolders));
       });
       return {
         message: MESSAGE.SUCCESS,

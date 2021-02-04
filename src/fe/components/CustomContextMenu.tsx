@@ -20,7 +20,7 @@ const CustomContextMenu = ({
   useEffect(() => {
     if (typeof children.key === 'string') {
       const childrenElement = document.getElementById(children.key);
-      if (childrenElement !== null) {
+      if (childrenElement) {
         childrenElement.oncontextmenu = event => {
           ContextMenu.show(createElement(ContextMenuBody), {
             left: event.clientX,

@@ -16,8 +16,12 @@ const Body = ({ updateSelectedFolders }: BodyInterface): ReactElement => {
     (state: RootState) => state.folder
   );
 
+  const clearSelectedFolders = () => {
+    updateSelectedFolders([]);
+  };
+
   useEffect(() => {
-    const clearSelectedFolders = (event: MouseEvent) => {
+    const onClickListerner = (event: MouseEvent) => {
       const isClickingFolderCard = event
         .composedPath()
         // element is supposed to be HTMLElement not EventTarget
@@ -25,53 +29,54 @@ const Body = ({ updateSelectedFolders }: BodyInterface): ReactElement => {
         .some((element: any): boolean =>
           RegExp(/folder-card-\d/).test(element?.id)
         );
-      if (!isClickingFolderCard) {
-        updateSelectedFolders([]);
-      }
+      if (!isClickingFolderCard) clearSelectedFolders();
     };
 
     const rootElement = document.getElementById('root');
-    rootElement?.addEventListener('click', clearSelectedFolders);
-    return () =>
-      rootElement?.removeEventListener('click', clearSelectedFolders);
+    rootElement?.addEventListener('click', onClickListerner);
+    return () => rootElement?.removeEventListener('click', onClickListerner);
   }, []);
 
   const onSelectFolder = (
     event: React.MouseEvent,
-    folderLocation: string
+    clickedFolder: string
   ): void => {
     const isHoldingShift = event.shiftKey;
     const isHoldingCtrl = event.ctrlKey;
-    const isSelectingSameFolder = folderLocation === selectedFolders[0];
+    const clickedFirstSelectedFolders = clickedFolder === selectedFolders[0];
     const selectedFoldersCount = selectedFolders.length;
+    const clickedOneOfSelectedFolders = selectedFolders.includes(clickedFolder);
+    const deselectFolder =
+      clickedFirstSelectedFolders && selectedFoldersCount === 1;
+    const noFolderIsBeingSelected = selectedFoldersCount === 0;
 
     if (!isHoldingShift) {
       if (isHoldingCtrl) {
         // Holding ctrl while clicking
-        if (selectedFolders.includes(folderLocation))
+        if (clickedOneOfSelectedFolders)
           updateSelectedFolders(
             selectedFolders.filter(
-              selectedFolder => selectedFolder !== folderLocation
+              selectedFolder => selectedFolder !== clickedFolder
             )
           );
-        else updateSelectedFolders([...selectedFolders, folderLocation]);
+        else updateSelectedFolders([...selectedFolders, clickedFolder]);
         return;
       }
       // Normal click, no holding shift nor ctrl
-      if (isSelectingSameFolder && selectedFoldersCount === 1)
-        updateSelectedFolders([]);
-      else updateSelectedFolders([folderLocation]);
+      if (deselectFolder) clearSelectedFolders();
+      else updateSelectedFolders([clickedFolder]);
     } else {
       // Holding shift while clicking, regardless of holding ctrl or not
-      if (selectedFoldersCount === 0) updateSelectedFolders([folderLocation]);
-      else if (isSelectingSameFolder) updateSelectedFolders([folderLocation]);
+      if (noFolderIsBeingSelected) updateSelectedFolders([clickedFolder]);
+      else if (clickedFirstSelectedFolders)
+        updateSelectedFolders([clickedFolder]);
       else {
         const folderLocationsList = foldersList.map(f => f.location);
         const fromPosition = folderLocationsList.findIndex(
           fl => fl === selectedFolders[0]
         );
         const toPosition = folderLocationsList.findIndex(
-          fl => fl === folderLocation
+          fl => fl === clickedFolder
         );
         if (fromPosition < toPosition)
           updateSelectedFolders(

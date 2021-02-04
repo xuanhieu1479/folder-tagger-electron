@@ -24,12 +24,13 @@ const getTags = async (
   dispatch: Dispatch,
   folderLocation?: string
 ): Promise<void | GetTagsOfOneFolderInterface> => {
+  const getTagsForFolder = folderLocation !== undefined;
   try {
     const { data } = await axios.get(TAG_API.GET, {
       params: { folderLocation }
     });
     const { tags, category, language } = data;
-    if (folderLocation) return { tags, category, language };
+    if (getTagsForFolder) return { tags, category, language };
     dispatch({
       type: GET_TAGS,
       payload: { allTags: tags }

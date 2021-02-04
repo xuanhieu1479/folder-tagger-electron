@@ -9,7 +9,7 @@ const onImportData = (): void => {
     properties: ['openFile'],
     filters: [{ name: 'JSON', extensions: ['json'] }]
   });
-  if (file !== undefined) {
+  if (file) {
     const json = file[0];
     const data = JSON.parse(fs.readFileSync(json).toString());
     BrowserWindow.getFocusedWindow()?.webContents.send(IPC_EVENT.IMPORT_DATA, {

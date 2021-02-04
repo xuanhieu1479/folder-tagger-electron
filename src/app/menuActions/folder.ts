@@ -8,7 +8,7 @@ const onAddFolder = (): void => {
     defaultPath: `${app.getPath('desktop')}`,
     properties: ['openDirectory']
   });
-  if (directory !== undefined) {
+  if (directory) {
     const selectedDirectory = directory[0];
     BrowserWindow.getFocusedWindow()?.webContents.send(IPC_EVENT.ADD_FOLDERS, {
       folderLocations: [selectedDirectory]
@@ -22,7 +22,7 @@ const onAddParentFolder = (): void => {
     defaultPath: `${app.getPath('desktop')}`,
     properties: ['openDirectory']
   });
-  if (directory !== undefined) {
+  if (directory) {
     const parentDirectory = directory[0];
     const subDirectories = fs
       .readdirSync(parentDirectory, { withFileTypes: true })

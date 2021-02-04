@@ -58,17 +58,18 @@ export default class Tag {
   get = async ({
     folderLocation
   }: GetTagFilterParams): Promise<TagQueryResult> => {
+    const getTagsForFolder = folderLocation !== undefined;
     const query = getRepository(Tag)
       .createQueryBuilder('tag')
       .select('tag.TagType', 'tagType')
       .addSelect('tag.TagName', 'tagName');
-    if (folderLocation)
+    if (getTagsForFolder)
       query
         .innerJoin('tag.Folders', 'folder')
         .where('folder.FolderLocation = :folderLocation', { folderLocation });
     try {
       const tags = await query.getRawMany();
-      if (folderLocation) {
+      if (getTagsForFolder) {
         const selectedFolder = await getRepository(
           Folder
         ).findOne(folderLocation, { relations: ['Category', 'Language'] });
@@ -153,13 +154,13 @@ export default class Tag {
       insertFoldersQuery.leftJoinAndSelect('folder.Tags', 'Tag');
 
     const insertFolders = await insertFoldersQuery.getMany();
-    const insertCategory = category
+    const newCategory = category
       ? await getRepository(Category)
           .createQueryBuilder()
           .whereInIds(category)
           .getOne()
       : undefined;
-    const insertLanguage = language
+    const newLanguage = language
       ? await getRepository(Language)
           .createQueryBuilder()
           .whereInIds(language)
@@ -175,8 +176,8 @@ export default class Tag {
         .whereInIds(tagIds)
         .getMany();
       for (const folder of insertFolders) {
-        if (insertCategory) folder.Category = insertCategory;
-        if (insertLanguage) folder.Language = insertLanguage;
+        if (newCategory) folder.Category = newCategory;
+        if (newLanguage) folder.Language = newLanguage;
         switch (action) {
           case TAG_ACTION.ADD:
             folder.Tags = [...folder.Tags, ...foundTags, ...newlyCreatedTags];

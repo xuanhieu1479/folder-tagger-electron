@@ -6,7 +6,7 @@ const onOpenDevtool = (): void => {
   // chrome devtool, alert no server found even though it is running.
   // *Note: Idk why
   const focusedWebContents = BrowserWindow.getFocusedWindow()?.webContents;
-  if (focusedWebContents === undefined) return;
+  if (!focusedWebContents) return;
   focusedWebContents.isDevToolsOpened()
     ? focusedWebContents.closeDevTools()
     : focusedWebContents.openDevTools();

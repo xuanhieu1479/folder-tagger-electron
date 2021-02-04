@@ -105,14 +105,13 @@ const DialogContent = ({
     const newTags: Array<Tags> = [];
     const existingTags: Array<Tags> = [];
     selectedTags.forEach(selectedTag => {
-      if (
+      const selectedTagAlreadyExists =
         allTags.find(
           tag =>
             tag.tagType === selectedTag.tagType &&
             tag.tagName === selectedTag.tagName
-        )
-      )
-        existingTags.push(selectedTag);
+        ) !== undefined;
+      if (selectedTagAlreadyExists) existingTags.push(selectedTag);
       else newTags.push(selectedTag);
     });
     return { existingTags, newTags };
