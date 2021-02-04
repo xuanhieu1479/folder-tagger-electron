@@ -1,17 +1,10 @@
-import moment from 'moment';
-import { LOG, DATE_TIME } from '../common/variables/commonVariables';
+import { LOG } from '../common/variables/commonVariables';
 import { initDirectory, writeToFile } from '../utilities/utilityFunctions';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const logErrors = (error: Error | any, origin: Promise<any> | string): void => {
   initDirectory(LOG.DIRECTORY);
-  const seperator = '-'.repeat(100);
-  const logFileName = `${moment().format(DATE_TIME.DATE_LOG_FORMAT)}.log`;
-  const logFilePath = `${LOG.DIRECTORY}/${logFileName}`;
-  const errorMessage = `${moment().format(
-    DATE_TIME.TIME_LOG_FORMAT
-  )}\n\nError: ${error}\n\nOrigin: ${origin}\n\n${seperator}\n`;
-  writeToFile(logFilePath, errorMessage, true);
+  writeToFile(LOG.PATH, LOG.ERROR_MESSAGE(error, origin), true);
 };
 
 const initLogging = (): void => {

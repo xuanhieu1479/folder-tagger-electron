@@ -22,7 +22,7 @@ const getLogPath = (): string => {
   const backtrackCount = (needToBeRemovedPath.match(/\\/g) || []).length;
   const backtrackString = '../'.repeat(backtrackCount);
   const result = `${backtrackString}/${LOG.DIRECTORY}/${moment().format(
-    DATE_TIME.DATE_LOG_FORMAT
+    DATE_TIME.DATE_FILE_FORMAT
   )}-QUERY.log`;
   return result;
 };

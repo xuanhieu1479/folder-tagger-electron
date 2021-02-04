@@ -11,7 +11,6 @@ const writeToFile = (
   insertFromTop = false
 ): void => {
   if (!insertFromTop) fs.appendFileSync(filePath, fileContent);
-
   if (insertFromTop) {
     if (!fs.existsSync(filePath)) fs.appendFileSync(filePath, fileContent);
     else {

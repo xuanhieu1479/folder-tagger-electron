@@ -460,10 +460,8 @@ export default class Folder {
         if (!_.isEmpty(newTags)) await transactionManager.insert(Tag, newTags);
         // Sqlite maximum depth is 1000
         await transactionManager.save(upsertFolders, { chunk: 500 });
-        const failedDataName = `${new Date().getTime()}-FAILED-DATA.json`;
-        const failedDataPath = `${BACKUP.DIRECTORY}/${failedDataName}`;
         initDirectory(BACKUP.DIRECTORY);
-        writeToFile(failedDataPath, JSON.stringify(failedToImportFolders));
+        writeToFile(BACKUP.PATH, JSON.stringify(failedToImportFolders));
       });
       return {
         message: MESSAGE.SUCCESS,
