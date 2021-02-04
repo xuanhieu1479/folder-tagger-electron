@@ -4,11 +4,7 @@ import { Dispatch } from 'redux';
 import { SettingReducerInterface } from '../../../common/interfaces/feInterfaces';
 import { SETTING } from '../../../common/variables/commonVariables';
 import { UPDATE_SETTINGS } from './settingActionType';
-import {
-  initDirectory,
-  writeToFile,
-  fileExists
-} from '../../../utilities/utilityFunctions';
+import { writeToFile, fileExists } from '../../../utilities/utilityFunctions';
 import { showMessage } from '../../../utilities/feUtilities';
 
 const getSettings = (dispatch: Dispatch): void => {
@@ -34,8 +30,7 @@ const updateSettings = (
 ): void => {
   try {
     const payload = settings || SETTING.DEFAULT;
-    initDirectory(SETTING.DIRECTORY);
-    writeToFile(SETTING.PATH, ini.encode(payload));
+    writeToFile(SETTING.DIRECTORY, SETTING.PATH, ini.encode(payload));
     dispatch({ type: UPDATE_SETTINGS, payload });
   } catch (error) {
     showMessage.error(error);

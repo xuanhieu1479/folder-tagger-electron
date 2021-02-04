@@ -28,7 +28,6 @@ import {
   fileExists,
   getFolderName,
   getFolderThumbnail,
-  initDirectory,
   writeToFile
 } from '../../utilities/utilityFunctions';
 
@@ -460,8 +459,8 @@ export default class Folder {
         if (!_.isEmpty(newTags)) await transactionManager.insert(Tag, newTags);
         // Sqlite maximum depth is 1000
         await transactionManager.save(upsertFolders, { chunk: 500 });
-        initDirectory(BACKUP.DIRECTORY);
         writeToFile(
+          BACKUP.DIRECTORY,
           BACKUP.PATH_FAILED_IMPORT,
           JSON.stringify(failedToImportFolders)
         );
@@ -517,8 +516,7 @@ export default class Folder {
           )
         };
       });
-      initDirectory(BACKUP.DIRECTORY);
-      writeToFile(BACKUP.PATH_EXPORT, JSON.stringify(json));
+      writeToFile(BACKUP.DIRECTORY, BACKUP.PATH_EXPORT, JSON.stringify(json));
 
       return {
         message: MESSAGE.SUCCESS,

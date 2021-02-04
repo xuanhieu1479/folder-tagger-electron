@@ -1,10 +1,9 @@
 import { LOG } from '../common/variables/commonVariables';
-import { initDirectory, writeToFile } from '../utilities/utilityFunctions';
+import { writeToFile } from '../utilities/utilityFunctions';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const logErrors = (error: Error | any, origin: Promise<any> | string): void => {
-  initDirectory(LOG.DIRECTORY);
-  writeToFile(LOG.PATH, LOG.ERROR_MESSAGE(error, origin), true);
+  writeToFile(LOG.DIRECTORY, LOG.PATH, LOG.ERROR_MESSAGE(error, origin), true);
 };
 
 const initLogging = (): void => {

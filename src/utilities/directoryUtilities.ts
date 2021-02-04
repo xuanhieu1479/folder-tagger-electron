@@ -6,10 +6,12 @@ const initDirectory = (directoryPath: string): void => {
 
 const fileExists = (filePath: string): boolean => fs.existsSync(filePath);
 const writeToFile = (
+  fileDirectory: string,
   filePath: string,
   fileContent: string,
   insertFromTop = false
 ): void => {
+  initDirectory(fileDirectory);
   if (!insertFromTop) fs.appendFileSync(filePath, fileContent);
   if (insertFromTop) {
     if (!fs.existsSync(filePath)) fs.appendFileSync(filePath, fileContent);
