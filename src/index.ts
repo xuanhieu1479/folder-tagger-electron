@@ -7,7 +7,7 @@ import 'source-map-support/register';
 import _ from 'lodash';
 import { APP } from './common/variables/commonVariables';
 import initBE from './be/be';
-import { menuTemplate, initDirectory } from './app/app';
+import { menuTemplate } from './app/app';
 import { logErrors } from './be/logging';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -43,7 +43,6 @@ const initWindows = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   mainWindow.once('ready-to-show', async () => {
-    initDirectory();
     await initApp();
     splashWindow.destroy();
     mainWindow.show();

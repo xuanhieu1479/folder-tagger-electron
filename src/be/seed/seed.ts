@@ -4,9 +4,11 @@ import { createConnection } from 'typeorm';
 import { DATABASE, SEED_DATA } from '../../common/variables/commonVariables';
 import ormConfig from '../config/ormConfig';
 import { Category, Language, TagType } from '../entity/entity';
+import { initDirectory } from '../../utility/directoryUtility';
 
 const initDatabase = async (): Promise<void> => {
   if (!fs.existsSync(DATABASE.PATH)) {
+    initDirectory(DATABASE.DIRECTORY);
     // Generate database
     new Database(DATABASE.PATH);
 

@@ -6,6 +6,7 @@ import {
   DATE_TIME
 } from '../../common/variables/commonVariables';
 import { Folder, Category, Language, Tag, TagType } from '../entity/entity';
+import { initDirectory } from '../../utility/directoryUtility';
 
 /**
  * Since typeorm logger base path is where
@@ -14,6 +15,7 @@ import { Folder, Category, Language, Tag, TagType } from '../entity/entity';
  * necessary to get desired location.
  */
 const getLogPath = (): string => {
+  initDirectory(LOG.DIRECTORY);
   const programDirectory = process.cwd();
   const mainProcessPath = __dirname;
   const needToBeRemovedPath = mainProcessPath.replace(programDirectory, '');

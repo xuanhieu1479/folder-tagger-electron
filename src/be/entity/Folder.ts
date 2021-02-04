@@ -26,6 +26,7 @@ import {
 } from '../../common/variables/commonVariables';
 import { logErrors } from '../logging';
 import { getFolderName, getFolderThumbnail } from '../../utility/folderUtility';
+import { initDirectory } from '../../utility/directoryUtility';
 
 interface FolderQueryResult extends QueryResultInterface {
   folders?: {
@@ -457,8 +458,9 @@ export default class Folder {
           await transactionManager.insert(Tag, insertTags);
         // Sqlite maximum depth is 1000
         await transactionManager.save(upsertFolders, { chunk: 500 });
-        const failedDataName = `${new Date().getTime()}-Failed-Data.json`;
+        const failedDataName = `${new Date().getTime()}-FAILED-DATA.json`;
         const failedDataPath = `${BACKUP.DIRECTORY}/${failedDataName}`;
+        initDirectory(BACKUP.DIRECTORY);
         fs.appendFileSync(failedDataPath, JSON.stringify(failedFolders));
       });
       return {

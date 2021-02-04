@@ -1,10 +1,11 @@
 import fs from 'fs';
 import moment from 'moment';
 import { LOG, DATE_TIME } from '../common/variables/commonVariables';
+import { initDirectory } from '../utility/directoryUtility';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const logErrors = (error: Error | any, origin: Promise<any> | string): void => {
-  if (!fs.existsSync(LOG.DIRECTORY)) fs.mkdirSync(LOG.DIRECTORY);
+  initDirectory(LOG.DIRECTORY);
   const seperator = '-'.repeat(100);
   const logFileName = `${moment().format(DATE_TIME.DATE_LOG_FORMAT)}.log`;
   const logFilePath = `${LOG.DIRECTORY}/${logFileName}`;
