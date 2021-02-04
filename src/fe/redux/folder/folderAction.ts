@@ -65,6 +65,18 @@ const importFolders = async (
   }
 };
 
+const exportFolders = async (dispatch: Dispatch): Promise<void> => {
+  try {
+    startLoading(dispatch);
+    await axios.get(FOLDER_API.EXPORT);
+    showMessage.success(MESSAGE.SUCCESS);
+  } catch (error) {
+    showMessage.error(error.response.data.message);
+  } finally {
+    finishLoading(dispatch);
+  }
+};
+
 const getCategories = async (dispatch: Dispatch): Promise<void> => {
   try {
     const { data } = await axios.get(CATEGORY_API.GET);
@@ -85,4 +97,11 @@ const getLanguages = async (dispatch: Dispatch): Promise<void> => {
   }
 };
 
-export { getFolders, addFolders, importFolders, getCategories, getLanguages };
+export {
+  getFolders,
+  addFolders,
+  importFolders,
+  exportFolders,
+  getCategories,
+  getLanguages
+};

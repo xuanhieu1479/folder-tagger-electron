@@ -1,6 +1,6 @@
 import { onAddFolder, onAddParentFolder } from './folder';
 import { onOpenSetting } from './setting';
-import { onImportData } from './data';
+import { onImportData, onExportData } from './data';
 import { onOpenDevtool, onReload } from './debug';
 
 export {
@@ -8,6 +8,7 @@ export {
   onAddParentFolder,
   onOpenSetting,
   onImportData,
+  onExportData,
   onOpenDevtool,
   onReload
 };

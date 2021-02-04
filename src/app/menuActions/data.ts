@@ -18,4 +18,8 @@ const onImportData = (): void => {
   }
 };
 
-export { onImportData };
+const onExportData = (): void => {
+  BrowserWindow.getFocusedWindow()?.webContents.send(IPC_EVENT.EXPORT_DATA);
+};
+
+export { onImportData, onExportData };

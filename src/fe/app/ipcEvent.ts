@@ -1,7 +1,11 @@
 import { ipcRenderer } from 'electron';
 import { Dispatch } from 'redux';
 import { IPC_EVENT } from '../../common/variables/commonVariables';
-import { addFolders, importFolders } from '../redux/folder/folderAction';
+import {
+  addFolders,
+  exportFolders,
+  importFolders
+} from '../redux/folder/folderAction';
 
 const initIpcEventListeners = (
   dispatch: Dispatch,
@@ -17,6 +21,9 @@ const initIpcEventListeners = (
   ipcRenderer.on(IPC_EVENT.IMPORT_DATA, (_event, data) => {
     const { json } = data;
     importFolders(dispatch, json);
+  });
+  ipcRenderer.on(IPC_EVENT.EXPORT_DATA, () => {
+    exportFolders(dispatch);
   });
 };
 

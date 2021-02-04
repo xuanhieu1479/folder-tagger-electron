@@ -461,7 +461,10 @@ export default class Folder {
         // Sqlite maximum depth is 1000
         await transactionManager.save(upsertFolders, { chunk: 500 });
         initDirectory(BACKUP.DIRECTORY);
-        writeToFile(BACKUP.PATH, JSON.stringify(failedToImportFolders));
+        writeToFile(
+          BACKUP.PATH_FAILED_IMPORT,
+          JSON.stringify(failedToImportFolders)
+        );
       });
       return {
         message: MESSAGE.SUCCESS,
@@ -469,6 +472,60 @@ export default class Folder {
       };
     } catch (error) {
       console.error('IMPORT FOLDERS ERROR: ', error);
+      logErrors(error.message, error.stack);
+      return {
+        message: error.message,
+        status: STATUS_CODE.DB_ERROR
+      };
+    }
+  };
+
+  export = async (): Promise<QueryResultInterface> => {
+    try {
+      const allFolders = await getRepository(Folder)
+        .createQueryBuilder('folder')
+        .leftJoinAndSelect('folder.Category', 'category')
+        .leftJoinAndSelect('folder.Language', 'language')
+        .leftJoinAndSelect('folder.Tags', 'tag')
+        .leftJoinAndSelect('tag.TagType', 'tagType')
+        .select([
+          'folder.FolderLocation',
+          'folder.FolderName',
+          'category.Category',
+          'language.Language',
+          'tag.TagName',
+          'tagType.TagType'
+        ])
+        .getMany();
+      const json = allFolders.map(folder => {
+        const { FolderLocation, FolderName, Category, Language, Tags } = folder;
+        return {
+          FolderLocation,
+          FolderName,
+          Category: Category?.Category || null,
+          Language: Language?.Language || null,
+          Tags: Tags.reduce(
+            (accumulator: Record<string, Array<string>>, currentValue) => {
+              const tagKey = currentValue.TagType.TagType;
+              accumulator[tagKey] = [
+                ...accumulator[tagKey],
+                currentValue.TagName
+              ];
+              return accumulator;
+            },
+            { artist: [], group: [], parody: [], character: [], genre: [] }
+          )
+        };
+      });
+      initDirectory(BACKUP.DIRECTORY);
+      writeToFile(BACKUP.PATH_EXPORT, JSON.stringify(json));
+
+      return {
+        message: MESSAGE.SUCCESS,
+        status: STATUS_CODE.SUCCESS
+      };
+    } catch (error) {
+      console.error('EXPORT FOLDERS ERROR: ', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,

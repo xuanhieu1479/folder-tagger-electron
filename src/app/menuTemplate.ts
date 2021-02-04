@@ -5,7 +5,8 @@ import {
   onOpenSetting,
   onImportData,
   onOpenDevtool,
-  onReload
+  onReload,
+  onExportData
 } from './menuActions/menuActions';
 
 const menuTemplate = [
@@ -37,6 +38,10 @@ const menuTemplate = [
       {
         label: 'Import Data',
         click: onImportData
+      },
+      {
+        label: 'Export Data',
+        click: onExportData
       }
     ]
   },
