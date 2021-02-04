@@ -5,7 +5,10 @@ import {
   CONTROLLER_PATH,
   PAGINATION
 } from '../../common/variables/commonVariables';
-import { getFolderName, getFolderThumbnail } from '../../utility/folderUtility';
+import {
+  getFolderName,
+  getFolderThumbnail
+} from '../../utilities/utilityFunctions';
 
 const router = express.Router();
 const folder = new Folder();

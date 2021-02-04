@@ -1,5 +1,9 @@
 import fs from 'fs';
 
+const initDirectory = (directoryPath: string): void => {
+  if (!fs.existsSync(directoryPath)) fs.mkdirSync(directoryPath);
+};
+
 const getFolderName = (folderLocation: string): string => {
   return folderLocation.split('\\').pop() || 'Error Name';
 };
@@ -14,4 +18,4 @@ const getFolderThumbnail = (folderLocation: string): string | undefined => {
   return thumbnailName ? `${folderLocation}\\${thumbnailName}` : undefined;
 };
 
-export { getFolderName, getFolderThumbnail };
+export { initDirectory, getFolderName, getFolderThumbnail };

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import moment from 'moment';
 import { LOG, DATE_TIME } from '../common/variables/commonVariables';
-import { initDirectory } from '../utility/directoryUtility';
+import { initDirectory } from '../utilities/utilityFunctions';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const logErrors = (error: Error | any, origin: Promise<any> | string): void => {

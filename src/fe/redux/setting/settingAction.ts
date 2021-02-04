@@ -4,8 +4,10 @@ import { Dispatch } from 'redux';
 import { SettingReducerInterface } from '../../../common/interfaces/feInterfaces';
 import { SETTING } from '../../../common/variables/commonVariables';
 import { UPDATE_SETTINGS } from './settingActionType';
-import { showMessage } from '../../../utility/showMessage';
-import { initDirectory } from '../../../utility/directoryUtility';
+import {
+  initDirectory,
+  showMessage
+} from '../../../utilities/utilityFunctions';
 
 const getSettings = (dispatch: Dispatch): void => {
   try {

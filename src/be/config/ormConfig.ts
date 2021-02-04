@@ -6,7 +6,7 @@ import {
   DATE_TIME
 } from '../../common/variables/commonVariables';
 import { Folder, Category, Language, Tag, TagType } from '../entity/entity';
-import { initDirectory } from '../../utility/directoryUtility';
+import { initDirectory } from '../../utilities/utilityFunctions';
 
 /**
  * Since typeorm logger base path is where

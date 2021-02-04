@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Tags } from '../../../common/interfaces/commonInterfaces';
 import { TAG_API } from '../../../common/variables/commonVariables';
 import { GET_TAGS } from './tagActionType';
-import { showMessage } from '../../../utility/showMessage';
+import { showMessage } from '../../../utilities/utilityFunctions';
 
 interface GetTagsOfOneFolderInterface {
   tags: Array<Tags>;

@@ -16,7 +16,7 @@ import Footer from '../footer/Footer';
 import { onOpenDialog, onCloseDialog } from '../../redux/status/statusAction';
 import { SELECT_FOLDERS } from '../../redux/folder/folderActionType';
 import { getFolders } from '../../redux/folder/folderAction';
-import { showMessage } from '../../../utility/showMessage';
+import { showMessage } from '../../../utilities/utilityFunctions';
 import './FoldersDisplay.styled.scss';
 
 interface FoldersDisplayInterface {

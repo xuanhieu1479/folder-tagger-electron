@@ -25,8 +25,11 @@ import {
   BACKUP
 } from '../../common/variables/commonVariables';
 import { logErrors } from '../logging';
-import { getFolderName, getFolderThumbnail } from '../../utility/folderUtility';
-import { initDirectory } from '../../utility/directoryUtility';
+import {
+  getFolderName,
+  getFolderThumbnail,
+  initDirectory
+} from '../../utilities/utilityFunctions';
 
 interface FolderQueryResult extends QueryResultInterface {
   folders?: {
