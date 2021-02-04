@@ -462,7 +462,7 @@ export default class Folder {
         writeToFile(
           BACKUP.DIRECTORY,
           BACKUP.PATH_FAILED_IMPORT,
-          JSON.stringify(failedToImportFolders)
+          JSON.stringify(failedToImportFolders, null, 2)
         );
       });
       return {
@@ -516,7 +516,11 @@ export default class Folder {
           )
         };
       });
-      writeToFile(BACKUP.DIRECTORY, BACKUP.PATH_EXPORT, JSON.stringify(json));
+      writeToFile(
+        BACKUP.DIRECTORY,
+        BACKUP.PATH_EXPORT,
+        JSON.stringify(json, null, 2)
+      );
 
       return {
         message: MESSAGE.SUCCESS,
