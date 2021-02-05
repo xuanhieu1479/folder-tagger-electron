@@ -36,14 +36,9 @@ interface SettingDefaultValueInterface {
   defaultLanguage: string;
 }
 
-interface WrapperComponentInterface {
-  children: React.ReactElement;
-}
-
 export {
   RootState,
   ReducerAction,
-  WrapperComponentInterface,
   StatusReducerInterface,
   FolderReducerInterface,
   TagReducerInterface,

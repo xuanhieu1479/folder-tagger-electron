@@ -1,14 +1,37 @@
 import { remote } from 'electron';
-import React, { ReactElement, MouseEvent } from 'react';
-import { Card, Tooltip } from '@blueprintjs/core';
-import { ASSET } from '../../common/variables/commonVariables';
+import React, {
+  ReactElement,
+  MouseEvent,
+  useEffect,
+  useRef,
+  useContext,
+  createElement
+} from 'react';
+import { Card, Tooltip, Menu, MenuItem, ContextMenu } from '@blueprintjs/core';
+import { ASSET, TAG_ACTION } from '../../common/variables/commonVariables';
+import FunctionsContext from '../context/FunctionsContext';
 import { showMessage } from '../../utilities/feUtilities';
 import './styles/FolderCard.styled.scss';
 
-const { app } = remote;
-const defaultThumbnail = `${app.getAppPath()}\\.webpack\\renderer\\${
-  ASSET.DIRECTORY
-}\\default-thumbnail.jpg`;
+interface ContextMenuBodyInterface {
+  onOpenFolderDialog: (dialogType: string) => void;
+}
+
+const ContextMenuBody = ({
+  onOpenFolderDialog
+}: ContextMenuBodyInterface): React.ReactElement => {
+  const onClickAddTags = () => onOpenFolderDialog(TAG_ACTION.ADD);
+  const onClickEditTags = () => onOpenFolderDialog(TAG_ACTION.EDIT);
+  const onClickRemoveTags = () => onOpenFolderDialog(TAG_ACTION.REMOVE);
+
+  return (
+    <Menu>
+      <MenuItem text="Add Tags" onClick={onClickAddTags} />
+      <MenuItem text="Edit Tags" onClick={onClickEditTags} />
+      <MenuItem text="Remove Tags" onClick={onClickRemoveTags} />
+    </Menu>
+  );
+};
 
 interface FolderCardInterface {
   id: string;
@@ -16,8 +39,14 @@ interface FolderCardInterface {
   thumbnailLocation?: string;
   folderName: string;
   onClick: (event: MouseEvent, folderLocation: string) => void;
+  addToSelectedList: (folderLocation: string) => void;
   isBeingSelected: boolean;
 }
+
+const { app } = remote;
+const defaultThumbnail = `${app.getAppPath()}\\.webpack\\renderer\\${
+  ASSET.DIRECTORY
+}\\default-thumbnail.jpg`;
 
 const FolderCard = ({
   id,
@@ -25,8 +54,34 @@ const FolderCard = ({
   thumbnailLocation,
   folderName,
   onClick,
+  addToSelectedList,
   isBeingSelected
 }: FolderCardInterface): ReactElement => {
+  const context = useContext(FunctionsContext);
+  const { dialog } = context;
+  const { onOpenFolderDialog } = dialog;
+  const isBeingSelectedRef = useRef(isBeingSelected);
+
+  useEffect(() => {
+    const folderCardElement = document.getElementById(id);
+    if (folderCardElement) {
+      folderCardElement.oncontextmenu = event => {
+        if (!isBeingSelectedRef.current) addToSelectedList(folderLocation);
+        ContextMenu.show(
+          createElement(ContextMenuBody, { onOpenFolderDialog }),
+          {
+            left: event.clientX,
+            top: event.clientY
+          }
+        );
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    isBeingSelectedRef.current = isBeingSelected;
+  }, [isBeingSelected]);
+
   const onClickCardName = () => {
     navigator.clipboard.writeText(folderName);
     showMessage.info('Copied to clipboard!');

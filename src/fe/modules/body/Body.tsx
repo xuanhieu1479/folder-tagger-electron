@@ -19,6 +19,12 @@ const Body = ({ updateSelectedFolders }: BodyInterface): ReactElement => {
   const clearSelectedFolders = () => {
     updateSelectedFolders([]);
   };
+  const selectOnlyOneFolder = (folderLocation: string) => {
+    updateSelectedFolders([folderLocation]);
+  };
+  const addFolderToSelectedList = (folderLocation: string) => {
+    updateSelectedFolders([...selectedFolders, folderLocation]);
+  };
 
   useEffect(() => {
     const onClickListerner = (event: MouseEvent) => {
@@ -59,17 +65,16 @@ const Body = ({ updateSelectedFolders }: BodyInterface): ReactElement => {
               selectedFolder => selectedFolder !== clickedFolder
             )
           );
-        else updateSelectedFolders([...selectedFolders, clickedFolder]);
+        else addFolderToSelectedList(clickedFolder);
         return;
       }
       // Normal click, no holding shift nor ctrl
       if (deselectFolder) clearSelectedFolders();
-      else updateSelectedFolders([clickedFolder]);
+      else selectOnlyOneFolder(clickedFolder);
     } else {
       // Holding shift while clicking, regardless of holding ctrl or not
-      if (noFolderIsBeingSelected) updateSelectedFolders([clickedFolder]);
-      else if (clickedFirstSelectedFolders)
-        updateSelectedFolders([clickedFolder]);
+      if (noFolderIsBeingSelected || clickedFirstSelectedFolders)
+        selectOnlyOneFolder(clickedFolder);
       else {
         const folderLocationsList = foldersList.map(f => f.location);
         const fromPosition = folderLocationsList.findIndex(
@@ -99,6 +104,7 @@ const Body = ({ updateSelectedFolders }: BodyInterface): ReactElement => {
           folderName={folder.name || ''}
           thumbnailLocation={folder.thumbnail}
           onClick={onSelectFolder}
+          addToSelectedList={selectOnlyOneFolder}
           isBeingSelected={selectedFolders.includes(folder.location)}
         />
       );

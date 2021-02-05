@@ -30,6 +30,8 @@ const initIpcEventListeners = (
 const clearIpcEventListerners = (): void => {
   ipcRenderer.removeAllListeners(IPC_EVENT.ADD_FOLDERS);
   ipcRenderer.removeAllListeners(IPC_EVENT.OPEN_SETTING);
+  ipcRenderer.removeAllListeners(IPC_EVENT.IMPORT_DATA);
+  ipcRenderer.removeAllListeners(IPC_EVENT.EXPORT_DATA);
 };
 
 export { initIpcEventListeners, clearIpcEventListerners };

@@ -9,6 +9,7 @@ import {
   ELEMENT_ID,
   MESSAGE
 } from '../../../common/variables/commonVariables';
+import FunctionsContext from '../../context/FunctionsContext';
 import { FolderDialog } from '../../components/commonComponents';
 import Header from '../header/Header';
 import Body from '../body/Body';
@@ -49,30 +50,25 @@ const FoldersDisplay = ({
       const selectedFolders = selectedFoldersRef.current;
       const foldersList = foldersListRef.current.map(folder => folder.location);
       const isHoldingCtrl = event.ctrlKey;
-      const hasNoSelectedFolders = selectedFolders.length === 0;
-      const hasOneSelectedFolder = selectedFolders.length === 1;
-      const hasSeveralSelectedFolders = selectedFolders.length > 1;
 
       if (isHoldingCtrl) {
         if (isDialogOpen) return;
         switch (event.key) {
           case 'e':
-            if (!hasNoSelectedFolders) onOpenFolderDialog(TAG_ACTION.ADD);
+            onOpenFolderDialog(TAG_ACTION.ADD);
             break;
           case 's':
-            if (hasOneSelectedFolder) onOpenFolderDialog(TAG_ACTION.EDIT);
-            if (hasSeveralSelectedFolders)
-              showMessage.error(MESSAGE.CANNOT_EDIT_MANY_FOLDERS);
+            onOpenFolderDialog(TAG_ACTION.EDIT);
             break;
           case 'd':
-            if (!hasNoSelectedFolders) onOpenFolderDialog(TAG_ACTION.REMOVE);
+            onOpenFolderDialog(TAG_ACTION.REMOVE);
             break;
           case 't':
             openSettingDialog();
             break;
         }
       } else {
-        if (hasNoSelectedFolders || foldersList.length <= 1) return;
+        if (selectedFolders.length === 0 || foldersList.length <= 1) return;
         const folderCardElements = document
           .getElementById(ELEMENT_ID.FOLDER_CARD_CONTAINER)
           ?.querySelectorAll(`[id^=${ELEMENT_ID.FOLDER_CARD('')}]`);
@@ -189,8 +185,26 @@ const FoldersDisplay = ({
   };
 
   const onOpenFolderDialog = (dialogType: string) => {
-    setFolderDialogParams({ isOpen: true, dialogType });
-    onOpenDialog(dispatch);
+    const selectedFolders = selectedFoldersRef.current;
+    const atLeastOneFolderIsBeingSelected = selectedFolders.length > 0;
+    const hasExactlyOneSelectedFolder = selectedFolders.length === 1;
+    const hasSeveralSelectedFolders = selectedFolders.length > 1;
+    const openFolderDialog = () => {
+      setFolderDialogParams({ isOpen: true, dialogType });
+      onOpenDialog(dispatch);
+    };
+
+    switch (dialogType) {
+      case TAG_ACTION.ADD:
+      case TAG_ACTION.REMOVE:
+        if (atLeastOneFolderIsBeingSelected) openFolderDialog();
+        break;
+      case TAG_ACTION.EDIT:
+        if (hasSeveralSelectedFolders)
+          showMessage.error(MESSAGE.CANNOT_EDIT_MANY_FOLDERS);
+        if (hasExactlyOneSelectedFolder) openFolderDialog();
+        break;
+    }
   };
   const onCloseFolderDialog = () => {
     setFolderDialogParams(defaultFolderDialogParams);
@@ -198,7 +212,7 @@ const FoldersDisplay = ({
   };
 
   return (
-    <>
+    <FunctionsContext.Provider value={{ dialog: { onOpenFolderDialog } }}>
       <section className="folder-display_container">
         <Header
           params={params}
@@ -209,8 +223,12 @@ const FoldersDisplay = ({
         <Body updateSelectedFolders={updateSelectedFolders} />
         <Footer params={params} updateParams={updateParams} />
       </section>
-      <FolderDialog onClose={onCloseFolderDialog} {...folderDialogParams} />
-    </>
+      <FolderDialog
+        onClose={onCloseFolderDialog}
+        isOpen={folderDialogParams.isOpen}
+        dialogType={folderDialogParams.dialogType}
+      />
+    </FunctionsContext.Provider>
   );
 };
 
