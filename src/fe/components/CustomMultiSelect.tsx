@@ -1,6 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { MultiSelect, ItemRenderer } from '@blueprintjs/select';
+import './styles/CustomMultiSelect.styled.scss';
 
 interface CustomMultiSelectInterface {
   itemKey: string;
@@ -75,7 +76,10 @@ const CustomMultiSelect = ({
       createNewItemFromQuery={onCreatItem}
       tagRenderer={item => item}
       tagInputProps={{ onRemove: onRemoveItem }}
-      popoverProps={{ minimal: true }}
+      popoverProps={{
+        minimal: true,
+        popoverClassName: 'custom-multi-select_popover'
+      }}
       openOnKeyDown={true}
     />
   );

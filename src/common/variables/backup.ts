@@ -1,8 +1,15 @@
+import moment from 'moment';
+import { DATE_TIME } from './commonVariables';
+
 const BACKUP_DIRECTORY = 'Backup';
 
-const failedDataName = `${new Date().getTime()}-FAILED.json`;
+const failedDataName = `${moment().format(
+  DATE_TIME.DATE_TIME_FILE_FORMAT
+)}-FAILED.json`;
 const failedDataPath = `${BACKUP_DIRECTORY}/${failedDataName}`;
-const exportDataName = `${new Date().getTime()}-BACKUP.json`;
+const exportDataName = `${moment().format(
+  DATE_TIME.DATE_TIME_FILE_FORMAT
+)}-BACKUP.json`;
 const exportDataPath = `${BACKUP_DIRECTORY}/${exportDataName}`;
 
 const BACKUP = {
