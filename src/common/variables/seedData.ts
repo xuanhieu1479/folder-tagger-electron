@@ -29,9 +29,6 @@ const SEED_DATA = {
       TagType: 'artist'
     },
     {
-      TagType: 'group'
-    },
-    {
       TagType: 'parody'
     },
     {

@@ -15,7 +15,6 @@ interface HeaderInterface {
 type TagKeyType =
   | 'name'
   | 'artist'
-  | 'group'
   | 'parody'
   | 'character'
   | 'genre'
@@ -100,7 +99,6 @@ const Header = ({
               break;
             case 'name':
             case 'artist':
-            case 'group':
             case 'genre':
               tags[tagKey] = sanitizeSearchKeywords(match);
               break;
@@ -149,7 +147,6 @@ const Header = ({
           content={
             <div className="header_keyword-icon_tooltip">
               <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_ARTIST}" to get folders that have no artist.`}</div>
-              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_GROUP}" to get folders that have no group.`}</div>
               <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_TAG}" to get folders that have no tag (except artist and group).`}</div>
             </div>
           }

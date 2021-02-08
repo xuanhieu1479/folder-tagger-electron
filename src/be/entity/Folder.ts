@@ -96,8 +96,6 @@ export default class Folder {
           case SEARCH.SPECIAL_TAGS.NO_ARTIST:
             subQuery.where('tag.TagType = :artist', { artist: 'artist' });
             break;
-          case SEARCH.SPECIAL_TAGS.NO_GROUP:
-            subQuery.where('tag.TagType = :group', { group: 'group' });
             break;
           case SEARCH.SPECIAL_TAGS.NO_TAG:
             subQuery.where(
@@ -410,6 +408,8 @@ export default class Folder {
             const tagTypeInDatabase = allTagTypes.find(
               t => t.TagType === tagType
             );
+            // This tag type does not exist in database
+            if (!tagTypeInDatabase) continue;
             for (const tagName of transferTags[tagType]) {
               const tagAlreadyInDB = await getTagInDB(tagType, tagName);
               if (tagAlreadyInDB) folderTags.push(tagAlreadyInDB);
@@ -512,7 +512,7 @@ export default class Folder {
               ];
               return accumulator;
             },
-            { artist: [], group: [], parody: [], character: [], genre: [] }
+            { artist: [], parody: [], character: [], genre: [] }
           )
         };
       });
