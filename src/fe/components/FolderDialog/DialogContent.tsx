@@ -13,9 +13,9 @@ interface DialogContentInterface {
   dialogType: string;
   onClose: () => void;
 }
-type BreakDownTagsType = 'artist' | 'parody' | 'character' | 'genre' | string;
+type BreakDownTagsType = 'author' | 'parody' | 'character' | 'genre' | string;
 const defaultSelectedTags = {
-  artist: [],
+  author: [],
   parody: [],
   character: [],
   genre: []
@@ -76,7 +76,7 @@ const DialogContent = ({
         newValue[currentValue.tagType].push(currentValue.tagName);
         return { ...accumulator, ...newValue };
       },
-      { artist: [], parody: [], character: [], genre: [] }
+      { author: [], parody: [], character: [], genre: [] }
     );
   };
   const transformSelectedTags = () => {
@@ -183,12 +183,12 @@ const DialogContent = ({
         </div>
       </div>
       <div className="folder-dialog_content_row">
-        <div className="folder-dialog_content_row_title">Artist</div>
+        <div className="folder-dialog_content_row_title">Author</div>
         <div className="folder-dialog_content_row_tags">
           <CustomMultiSelect
-            itemKey="artist"
-            allItems={allItems.artist}
-            selectedItems={selectedTags.artist}
+            itemKey="author"
+            allItems={allItems.author}
+            selectedItems={selectedTags.author}
             updateSelectedItems={updateSelectedTags}
           />
         </div>

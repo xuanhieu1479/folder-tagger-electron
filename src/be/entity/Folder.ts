@@ -93,8 +93,8 @@ export default class Folder {
           .from(Folder, 'folder')
           .leftJoin('folder.Tags', 'tag');
         switch (tag) {
-          case SEARCH.SPECIAL_TAGS.NO_ARTIST:
-            subQuery.where('tag.TagType = :artist', { artist: 'artist' });
+          case SEARCH.SPECIAL_TAGS.NO_AUTHOR:
+            subQuery.where('tag.TagType = :author', { author: 'author' });
             break;
             break;
           case SEARCH.SPECIAL_TAGS.NO_TAG:
@@ -512,7 +512,7 @@ export default class Folder {
               ];
               return accumulator;
             },
-            { artist: [], parody: [], character: [], genre: [] }
+            { author: [], parody: [], character: [], genre: [] }
           )
         };
       });

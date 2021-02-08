@@ -14,7 +14,7 @@ interface HeaderInterface {
 }
 type TagKeyType =
   | 'name'
-  | 'artist'
+  | 'author'
   | 'parody'
   | 'character'
   | 'genre'
@@ -98,7 +98,7 @@ const Header = ({
               tags[tagKey] = sanitizeSearchKeywords(match, 2);
               break;
             case 'name':
-            case 'artist':
+            case 'author':
             case 'genre':
               tags[tagKey] = sanitizeSearchKeywords(match);
               break;
@@ -146,8 +146,8 @@ const Header = ({
           intent={Intent.PRIMARY}
           content={
             <div className="header_keyword-icon_tooltip">
-              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_ARTIST}" to get folders that have no artist.`}</div>
-              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_TAG}" to get folders that have no tag (except artist and group).`}</div>
+              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_AUTHOR}" to get folders that have no author.`}</div>
+              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_TAG}" to get folders that have no tag (except author).`}</div>
             </div>
           }
         >

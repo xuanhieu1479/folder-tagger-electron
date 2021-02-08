@@ -14,7 +14,7 @@ interface FolderFilterParams {
   language?: string;
   tags?: {
     name?: Array<string>;
-    artist?: Array<string>;
+    author?: Array<string>;
     parody?: Array<string>;
     character?: Array<string>;
     genre?: Array<string>;
@@ -27,7 +27,7 @@ interface TransferDataInterface {
   Category: string;
   Language: string;
   Tags: {
-    artist: Array<string>;
+    author: Array<string>;
     parody: Array<string>;
     character: Array<string>;
     genre: Array<string>;

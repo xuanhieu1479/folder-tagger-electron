@@ -26,7 +26,7 @@ const SEED_DATA = {
   ],
   TAG_TYPE: [
     {
-      TagType: 'artist'
+      TagType: 'author'
     },
     {
       TagType: 'parody'

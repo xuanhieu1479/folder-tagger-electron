@@ -5,7 +5,7 @@ const SEARCH = {
   MINIMUM_LETTERS: 3,
   TAG_KEYS: ['name', 'language', 'parody', 'character', 'genre'],
   SPECIAL_TAGS: {
-    NO_ARTIST: 'no_artist',
+    NO_AUTHOR: 'no_author',
     NO_TAG: 'no_tag'
   }
 };
