@@ -1,9 +1,10 @@
 import { Dispatch } from 'redux';
 import axios from 'axios';
 import { Tags } from '../../../common/interfaces/commonInterfaces';
-import { TAG_API } from '../../../common/variables/commonVariables';
-import { GET_TAGS } from './tagActionType';
+import { TAG_API, MESSAGE } from '../../../common/variables/commonVariables';
 import { showMessage } from '../../../utilities/feUtilities';
+import { GET_TAGS } from './tagActionType';
+import { startLoading, finishLoading } from '../status/statusAction';
 
 interface GetTagsOfOneFolderInterface {
   tags: Array<Tags>;
@@ -64,4 +65,16 @@ const modifyTagsOfFolders = async ({
   }
 };
 
-export { getTags, modifyTagsOfFolders };
+const calculateTagsRelation = async (dispatch: Dispatch): Promise<void> => {
+  try {
+    startLoading(dispatch);
+    await axios.get(TAG_API.CALCULATE_RELATION);
+    showMessage.success(MESSAGE.SUCCESS);
+  } catch (error) {
+    showMessage.error(error.response.data.message);
+  } finally {
+    finishLoading(dispatch);
+  }
+};
+
+export { getTags, modifyTagsOfFolders, calculateTagsRelation };

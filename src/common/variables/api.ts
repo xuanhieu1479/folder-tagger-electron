@@ -13,7 +13,8 @@ const CONTROLLER_PATH = {
   MODIFY: '/modify',
   ADD: '/add',
   IMPORT: '/import',
-  EXPORT: '/export'
+  EXPORT: '/export',
+  CALCULATE: '/calculate'
 };
 
 const FOLDER_API = {
@@ -33,7 +34,8 @@ const LANGUAGE_API = {
 
 const TAG_API = {
   GET: `${MODULE.TAG}${CONTROLLER_PATH.GET}`,
-  MODIFY: `${MODULE.TAG}${CONTROLLER_PATH.MODIFY}`
+  MODIFY: `${MODULE.TAG}${CONTROLLER_PATH.MODIFY}`,
+  CALCULATE_RELATION: `${MODULE.TAG}${CONTROLLER_PATH.CALCULATE}`
 };
 
 export {

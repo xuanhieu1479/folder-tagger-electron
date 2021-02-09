@@ -224,7 +224,7 @@ export default class Folder {
       });
     };
 
-    _.forEach(tags, async (value, key) => {
+    _.forEach(tags, (value, key) => {
       switch (key) {
         case 'name':
           value.forEach((tagValue: string, tagPosition: number) => {
@@ -459,11 +459,12 @@ export default class Folder {
         if (!_.isEmpty(newTags)) await transactionManager.insert(Tag, newTags);
         // Sqlite maximum depth is 1000
         await transactionManager.save(upsertFolders, { chunk: 500 });
-        writeToFile(
-          BACKUP.DIRECTORY,
-          BACKUP.PATH_FAILED_IMPORT,
-          JSON.stringify(failedToImportFolders, null, 2)
-        );
+        if (!_.isEmpty(failedToImportFolders))
+          writeToFile(
+            BACKUP.DIRECTORY,
+            BACKUP.PATH_FAILED_IMPORT,
+            JSON.stringify(failedToImportFolders, null, 2)
+          );
       });
       return {
         message: MESSAGE.SUCCESS,

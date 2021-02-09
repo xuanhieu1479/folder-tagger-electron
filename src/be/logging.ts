@@ -3,7 +3,13 @@ import { writeToFile } from '../utilities/utilityFunctions';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const logErrors = (error: Error | any, origin: Promise<any> | string): void => {
-  writeToFile(LOG.DIRECTORY, LOG.PATH, LOG.ERROR_MESSAGE(error, origin), true);
+  writeToFile(
+    LOG.DIRECTORY,
+    LOG.PATH,
+    LOG.ERROR_MESSAGE(error, origin),
+    false,
+    true
+  );
 };
 
 const initLogging = (): void => {

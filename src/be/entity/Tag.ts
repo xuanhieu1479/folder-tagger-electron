@@ -13,10 +13,12 @@ import { TagType, Folder, Category, Language } from './entity';
 import {
   MESSAGE,
   STATUS_CODE,
-  TAG_ACTION
+  TAG_ACTION,
+  SETTING
 } from '../../common/variables/commonVariables';
 import { Tags as TagsInterface } from '../../common/interfaces/commonInterfaces';
 import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
+import { writeToFile } from '../../utilities/utilityFunctions';
 import { logErrors } from '../logging';
 
 interface TagQueryResult extends QueryResultInterface {
@@ -27,7 +29,7 @@ interface TagQueryResult extends QueryResultInterface {
 interface GetTagFilterParams {
   folderLocation?: string;
 }
-interface ModifyTagsOfFoldersInterface extends TagsInterface {
+interface ModifyTagsOfFolders extends TagsInterface {
   folderLocations: Array<string>;
   existingTags: Array<TagsInterface>;
   newTags: Array<TagsInterface>;
@@ -35,7 +37,16 @@ interface ModifyTagsOfFoldersInterface extends TagsInterface {
   language: string | undefined;
   action: string;
 }
+interface TagRelation {
+  parody_character: Record<string, Array<string>>;
+  author_parody: Record<string, Array<string>>;
+  author_genre: Record<string, Array<string>>;
+}
 
+const TAG_FREQUENT_THRESHOLD = 0.5;
+const FOLDER_COUNT_THRESHOLD = Math.ceil(
+  1 / Math.pow(TAG_FREQUENT_THRESHOLD, 2)
+);
 const getTagId = (tagType: string, tagName: string) => `${tagType}-${tagName}`;
 
 @Entity({ name: 'Tags' })
@@ -132,7 +143,7 @@ export default class Tag {
   };
 
   modifyTagsOfFolders = async (
-    params: ModifyTagsOfFoldersInterface
+    params: ModifyTagsOfFolders
   ): Promise<QueryResultInterface> => {
     const {
       folderLocations,
@@ -207,6 +218,154 @@ export default class Tag {
       };
     } catch (error) {
       console.error('MODIFY FOLDERS TAGS ERROR:', error);
+      logErrors(error.message, error.stack);
+      return {
+        message: error.message,
+        status: STATUS_CODE.DB_ERROR
+      };
+    }
+  };
+
+  calculateRelation = async (): Promise<QueryResultInterface> => {
+    const rawData = await getRepository(Folder)
+      .createQueryBuilder('folder')
+      .innerJoinAndSelect('folder.Tags', 'tag')
+      .innerJoinAndSelect('tag.TagType', 'tagType')
+      .select(['folder.FolderLocation', 'tagType.TagType', 'tag.TagName'])
+      .getMany();
+    type TagTypeType = 'author' | 'parody' | 'character' | 'genre';
+
+    const findFrequentTags = async (source: Record<string, Array<string>>) => {
+      const getSourceWithFrequentTags = async () => {
+        const newSource = { ...source };
+        for (const parentTag of Object.keys(newSource)) {
+          const childrenTags = [...newSource[parentTag]];
+          const numberOfFoldersWithParentTag = await getRepository(Folder)
+            .createQueryBuilder('folder')
+            .innerJoin('folder.Tags', 'tag')
+            .innerJoin('tag.TagType', 'tagType')
+            .where(`tagType.TagType = :author`, { author: 'author' })
+            .andWhere(`tag.Tagname = :${parentTag}`, {
+              [parentTag]: parentTag
+            })
+            .getCount();
+          // Calculating tags frequency is meaningless if the sample is too small
+          if (numberOfFoldersWithParentTag <= FOLDER_COUNT_THRESHOLD) {
+            newSource[parentTag] = [];
+            continue;
+          }
+          const childrenTagsPresence = childrenTags.reduce(
+            (accumulator: Record<string, number>, tag) => {
+              accumulator[tag] =
+                typeof accumulator[tag] === 'number' ? accumulator[tag] + 1 : 1;
+              return accumulator;
+            },
+            {}
+          );
+          newSource[parentTag] = _.reduce(
+            childrenTagsPresence,
+            (childrenTags: Array<string>, count, tag) => {
+              if (
+                count >=
+                numberOfFoldersWithParentTag * TAG_FREQUENT_THRESHOLD
+              )
+                childrenTags.push(tag);
+              return childrenTags;
+            },
+            []
+          );
+        }
+        return newSource;
+      };
+
+      const sourceWithFrequentTags = await getSourceWithFrequentTags();
+      return _.omitBy(sourceWithFrequentTags, _.isEmpty);
+    };
+
+    const relations = rawData.reduce(
+      (relation: TagRelation, folder) => {
+        const parodyCharacterRelation = relation.parody_character;
+        const authorParodyRelation = relation.author_parody;
+        const authorGenreRelation = relation.author_genre;
+        const tags = folder.Tags.reduce(
+          (accumulator: Record<TagTypeType, Array<string>>, tag) => {
+            const { TagType } = tag.TagType;
+            switch (TagType) {
+              case 'author':
+              case 'parody':
+              case 'character':
+              case 'genre':
+                accumulator[TagType].push(tag.TagName);
+                break;
+            }
+            return accumulator;
+          },
+          {
+            author: [],
+            parody: [],
+            character: [],
+            genre: []
+          }
+        );
+        const hasExactlyOneAuthor = tags.author.length === 1;
+        const hasExactlyOneParody = tags.parody.length === 1;
+        const hasAtLeastOneCharacter = tags.character.length >= 1;
+
+        if (hasExactlyOneParody && hasAtLeastOneCharacter) {
+          const currentParody = tags.parody[0];
+          if (typeof parodyCharacterRelation[currentParody] === 'object') {
+            const relatedCharacters = [
+              ...parodyCharacterRelation[currentParody],
+              ...tags.character
+            ];
+            parodyCharacterRelation[currentParody] = [
+              ...new Set(relatedCharacters)
+            ];
+          } else parodyCharacterRelation[currentParody] = [...tags.character];
+        }
+        if (hasExactlyOneAuthor) {
+          const currentAuthor = tags.author[0];
+          authorParodyRelation[currentAuthor] =
+            typeof authorParodyRelation[currentAuthor] === 'object'
+              ? [...authorParodyRelation[currentAuthor], ...tags.parody]
+              : [...tags.parody];
+          authorGenreRelation[currentAuthor] =
+            typeof authorGenreRelation[currentAuthor] === 'object'
+              ? [...authorGenreRelation[currentAuthor], ...tags.genre]
+              : [...tags.genre];
+        }
+
+        return {
+          parody_character: parodyCharacterRelation,
+          author_parody: authorParodyRelation,
+          author_genre: authorGenreRelation
+        };
+      },
+      {
+        parody_character: {},
+        author_parody: {},
+        author_genre: {}
+      }
+    );
+
+    try {
+      const { author_parody, author_genre } = relations;
+      const authorParodyRelation = await findFrequentTags(author_parody);
+      const authorGenreRelation = await findFrequentTags(author_genre);
+      relations.author_parody = authorParodyRelation;
+      relations.author_genre = authorGenreRelation;
+      writeToFile(
+        SETTING.DIRECTORY,
+        SETTING.RELATION_PATH,
+        JSON.stringify(relations, null, 2),
+        true
+      );
+      return {
+        message: MESSAGE.SUCCESS,
+        status: STATUS_CODE.SUCCESS
+      };
+    } catch (error) {
+      console.error('CALCULATE TAGS RELATION ERROR:', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,

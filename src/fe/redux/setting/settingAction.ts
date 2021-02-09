@@ -30,7 +30,7 @@ const updateSettings = (
 ): void => {
   try {
     const payload = settings || SETTING.DEFAULT;
-    writeToFile(SETTING.DIRECTORY, SETTING.PATH, ini.encode(payload));
+    writeToFile(SETTING.DIRECTORY, SETTING.PATH, ini.encode(payload), true);
     dispatch({ type: UPDATE_SETTINGS, payload });
   } catch (error) {
     showMessage.error(error);

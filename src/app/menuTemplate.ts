@@ -3,6 +3,7 @@ import {
   onAddFolder,
   onAddParentFolder,
   onOpenSetting,
+  calculateTagsRelation,
   onImportData,
   onOpenDevtool,
   onReload,
@@ -27,8 +28,12 @@ const menuTemplate = [
     label: 'Setting',
     submenu: [
       {
-        label: 'Open setting',
+        label: 'Open Setting',
         click: onOpenSetting
+      },
+      {
+        label: 'Calculate Tags Relation',
+        click: calculateTagsRelation
       }
     ]
   },

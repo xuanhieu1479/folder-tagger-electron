@@ -6,6 +6,7 @@ import {
   exportFolders,
   importFolders
 } from '../redux/folder/folderAction';
+import { calculateTagsRelation } from '../redux/tag/tagAction';
 
 const initIpcEventListeners = (
   dispatch: Dispatch,
@@ -24,6 +25,9 @@ const initIpcEventListeners = (
   });
   ipcRenderer.on(IPC_EVENT.EXPORT_DATA, () => {
     exportFolders(dispatch);
+  });
+  ipcRenderer.on(IPC_EVENT.CALCULATE_TAGS_RELATION, () => {
+    calculateTagsRelation(dispatch);
   });
 };
 

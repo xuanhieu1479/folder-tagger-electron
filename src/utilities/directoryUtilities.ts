@@ -9,17 +9,25 @@ const writeToFile = (
   fileDirectory: string,
   filePath: string,
   fileContent: string,
+  overWrite = false,
   insertFromTop = false
 ): void => {
   initDirectory(fileDirectory);
-  if (!insertFromTop) fs.appendFileSync(filePath, fileContent);
-  if (insertFromTop) {
-    if (!fs.existsSync(filePath)) fs.appendFileSync(filePath, fileContent);
-    else {
-      const existingContent = fs.readFileSync(filePath);
-      fs.writeFileSync(filePath, fileContent + existingContent);
-    }
+  if (!fs.existsSync(filePath)) {
+    fs.appendFileSync(filePath, fileContent);
+    return;
   }
+  if (overWrite) {
+    fs.writeFileSync(filePath, fileContent);
+    return;
+  }
+  if (insertFromTop) {
+    const existingContent = fs.readFileSync(filePath);
+    fs.writeFileSync(filePath, fileContent + existingContent);
+    return;
+  }
+
+  fs.appendFileSync(filePath, fileContent);
 };
 
 const getFolderName = (folderLocation: string): string => {

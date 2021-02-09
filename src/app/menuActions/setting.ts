@@ -5,4 +5,10 @@ const onOpenSetting = (): void => {
   BrowserWindow.getFocusedWindow()?.webContents.send(IPC_EVENT.OPEN_SETTING);
 };
 
-export { onOpenSetting };
+const calculateTagsRelation = (): void => {
+  BrowserWindow.getFocusedWindow()?.webContents.send(
+    IPC_EVENT.CALCULATE_TAGS_RELATION
+  );
+};
+
+export { onOpenSetting, calculateTagsRelation };
