@@ -1,12 +1,13 @@
 import React, { ReactElement } from 'react';
 import { Dialog } from '@blueprintjs/core';
+import { TAG_ACTION } from '../../../common/enums/commonEnums';
 import DialogContent from './DialogContent';
 import './FolderDialog.styled.scss';
 
 interface FolderDialogInterface {
   isOpen: boolean;
   onClose: () => void;
-  dialogType: string;
+  dialogType: TAG_ACTION;
 }
 
 const FolderDialog = ({

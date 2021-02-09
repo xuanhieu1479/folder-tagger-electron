@@ -1,6 +1,6 @@
 import { dialog, app, BrowserWindow } from 'electron';
 import fs from 'fs';
-import { IPC_EVENT } from '../../common/variables/commonVariables';
+import { IPC_EVENT } from '../../common/enums/commonEnums';
 
 const onAddFolder = (): void => {
   const directory = dialog.showOpenDialogSync({

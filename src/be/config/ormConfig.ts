@@ -1,10 +1,7 @@
 import moment from 'moment';
 import { ConnectionOptions, FileLogger } from 'typeorm';
-import {
-  DATABASE,
-  LOG,
-  DATE_TIME
-} from '../../common/variables/commonVariables';
+import { DATABASE, LOG } from '../../common/variables/commonVariables';
+import { DATE_TIME } from '../../common/enums/commonEnums';
 import { Folder, Category, Language, Tag, TagType } from '../entity/entity';
 import { initDirectory } from '../../utilities/utilityFunctions';
 

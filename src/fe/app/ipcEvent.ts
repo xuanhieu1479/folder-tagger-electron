@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
 import { Dispatch } from 'redux';
-import { IPC_EVENT } from '../../common/variables/commonVariables';
+import { IPC_EVENT } from '../../common/enums/commonEnums';
 import {
   addFolders,
   exportFolders,
@@ -36,6 +36,7 @@ const clearIpcEventListerners = (): void => {
   ipcRenderer.removeAllListeners(IPC_EVENT.OPEN_SETTING);
   ipcRenderer.removeAllListeners(IPC_EVENT.IMPORT_DATA);
   ipcRenderer.removeAllListeners(IPC_EVENT.EXPORT_DATA);
+  ipcRenderer.removeAllListeners(IPC_EVENT.CALCULATE_TAGS_RELATION);
 };
 
 export { initIpcEventListeners, clearIpcEventListerners };

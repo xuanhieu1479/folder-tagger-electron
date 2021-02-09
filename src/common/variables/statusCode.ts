@@ -1,7 +1,0 @@
-const STATUS_CODE = {
-  SUCCESS: 200,
-  INVALID_DATA: 400,
-  DB_ERROR: 500
-};
-
-export default STATUS_CODE;

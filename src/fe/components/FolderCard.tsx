@@ -8,13 +8,13 @@ import React, {
   createElement
 } from 'react';
 import { Card, Tooltip, Menu, MenuItem, ContextMenu } from '@blueprintjs/core';
-import { ASSET, TAG_ACTION } from '../../common/variables/commonVariables';
+import { TAG_ACTION } from '../../common/enums/commonEnums';
 import FunctionsContext from '../context/FunctionsContext';
 import { showMessage } from '../../utilities/feUtilities';
 import './styles/FolderCard.styled.scss';
 
 interface ContextMenuBodyInterface {
-  onOpenFolderDialog: (dialogType: string) => void;
+  onOpenFolderDialog: (dialogType: TAG_ACTION) => void;
 }
 
 const ContextMenuBody = ({
@@ -44,9 +44,7 @@ interface FolderCardInterface {
 }
 
 const { app } = remote;
-const defaultThumbnail = `${app.getAppPath()}\\.webpack\\renderer\\${
-  ASSET.DIRECTORY
-}\\default-thumbnail.jpg`;
+const defaultThumbnail = `${app.getAppPath()}\\.webpack\\renderer\\Asset\\default-thumbnail.jpg`;
 
 const FolderCard = ({
   id,

@@ -1,6 +1,7 @@
 import { Entity, PrimaryColumn, OneToMany, getRepository } from 'typeorm';
-import { MESSAGE, STATUS_CODE } from '../../common/variables/commonVariables';
 import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
+import { MESSAGE } from '../../common/variables/commonVariables';
+import { STATUS_CODE } from '../../common/enums/commonEnums';
 import { Folder } from './entity';
 import { logErrors } from '../logging';
 

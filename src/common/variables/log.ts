@@ -1,16 +1,16 @@
 import moment from 'moment';
-import { DATE_TIME } from './commonVariables';
+import { DATE_TIME } from '../enums/commonEnums';
 
-const LOG_DIRECTORY = 'Log';
+const DIRECTORY = 'Log';
 
 const seperator = '-'.repeat(100);
-const logFileName = `${moment().format(DATE_TIME.DATE_FILE_FORMAT)}.log`;
-const logFilePath = `${LOG_DIRECTORY}/${logFileName}`;
+const NAME = `${moment().format(DATE_TIME.DATE_FILE_FORMAT)}.log`;
+const PATH = `${DIRECTORY}/${NAME}`;
 
 const LOG = {
-  DIRECTORY: LOG_DIRECTORY,
-  NAME: logFileName,
-  PATH: logFilePath,
+  DIRECTORY,
+  NAME,
+  PATH,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ERROR_MESSAGE: (error: Error | any, origin: Promise<any> | string): string =>
     `${moment().format(

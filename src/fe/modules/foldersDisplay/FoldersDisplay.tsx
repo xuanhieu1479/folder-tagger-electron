@@ -5,10 +5,10 @@ import { RootState } from '../../../common/interfaces/feInterfaces';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import {
   PAGINATION,
-  TAG_ACTION,
   ELEMENT_ID,
   MESSAGE
 } from '../../../common/variables/commonVariables';
+import { TAG_ACTION } from '../../../common/enums/commonEnums';
 import FunctionsContext from '../../context/FunctionsContext';
 import { FolderDialog } from '../../components/commonComponents';
 import Header from '../header/Header';
@@ -184,7 +184,7 @@ const FoldersDisplay = ({
     scrollToNewlySelectedFolder();
   };
 
-  const onOpenFolderDialog = (dialogType: string) => {
+  const onOpenFolderDialog = (dialogType: TAG_ACTION) => {
     const selectedFolders = selectedFoldersRef.current;
     const atLeastOneFolderIsBeingSelected = selectedFolders.length > 0;
     const hasExactlyOneSelectedFolder = selectedFolders.length === 1;

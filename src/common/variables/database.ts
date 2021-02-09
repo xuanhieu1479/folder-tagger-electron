@@ -1,11 +1,11 @@
-const DATABASE_DIRECTORY = 'Database';
-const DATABASE_NAME = 'Database.db';
-const DATABASE_PATH = `${DATABASE_DIRECTORY}/${DATABASE_NAME}`;
+const DIRECTORY = 'Database';
+const NAME = 'Database.db';
+const PATH = `${DIRECTORY}/${NAME}`;
 
 const DATABASE = {
-  DIRECTORY: DATABASE_DIRECTORY,
-  NAME: DATABASE_NAME,
-  PATH: DATABASE_PATH
+  DIRECTORY,
+  NAME,
+  PATH
 };
 
 export default DATABASE;

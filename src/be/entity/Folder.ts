@@ -19,10 +19,10 @@ import {
 import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
 import {
   MESSAGE,
-  STATUS_CODE,
   SEARCH,
   BACKUP
 } from '../../common/variables/commonVariables';
+import { STATUS_CODE } from '../../common/enums/commonEnums';
 import { logErrors } from '../logging';
 import {
   fileExists,

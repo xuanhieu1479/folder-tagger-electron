@@ -1,22 +1,23 @@
 import moment from 'moment';
-import { DATE_TIME } from './commonVariables';
+import { DATE_TIME } from '../enums/commonEnums';
 
-const BACKUP_DIRECTORY = 'Backup';
+const DIRECTORY = 'Backup';
 
-const failedDataName = `${moment().format(
+const NAME_FAILED_IMPORT = `${moment().format(
   DATE_TIME.DATE_TIME_FILE_FORMAT
 )}-FAILED.json`;
-const failedDataPath = `${BACKUP_DIRECTORY}/${failedDataName}`;
-const exportDataName = `${moment().format(
+const PATH_FAILED_IMPORT = `${DIRECTORY}/${NAME_FAILED_IMPORT}`;
+const NAME_EXPORT = `${moment().format(
   DATE_TIME.DATE_TIME_FILE_FORMAT
 )}-BACKUP.json`;
-const exportDataPath = `${BACKUP_DIRECTORY}/${exportDataName}`;
+const PATH_EXPORT = `${DIRECTORY}/${NAME_EXPORT}`;
 
 const BACKUP = {
-  DIRECTORY: BACKUP_DIRECTORY,
-  NAME: failedDataName,
-  PATH_FAILED_IMPORT: failedDataPath,
-  PATH_EXPORT: exportDataPath
+  DIRECTORY,
+  NAME_FAILED_IMPORT,
+  PATH_FAILED_IMPORT,
+  NAME_EXPORT,
+  PATH_EXPORT
 };
 
 export default BACKUP;

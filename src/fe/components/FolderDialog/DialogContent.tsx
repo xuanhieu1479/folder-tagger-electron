@@ -4,13 +4,14 @@ import { Button, Intent } from '@blueprintjs/core';
 import _ from 'lodash';
 import { Tags } from '../../../common/interfaces/commonInterfaces';
 import { RootState } from '../../../common/interfaces/feInterfaces';
-import { TAG_ACTION, MESSAGE } from '../../../common/variables/commonVariables';
+import { MESSAGE } from '../../../common/variables/commonVariables';
+import { TAG_ACTION } from '../../../common/enums/commonEnums';
 import { CustomSuggest, CustomMultiSelect } from '../commonComponents';
 import { showMessage } from '../../../utilities/feUtilities';
 import { getTags, modifyTagsOfFolders } from '../../redux/tag/tagAction';
 
 interface DialogContentInterface {
-  dialogType: string;
+  dialogType: TAG_ACTION;
   onClose: () => void;
 }
 type BreakDownTagsType = 'author' | 'parody' | 'character' | 'genre' | string;

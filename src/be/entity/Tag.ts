@@ -10,14 +10,10 @@ import {
 } from 'typeorm';
 import _ from 'lodash';
 import { TagType, Folder, Category, Language } from './entity';
-import {
-  MESSAGE,
-  STATUS_CODE,
-  TAG_ACTION,
-  SETTING
-} from '../../common/variables/commonVariables';
 import { Tags as TagsInterface } from '../../common/interfaces/commonInterfaces';
 import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
+import { MESSAGE, SETTING } from '../../common/variables/commonVariables';
+import { STATUS_CODE, TAG_ACTION } from '../../common/enums/commonEnums';
 import { writeToFile } from '../../utilities/utilityFunctions';
 import { logErrors } from '../logging';
 
@@ -35,7 +31,7 @@ interface ModifyTagsOfFolders extends TagsInterface {
   newTags: Array<TagsInterface>;
   category: string | undefined;
   language: string | undefined;
-  action: string;
+  action: TAG_ACTION;
 }
 interface TagRelation {
   parody_character: Record<string, Array<string>>;
