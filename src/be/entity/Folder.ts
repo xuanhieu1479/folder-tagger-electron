@@ -87,6 +87,7 @@ export default class Folder {
 
     const querySpecialTags = (tag: string) => {
       query.andWhere(q => {
+        let preQuery = 'folder.FolderLocation NOT IN ';
         const subQuery = q
           .subQuery()
           .select('folder.FolderLocation')
@@ -103,8 +104,15 @@ export default class Folder {
               { parody: 'parody', character: 'character', genre: 'genre' }
             );
             break;
+          case SEARCH.SPECIAL_TAGS.MANY_PARODIES:
+            preQuery = 'folder.FolderLocation IN ';
+            subQuery
+              .where('tag.TagType = :parody', { parody: 'parody' })
+              .groupBy('folder.FolderLocation')
+              .having('COUNT(folder.FolderLocation) > 1');
+            break;
         }
-        return 'folder.FolderLocation NOT IN ' + subQuery.getQuery();
+        return preQuery + subQuery.getQuery();
       });
     };
 
