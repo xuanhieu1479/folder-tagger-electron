@@ -6,6 +6,7 @@ import { SettingDialog } from './components/commonComponents';
 import FoldersDisplay from './modules/foldersDisplay/FoldersDisplay';
 import { onOpenDialog, onCloseDialog } from './redux/status/statusAction';
 import { getCategories, getLanguages } from './redux/folder/folderAction';
+import { loadTagRelations } from './redux/tag/tagAction';
 import { getSettings } from './redux/setting/settingAction';
 
 axiosConfig();
@@ -19,6 +20,7 @@ const App = (): ReactElement => {
     getCategories(dispatch);
     getLanguages(dispatch);
     getSettings(dispatch);
+    loadTagRelations(dispatch);
 
     return () => {
       clearIpcEventListerners();

@@ -10,7 +10,10 @@ import {
 } from 'typeorm';
 import _ from 'lodash';
 import { TagType, Folder, Category, Language } from './entity';
-import { Tags as TagsInterface } from '../../common/interfaces/commonInterfaces';
+import {
+  Tags as TagsInterface,
+  TagRelations
+} from '../../common/interfaces/commonInterfaces';
 import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
 import { MESSAGE, SETTING } from '../../common/variables/commonVariables';
 import { STATUS_CODE, TAG_ACTION } from '../../common/enums/commonEnums';
@@ -33,10 +36,8 @@ interface ModifyTagsOfFolders extends TagsInterface {
   language: string | undefined;
   action: TAG_ACTION;
 }
-interface TagRelation {
-  parody_character: Record<string, Array<string>>;
-  author_parody: Record<string, Array<string>>;
-  author_genre: Record<string, Array<string>>;
+interface TagRelationQueryResult extends QueryResultInterface {
+  relations?: TagRelations;
 }
 
 const TAG_FREQUENT_THRESHOLD = 0.5;
@@ -222,7 +223,7 @@ export default class Tag {
     }
   };
 
-  calculateRelation = async (): Promise<QueryResultInterface> => {
+  calculateRelation = async (): Promise<TagRelationQueryResult> => {
     const rawData = await getRepository(Folder)
       .createQueryBuilder('folder')
       .innerJoinAndSelect('folder.Tags', 'tag')
@@ -279,7 +280,7 @@ export default class Tag {
     };
 
     const relations = rawData.reduce(
-      (relation: TagRelation, folder) => {
+      (relation: TagRelations, folder) => {
         const parodyCharacterRelation = relation.parody_character;
         const authorParodyRelation = relation.author_parody;
         const authorGenreRelation = relation.author_genre;
@@ -357,6 +358,7 @@ export default class Tag {
         true
       );
       return {
+        relations,
         message: MESSAGE.SUCCESS,
         status: STATUS_CODE.SUCCESS
       };

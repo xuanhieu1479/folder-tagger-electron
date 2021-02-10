@@ -9,7 +9,7 @@ import {
   StatusReducerInterface
 } from '../../../common/interfaces/feInterfaces';
 
-export const statusInitState = {
+export const statusInitState: StatusReducerInterface = {
   isLoading: false,
   isDialogOpen: false
 };

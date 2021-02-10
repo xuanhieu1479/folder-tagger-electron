@@ -17,6 +17,7 @@ import Footer from '../footer/Footer';
 import { onOpenDialog, onCloseDialog } from '../../redux/status/statusAction';
 import { SELECT_FOLDERS } from '../../redux/folder/folderActionType';
 import { getFolders } from '../../redux/folder/folderAction';
+import { getTags } from '../../redux/tag/tagAction';
 import { showMessage } from '../../../utilities/feUtilities';
 import './FoldersDisplay.styled.scss';
 
@@ -156,6 +157,10 @@ const FoldersDisplay = ({
     foldersListRef.current = foldersList;
     isDialogOpenRef.current = isDialogOpen;
   }, [selectedFolders, foldersList, isDialogOpen]);
+
+  useEffect(() => {
+    if (!folderDialogParams.isOpen) getTags(dispatch);
+  }, [folderDialogParams.isOpen]);
 
   const updateParams = (newParams: Partial<FolderFilterParams>): void => {
     setParams({ ...params, ...newParams });

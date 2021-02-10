@@ -18,8 +18,8 @@ router.post(CONTROLLER_PATH.MODIFY, async (req: Request, res: Response) => {
 });
 
 router.get(CONTROLLER_PATH.CALCULATE, async (_req: Request, res: Response) => {
-  const { status, message } = await tag.calculateRelation();
-  res.status(status).json({ message });
+  const { status, message, relations } = await tag.calculateRelation();
+  res.status(status).json({ relations, message });
 });
 
 export default router;

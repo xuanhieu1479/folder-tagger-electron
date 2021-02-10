@@ -1,4 +1,4 @@
-import { Folder, Tags } from './commonInterfaces';
+import { Folder, Tags, TagRelations } from './commonInterfaces';
 
 interface RootState {
   status: StatusReducerInterface;
@@ -26,6 +26,7 @@ interface FolderReducerInterface {
 }
 interface TagReducerInterface {
   allTags: Array<Tags>;
+  relations: TagRelations;
 }
 // For the moment Setting only consists of default values.
 // But it probably will be expanded soon.

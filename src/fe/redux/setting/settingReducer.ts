@@ -5,7 +5,7 @@ import {
 import { SETTING } from '../../../common/variables/commonVariables';
 import { UPDATE_SETTINGS } from './settingActionType';
 
-export const settingInitState = SETTING.DEFAULT;
+export const settingInitState: SettingReducerInterface = SETTING.DEFAULT;
 
 const statusReducer = (
   state: SettingReducerInterface = settingInitState,

@@ -54,8 +54,6 @@ const DialogContent = ({
         setSelectedLanguage(selectedFolderLanguage);
       }
     };
-
-    getTags(dispatch);
     if (dialogType === TAG_ACTION.EDIT) getSelectedFolderTags();
   }, []);
 

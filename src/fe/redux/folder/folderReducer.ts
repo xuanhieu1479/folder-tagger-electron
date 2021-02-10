@@ -9,7 +9,7 @@ import {
   FolderReducerInterface
 } from '../../../common/interfaces/feInterfaces';
 
-export const folderInitState = {
+export const folderInitState: FolderReducerInterface = {
   selectedFolders: [],
   foldersList: [],
   totalFolders: 0,

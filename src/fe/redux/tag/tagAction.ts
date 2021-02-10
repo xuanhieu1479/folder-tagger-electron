@@ -1,9 +1,14 @@
 import { Dispatch } from 'redux';
 import axios from 'axios';
+import fs from 'fs';
 import { Tags } from '../../../common/interfaces/commonInterfaces';
-import { TAG_API, MESSAGE } from '../../../common/variables/commonVariables';
+import {
+  TAG_API,
+  MESSAGE,
+  SETTING
+} from '../../../common/variables/commonVariables';
 import { showMessage } from '../../../utilities/feUtilities';
-import { GET_TAGS } from './tagActionType';
+import { GET_TAGS, LOAD_TAG_RELATIONS } from './tagActionType';
 import { startLoading, finishLoading } from '../status/statusAction';
 
 interface GetTagsOfOneFolderInterface {
@@ -65,10 +70,13 @@ const modifyTagsOfFolders = async ({
   }
 };
 
-const calculateTagsRelation = async (dispatch: Dispatch): Promise<void> => {
+const calculateTagRelations = async (dispatch: Dispatch): Promise<void> => {
   try {
     startLoading(dispatch);
-    await axios.get(TAG_API.CALCULATE_RELATION);
+    const { data } = await axios.get(TAG_API.CALCULATE_RELATION);
+    const { relations } = data;
+    if (relations)
+      dispatch({ type: LOAD_TAG_RELATIONS, payload: { relations } });
     showMessage.success(MESSAGE.SUCCESS);
   } catch (error) {
     showMessage.error(error.response.data.message);
@@ -77,4 +85,22 @@ const calculateTagsRelation = async (dispatch: Dispatch): Promise<void> => {
   }
 };
 
-export { getTags, modifyTagsOfFolders, calculateTagsRelation };
+const loadTagRelations = (dispatch: Dispatch): void => {
+  try {
+    if (fs.existsSync(SETTING.RELATION_PATH)) {
+      const relations = JSON.parse(
+        fs.readFileSync(SETTING.RELATION_PATH).toString()
+      );
+      dispatch({ type: LOAD_TAG_RELATIONS, payload: { relations } });
+    }
+  } catch (error) {
+    showMessage.error(error);
+  }
+};
+
+export {
+  getTags,
+  modifyTagsOfFolders,
+  calculateTagRelations,
+  loadTagRelations
+};

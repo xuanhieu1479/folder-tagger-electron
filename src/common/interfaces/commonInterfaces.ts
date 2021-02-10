@@ -41,5 +41,16 @@ interface Tags {
   tagType: string;
   tagName: string;
 }
+interface TagRelations {
+  parody_character: Record<string, Array<string>>;
+  author_parody: Record<string, Array<string>>;
+  author_genre: Record<string, Array<string>>;
+}
 
-export { Folder, FolderFilterParams, TransferDataInterface, Tags };
+export {
+  Folder,
+  FolderFilterParams,
+  TransferDataInterface,
+  Tags,
+  TagRelations
+};
