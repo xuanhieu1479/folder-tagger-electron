@@ -147,7 +147,9 @@ const Header = ({
           content={
             <div className="header_keyword-icon_tooltip">
               <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_AUTHOR}" to get folders that have no author.`}</div>
+              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_PARODY}" to get folders that have no parody.`}</div>
               <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_TAG}" to get folders that have no tag (except author).`}</div>
+              <div>{`Use "${SEARCH.SPECIAL_TAGS.HAVE_CHARACTER}" to get folders that have at least one character.`}</div>
               <div>{`Use "${SEARCH.SPECIAL_TAGS.MANY_PARODIES}" to get folders that have multiple parodies.`}</div>
             </div>
           }

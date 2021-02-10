@@ -6,7 +6,9 @@ const SEARCH = {
   TAG_KEYS: ['name', 'language', 'author', 'parody', 'character', 'genre'],
   SPECIAL_TAGS: {
     NO_AUTHOR: 'no_author',
+    NO_PARODY: 'no_parody',
     NO_TAG: 'no_tag',
+    HAVE_CHARACTER: 'have_character',
     MANY_PARODIES: 'many_parody'
   }
 };

@@ -93,12 +93,20 @@ export default class Folder {
           case SEARCH.SPECIAL_TAGS.NO_AUTHOR:
             subQuery.where('tag.TagType = :author', { author: 'author' });
             break;
+          case SEARCH.SPECIAL_TAGS.NO_PARODY:
+            subQuery.where('tag.TagType = :parody', { parody: 'parody' });
             break;
           case SEARCH.SPECIAL_TAGS.NO_TAG:
             subQuery.where(
               'tag.TagType = :parody OR tag.TagType = :character OR tag.TagType = :genre',
               { parody: 'parody', character: 'character', genre: 'genre' }
             );
+            break;
+          case SEARCH.SPECIAL_TAGS.HAVE_CHARACTER:
+            preQuery = 'folder.FolderLocation IN ';
+            subQuery.where('tag.TagType = :character', {
+              character: 'character'
+            });
             break;
           case SEARCH.SPECIAL_TAGS.MANY_PARODIES:
             preQuery = 'folder.FolderLocation IN ';
