@@ -9,7 +9,7 @@ interface LanguageQueryResult extends QueryResultInterface {
   languages: Array<string>;
 }
 
-@Entity({ name: 'Languages' })
+@Entity()
 export default class Language {
   @PrimaryColumn()
   Language!: string;

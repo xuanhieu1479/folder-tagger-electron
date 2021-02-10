@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, OneToMany } from 'typeorm';
 import { Tag } from './entity';
 
-@Entity({ name: 'TagTypes' })
+@Entity()
 export default class TagType {
   @PrimaryColumn()
   TagType!: string;

@@ -45,7 +45,7 @@ const FOLDER_COUNT_THRESHOLD = Math.ceil(
 );
 const getTagId = (tagType: string, tagName: string) => `${tagType}-${tagName}`;
 
-@Entity({ name: 'Tags' })
+@Entity()
 export default class Tag {
   /**
    * TagId = TagType-TagName

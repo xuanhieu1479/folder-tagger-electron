@@ -31,5 +31,13 @@ module.exports = {
         }
       ]
     })
-  ]
+  ],
+  optimization: {
+    // Typeorm depends on entity class name to create table alias
+    // if none were defined before, and since webpack minimizes all class name
+    // on production it causes typeorm to mess up every database query.
+    // Therefore turning webpack minification off is a must.
+    // REFERENCE: https://github.com/typeorm/typeorm/issues/4266#issuecomment-505139399
+    minimize: false
+  }
 };

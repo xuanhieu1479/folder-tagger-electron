@@ -9,7 +9,7 @@ interface CategoryQueryResult extends QueryResultInterface {
   categories: Array<string>;
 }
 
-@Entity({ name: 'Categories' })
+@Entity()
 export default class Category {
   @PrimaryColumn()
   Category!: string;
