@@ -26,9 +26,13 @@ const ContextMenuBody = ({
 
   return (
     <Menu>
-      <MenuItem text="Add Tags" onClick={onClickAddTags} />
-      <MenuItem text="Edit Tags" onClick={onClickEditTags} />
-      <MenuItem text="Remove Tags" onClick={onClickRemoveTags} />
+      <MenuItem text="Add Tags" onClick={onClickAddTags} label="Ctrl + E" />
+      <MenuItem text="Edit Tags" onClick={onClickEditTags} label="Ctrl + S" />
+      <MenuItem
+        text="Remove Tags"
+        onClick={onClickRemoveTags}
+        label="Ctrl + D"
+      />
     </Menu>
   );
 };

@@ -1,9 +1,12 @@
-import React, { ReactElement, useState, useEffect, useMemo } from 'react';
+import React, { ReactElement, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Intent } from '@blueprintjs/core';
 import _ from 'lodash';
 import { Tags } from '../../../common/interfaces/commonInterfaces';
-import { RootState } from '../../../common/interfaces/feInterfaces';
+import {
+  RootState,
+  BreakDownTagsType
+} from '../../../common/interfaces/feInterfaces';
 import { MESSAGE } from '../../../common/variables/commonVariables';
 import { TAG_ACTION } from '../../../common/enums/commonEnums';
 import { CustomSuggest, CustomMultiSelect } from '../commonComponents';
@@ -14,8 +17,7 @@ interface DialogContentInterface {
   dialogType: TAG_ACTION;
   onClose: () => void;
 }
-type BreakDownTagsType = 'author' | 'parody' | 'character' | 'genre' | string;
-const defaultSelectedTags = {
+const defaultSelectedTags: Record<BreakDownTagsType, Array<string>> = {
   author: [],
   parody: [],
   character: [],
@@ -31,7 +33,10 @@ const DialogContent = ({
   const { categories, languages, selectedFolders } = useSelector(
     (state: RootState) => state.folder
   );
+  const { relations } = useSelector((state: RootState) => state.tag);
+  const { parody_character, author_parody, author_genre } = relations;
   const { allTags } = useSelector((state: RootState) => state.tag);
+  const [tagSuggestions, setTagSuggestions] = useState(defaultSelectedTags);
   const [selectedCategory, setSelectedCategory] = useState(defaultSuggestion);
   const [selectedLanguage, setSelectedLanguage] = useState(defaultSuggestion);
   const [selectedTags, setSelectedTags] = useState(defaultSelectedTags);
@@ -57,22 +62,128 @@ const DialogContent = ({
     if (dialogType === TAG_ACTION.EDIT) getSelectedFolderTags();
   }, []);
 
-  const updateSelectedTags = (
-    tagKey: string,
-    newSelectedTags: Array<string>
+  useEffect(() => {
+    if (!_.isEmpty(allTags)) setTagSuggestions(breakDownTags(allTags));
+  }, [allTags]);
+
+  const bringCertainTagSuggestionsToFront = (
+    tagKey: BreakDownTagsType,
+    certainTagSuggestions: Array<string>
   ) => {
-    setSelectedTags(prevState => {
-      return { ...prevState, [tagKey]: newSelectedTags };
+    setTagSuggestions({
+      ...tagSuggestions,
+      [tagKey]: [
+        ...certainTagSuggestions,
+        ..._.difference(tagSuggestions[tagKey], certainTagSuggestions)
+      ]
     });
+  };
+
+  const onSelectTag = (tagKey: BreakDownTagsType, selectedTag: string) => {
+    const seletecTagIsANewTag = !allTags.find(
+      tag => tag.tagType === tagKey && tag.tagName === selectedTag
+    );
+    const isDeselecting = selectedTags[tagKey].includes(selectedTag);
+    const hasNoParodyCharacterRelations = _.isEmpty(parody_character);
+    const hasNoAuthorParodyRelations = _.isEmpty(author_parody);
+    const hasNoAuthorGenreRelations = _.isEmpty(author_genre);
+
+    const handleSelectTags = () => {
+      if (seletecTagIsANewTag) return;
+      switch (tagKey) {
+        case 'character':
+          {
+            if (
+              hasNoParodyCharacterRelations ||
+              !_.isEmpty(selectedTags.parody)
+            )
+              break;
+            const parodyOfThisCharacter = _.findKey(
+              parody_character,
+              character => character.includes(selectedTag)
+            );
+            if (parodyOfThisCharacter) {
+              bringCertainTagSuggestionsToFront('character', [
+                ...parody_character[parodyOfThisCharacter]
+              ]);
+              setSelectedTags({
+                ...selectedTags,
+                parody: [parodyOfThisCharacter]
+              });
+            }
+          }
+          break;
+        case 'parody':
+          if (hasNoParodyCharacterRelations) break;
+          {
+            const thisParodyHasCharacterRelations = Object.keys(
+              parody_character
+            ).includes(selectedTag);
+            if (thisParodyHasCharacterRelations) {
+              bringCertainTagSuggestionsToFront('character', [
+                ...parody_character[selectedTag]
+              ]);
+            }
+          }
+          break;
+      }
+    };
+
+    if (isDeselecting) {
+      onRemoveTag(tagKey, selectedTag);
+      return;
+    }
+    handleSelectTags();
+    onAddTag(tagKey, selectedTag);
+  };
+
+  const onAddTag = (tagKey: BreakDownTagsType, addedTag: string) => {
+    const isNewTag = !allTags.find(
+      tag => tag.tagType === tagKey && tag.tagName === addedTag
+    );
+    setSelectedTags(prevState => {
+      return { ...prevState, [tagKey]: [...prevState[tagKey], addedTag] };
+    });
+    if (isNewTag)
+      setTagSuggestions(prevState => {
+        return {
+          ...prevState,
+          [tagKey]: [...prevState[tagKey], addedTag]
+        };
+      });
+  };
+  const onRemoveTag = (tagKey: BreakDownTagsType, removedTag: string) => {
+    const isNewTag = !allTags.find(
+      tag => tag.tagType === tagKey && tag.tagName === removedTag
+    );
+    setSelectedTags(prevState => {
+      return {
+        ...prevState,
+        [tagKey]: prevState[tagKey].filter(t => t !== removedTag)
+      };
+    });
+    if (isNewTag)
+      setTagSuggestions(prevState => {
+        return {
+          ...prevState,
+          [tagKey]: prevState[tagKey].filter(t => t !== removedTag)
+        };
+      });
   };
 
   const breakDownTags = (source: Array<Tags>) => {
     return source.reduce(
-      (accumulator, currentValue) => {
+      (accumulator: Record<BreakDownTagsType, Array<string>>, currentValue) => {
         const newValue: Record<BreakDownTagsType, Array<string>> = {
           ...accumulator
         };
-        newValue[currentValue.tagType].push(currentValue.tagName);
+        switch (currentValue.tagType) {
+          case 'author':
+          case 'parody':
+          case 'character':
+          case 'genre':
+            newValue[currentValue.tagType].push(currentValue.tagName);
+        }
         return { ...accumulator, ...newValue };
       },
       { author: [], parody: [], character: [], genre: [] }
@@ -155,8 +266,6 @@ const DialogContent = ({
     });
   };
 
-  const allItems = useMemo(() => breakDownTags(allTags), [allTags]);
-
   return (
     <section className="folder-dialog_content_container">
       <div className="folder-dialog_content_row">
@@ -186,9 +295,10 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_tags">
           <CustomMultiSelect
             itemKey="author"
-            allItems={allItems.author}
+            allItems={tagSuggestions.author}
             selectedItems={selectedTags.author}
-            updateSelectedItems={updateSelectedTags}
+            onSelectItem={onSelectTag}
+            onRemoveItem={onRemoveTag}
           />
         </div>
       </div>
@@ -197,9 +307,10 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_tags">
           <CustomMultiSelect
             itemKey="parody"
-            allItems={allItems.parody}
+            allItems={tagSuggestions.parody}
             selectedItems={selectedTags.parody}
-            updateSelectedItems={updateSelectedTags}
+            onSelectItem={onSelectTag}
+            onRemoveItem={onRemoveTag}
           />
         </div>
       </div>
@@ -208,9 +319,10 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_tags">
           <CustomMultiSelect
             itemKey="character"
-            allItems={allItems.character}
+            allItems={tagSuggestions.character}
             selectedItems={selectedTags.character}
-            updateSelectedItems={updateSelectedTags}
+            onSelectItem={onSelectTag}
+            onRemoveItem={onRemoveTag}
           />
         </div>
       </div>
@@ -219,9 +331,10 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_tags">
           <CustomMultiSelect
             itemKey="genre"
-            allItems={allItems.genre}
+            allItems={tagSuggestions.genre}
             selectedItems={selectedTags.genre}
-            updateSelectedItems={updateSelectedTags}
+            onSelectItem={onSelectTag}
+            onRemoveItem={onRemoveTag}
           />
         </div>
       </div>

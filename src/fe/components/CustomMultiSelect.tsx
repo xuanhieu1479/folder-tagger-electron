@@ -1,18 +1,17 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
 import { MenuItem } from '@blueprintjs/core';
-import { MultiSelect, ItemRenderer } from '@blueprintjs/select';
+import { MultiSelect, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
+import { BreakDownTagsType } from '../../common/interfaces/feInterfaces';
 import { MESSAGE } from '../../common/variables/commonVariables';
 import { showMessage } from '../../utilities/showMessage';
 import './styles/CustomMultiSelect.styled.scss';
 
 interface CustomMultiSelectInterface {
-  itemKey: string;
+  itemKey: BreakDownTagsType;
   allItems: Array<string>;
   selectedItems: Array<string>;
-  updateSelectedItems: (
-    itemKey: string,
-    newSelectedItems: Array<string>
-  ) => void;
+  onSelectItem: (itemKey: BreakDownTagsType, selectedItem: string) => void;
+  onRemoveItem: (itemKey: BreakDownTagsType, removedItem: string) => void;
 }
 const noSpecialCharactersRegex = new RegExp(/[^A-Za-z0-9\s]/g);
 
@@ -20,10 +19,14 @@ const CustomMultiSelect = ({
   itemKey,
   allItems,
   selectedItems,
-  updateSelectedItems
+  onSelectItem,
+  onRemoveItem
 }: CustomMultiSelectInterface): ReactElement => {
   const [inputValue, setInputvalue] = useState('');
 
+  const filterItems: ItemPredicate<string> = (query, item) => {
+    return item.toLocaleLowerCase().includes(query.toLocaleLowerCase());
+  };
   const clearInput = () => {
     setInputvalue('');
   };
@@ -33,19 +36,11 @@ const CustomMultiSelect = ({
     else showMessage.error(MESSAGE.SPECIAL_CHARACTERS_FORBIDDEN);
   };
   const onItemSelect = (item: string): void => {
-    if (selectedItems.includes(item))
-      updateSelectedItems(
-        itemKey,
-        selectedItems.filter(t => t !== item)
-      );
-    else updateSelectedItems(itemKey, [...selectedItems, item]);
+    onSelectItem(itemKey, item);
     clearInput();
   };
-  const onRemoveItem = (item: ReactNode): void => {
-    updateSelectedItems(
-      itemKey,
-      selectedItems.filter(t => t !== item)
-    );
+  const onRemove = (item: ReactNode): void => {
+    onRemoveItem(itemKey, item as string);
     clearInput();
   };
   const onCreatItem = (query: string) => {
@@ -94,9 +89,10 @@ const CustomMultiSelect = ({
       createNewItemFromQuery={onCreatItem}
       tagRenderer={item => item}
       tagInputProps={{
-        onRemove: onRemoveItem,
+        onRemove,
         inputProps: { value: inputValue, onChange: onInputChange }
       }}
+      itemPredicate={filterItems}
       popoverProps={{
         minimal: true,
         popoverClassName: 'custom-multi-select_popover'

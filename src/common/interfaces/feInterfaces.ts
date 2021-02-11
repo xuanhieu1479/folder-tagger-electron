@@ -37,6 +37,8 @@ interface SettingDefaultValueInterface {
   defaultLanguage: string;
 }
 
+type BreakDownTagsType = 'author' | 'parody' | 'character' | 'genre';
+
 export {
   RootState,
   ReducerAction,
@@ -44,5 +46,6 @@ export {
   FolderReducerInterface,
   TagReducerInterface,
   SettingReducerInterface,
-  SettingDefaultValueInterface
+  SettingDefaultValueInterface,
+  BreakDownTagsType
 };
