@@ -98,7 +98,7 @@ const DialogContent = ({
         bringCertainTagSuggestionsToFront('character', charactersOfThisParody);
       }
       if (!_.isEmpty(author_parody)) {
-        const authorsOfThisParody = _.reduce(
+        const authorsHaveThisParody = _.reduce(
           author_parody,
           (accumulator: Array<string>, parodies, author) => {
             if (parodies.includes(newParody)) accumulator.push(author);
@@ -106,7 +106,7 @@ const DialogContent = ({
           },
           []
         );
-        bringCertainTagSuggestionsToFront('author', authorsOfThisParody);
+        bringCertainTagSuggestionsToFront('author', authorsHaveThisParody);
       }
     }
     previousSelectedTags.current.parody = selectedTags.parody;
@@ -123,9 +123,34 @@ const DialogContent = ({
           parody: [parodyOfThisAuthor]
         });
       }
+      if (!_.isEmpty(author_genre) && author_genre[newAuthor]) {
+        const genresOfThisAuthor = [...author_genre[newAuthor]];
+        bringCertainTagSuggestionsToFront('genre', genresOfThisAuthor);
+      }
     }
     previousSelectedTags.current.author = selectedTags.author;
   }, [selectedTags.author]);
+  // On change genre
+  useEffect(() => {
+    if (_.isEmpty(author_genre) || !_.isEmpty(selectedTags.author)) {
+      previousSelectedTags.current.genre = selectedTags.genre;
+      return;
+    }
+    const isOK = checkNewlySelectedTag(selectedTags.genre, 'genre');
+    if (isOK) {
+      const newGenre = _.last(selectedTags.genre) as string;
+      const authorsHaveThisGenre = _.reduce(
+        author_genre,
+        (accumulator: Array<string>, genres, author) => {
+          if (genres.includes(newGenre)) accumulator.push(author);
+          return accumulator;
+        },
+        []
+      );
+      bringCertainTagSuggestionsToFront('author', authorsHaveThisGenre);
+    }
+    previousSelectedTags.current.genre = selectedTags.genre;
+  }, [selectedTags.genre]);
 
   /**
    * Ensure newly selected tag is for adding

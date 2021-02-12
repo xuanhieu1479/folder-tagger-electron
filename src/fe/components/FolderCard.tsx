@@ -86,7 +86,7 @@ const FolderCard = ({
 
   const onClickCardName = () => {
     navigator.clipboard.writeText(folderName);
-    showMessage.info('Copied to clipboard!');
+    showMessage.info("Copied folder's name to clipboard!");
   };
 
   return (

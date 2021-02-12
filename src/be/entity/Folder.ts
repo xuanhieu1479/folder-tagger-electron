@@ -96,11 +96,8 @@ export default class Folder {
           case SEARCH.SPECIAL_TAGS.NO_PARODY:
             subQuery.where('tag.TagType = :parody', { parody: 'parody' });
             break;
-          case SEARCH.SPECIAL_TAGS.NO_TAG:
-            subQuery.where(
-              'tag.TagType = :parody OR tag.TagType = :character OR tag.TagType = :genre',
-              { parody: 'parody', character: 'character', genre: 'genre' }
-            );
+          case SEARCH.SPECIAL_TAGS.NO_GENRE:
+            subQuery.where('tag.TagType = :genre', { parody: 'genre' });
             break;
           case SEARCH.SPECIAL_TAGS.HAVE_CHARACTER:
             preQuery = 'folder.FolderLocation IN ';

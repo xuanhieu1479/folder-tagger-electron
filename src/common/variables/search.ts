@@ -7,7 +7,7 @@ const SEARCH = {
   SPECIAL_TAGS: {
     NO_AUTHOR: 'no_author',
     NO_PARODY: 'no_parody',
-    NO_TAG: 'no_tag',
+    NO_GENRE: 'no_genre',
     HAVE_CHARACTER: 'have_character',
     MANY_PARODIES: 'many_parody'
   }
