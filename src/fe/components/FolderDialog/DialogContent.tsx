@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react';
+import React, { ReactElement, useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Intent } from '@blueprintjs/core';
 import _ from 'lodash';
@@ -40,6 +40,7 @@ const DialogContent = ({
   const [selectedCategory, setSelectedCategory] = useState(defaultSuggestion);
   const [selectedLanguage, setSelectedLanguage] = useState(defaultSuggestion);
   const [selectedTags, setSelectedTags] = useState(defaultSelectedTags);
+  const previousSelectedTags = useRef(selectedTags);
 
   useEffect(() => {
     const getSelectedFolderTags = async () => {
@@ -66,6 +67,66 @@ const DialogContent = ({
     if (!_.isEmpty(allTags)) setTagSuggestions(breakDownTags(allTags));
   }, [allTags]);
 
+  // On change character
+  useEffect(() => {
+    if (_.isEmpty(parody_character) || !_.isEmpty(selectedTags.parody)) {
+      previousSelectedTags.current.character = selectedTags.character;
+      return;
+    }
+    const isOK = checkNewlySelectedTag(selectedTags.character, 'character');
+    if (isOK) {
+      const newCharacter = _.last(selectedTags.character) as string;
+      const parodyOfThisCharacter = _.findKey(parody_character, characters =>
+        characters.includes(newCharacter)
+      );
+      if (parodyOfThisCharacter) {
+        setSelectedTags({
+          ...selectedTags,
+          parody: [parodyOfThisCharacter]
+        });
+      }
+    }
+    previousSelectedTags.current.character = selectedTags.character;
+  }, [selectedTags.character]);
+  // On change parody
+  useEffect(() => {
+    if (_.isEmpty(parody_character)) {
+      previousSelectedTags.current.parody = selectedTags.parody;
+      return;
+    }
+    const isOK = checkNewlySelectedTag(selectedTags.parody, 'parody');
+    if (isOK) {
+      const newParody = _.last(selectedTags.parody) as string;
+      const newParodyHasCharacterRelations = Object.keys(
+        parody_character
+      ).includes(newParody);
+      if (newParodyHasCharacterRelations) {
+        const charactersOfThisParody = [...parody_character[newParody]];
+        bringCertainTagSuggestionsToFront('character', charactersOfThisParody);
+      }
+    }
+    previousSelectedTags.current.parody = selectedTags.parody;
+  }, [selectedTags.parody]);
+
+  /**
+   * Ensure newly selected tag is for adding
+   * and not a newly created tag.
+   */
+  const checkNewlySelectedTag = (
+    selectedTags: Array<string>,
+    tagType: BreakDownTagsType
+  ) => {
+    const isAddingTag =
+      selectedTags.length > previousSelectedTags.current[tagType].length;
+    if (isAddingTag) {
+      const newlySelectedTag = _.last(selectedTags) as string;
+      const newlySelectedTagAlreadyExists = allTags.some(
+        tag => tag.tagType === tagType && tag.tagName === newlySelectedTag
+      );
+      if (newlySelectedTagAlreadyExists) return true;
+    }
+    return false;
+  };
   const bringCertainTagSuggestionsToFront = (
     tagKey: BreakDownTagsType,
     certainTagSuggestions: Array<string>
@@ -80,61 +141,9 @@ const DialogContent = ({
   };
 
   const onSelectTag = (tagKey: BreakDownTagsType, selectedTag: string) => {
-    const seletecTagIsANewTag = !allTags.find(
-      tag => tag.tagType === tagKey && tag.tagName === selectedTag
-    );
     const isDeselecting = selectedTags[tagKey].includes(selectedTag);
-    const hasNoParodyCharacterRelations = _.isEmpty(parody_character);
-    const hasNoAuthorParodyRelations = _.isEmpty(author_parody);
-    const hasNoAuthorGenreRelations = _.isEmpty(author_genre);
-
-    const handleSelectTags = () => {
-      if (seletecTagIsANewTag) return;
-      switch (tagKey) {
-        case 'character':
-          {
-            if (
-              hasNoParodyCharacterRelations ||
-              !_.isEmpty(selectedTags.parody)
-            )
-              break;
-            const parodyOfThisCharacter = _.findKey(
-              parody_character,
-              character => character.includes(selectedTag)
-            );
-            if (parodyOfThisCharacter) {
-              bringCertainTagSuggestionsToFront('character', [
-                ...parody_character[parodyOfThisCharacter]
-              ]);
-              setSelectedTags({
-                ...selectedTags,
-                parody: [parodyOfThisCharacter]
-              });
-            }
-          }
-          break;
-        case 'parody':
-          if (hasNoParodyCharacterRelations) break;
-          {
-            const thisParodyHasCharacterRelations = Object.keys(
-              parody_character
-            ).includes(selectedTag);
-            if (thisParodyHasCharacterRelations) {
-              bringCertainTagSuggestionsToFront('character', [
-                ...parody_character[selectedTag]
-              ]);
-            }
-          }
-          break;
-      }
-    };
-
-    if (isDeselecting) {
-      onRemoveTag(tagKey, selectedTag);
-      return;
-    }
-    handleSelectTags();
-    onAddTag(tagKey, selectedTag);
+    if (isDeselecting) onRemoveTag(tagKey, selectedTag);
+    else onAddTag(tagKey, selectedTag);
   };
 
   const onAddTag = (tagKey: BreakDownTagsType, addedTag: string) => {
