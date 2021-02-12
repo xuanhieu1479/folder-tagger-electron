@@ -90,23 +90,42 @@ const DialogContent = ({
   }, [selectedTags.character]);
   // On change parody
   useEffect(() => {
-    if (_.isEmpty(parody_character)) {
-      previousSelectedTags.current.parody = selectedTags.parody;
-      return;
-    }
     const isOK = checkNewlySelectedTag(selectedTags.parody, 'parody');
     if (isOK) {
       const newParody = _.last(selectedTags.parody) as string;
-      const newParodyHasCharacterRelations = Object.keys(
-        parody_character
-      ).includes(newParody);
-      if (newParodyHasCharacterRelations) {
+      if (!_.isEmpty(parody_character) && parody_character[newParody]) {
         const charactersOfThisParody = [...parody_character[newParody]];
         bringCertainTagSuggestionsToFront('character', charactersOfThisParody);
+      }
+      if (!_.isEmpty(author_parody)) {
+        const authorsOfThisParody = _.reduce(
+          author_parody,
+          (accumulator: Array<string>, parodies, author) => {
+            if (parodies.includes(newParody)) accumulator.push(author);
+            return accumulator;
+          },
+          []
+        );
+        bringCertainTagSuggestionsToFront('author', authorsOfThisParody);
       }
     }
     previousSelectedTags.current.parody = selectedTags.parody;
   }, [selectedTags.parody]);
+  // On change author
+  useEffect(() => {
+    const isOK = checkNewlySelectedTag(selectedTags.author, 'author');
+    if (isOK) {
+      const newAuthor = _.last(selectedTags.author) as string;
+      if (!_.isEmpty(author_parody) && author_parody[newAuthor]) {
+        const parodyOfThisAuthor = author_parody[newAuthor][0];
+        setSelectedTags({
+          ...selectedTags,
+          parody: [parodyOfThisAuthor]
+        });
+      }
+    }
+    previousSelectedTags.current.author = selectedTags.author;
+  }, [selectedTags.author]);
 
   /**
    * Ensure newly selected tag is for adding
@@ -131,12 +150,14 @@ const DialogContent = ({
     tagKey: BreakDownTagsType,
     certainTagSuggestions: Array<string>
   ) => {
-    setTagSuggestions({
-      ...tagSuggestions,
-      [tagKey]: [
-        ...certainTagSuggestions,
-        ..._.difference(tagSuggestions[tagKey], certainTagSuggestions)
-      ]
+    setTagSuggestions(prevState => {
+      return {
+        ...prevState,
+        [tagKey]: [
+          ...certainTagSuggestions,
+          ..._.difference(prevState[tagKey], certainTagSuggestions)
+        ]
+      };
     });
   };
 

@@ -40,7 +40,9 @@ interface TagRelationQueryResult extends QueryResultInterface {
   relations?: TagRelations;
 }
 
-const TAG_FREQUENT_THRESHOLD = 0.5;
+// A 51% instead of 50% will ensure an author will only have a single main parody
+// while an increasing of 1% won't affect much to other kinds of tag.
+const TAG_FREQUENT_THRESHOLD = 0.51;
 const FOLDER_COUNT_THRESHOLD = Math.ceil(
   1 / Math.pow(TAG_FREQUENT_THRESHOLD, 2)
 );
