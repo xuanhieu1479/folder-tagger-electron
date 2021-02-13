@@ -1,7 +1,7 @@
 import fs from 'fs';
 import ini from 'ini';
 import { Dispatch } from 'redux';
-import { SettingReducerInterface } from '../../../common/interfaces/feInterfaces';
+import { SettingReducer } from '../../../common/interfaces/feInterfaces';
 import { SETTING } from '../../../common/variables/commonVariables';
 import { UPDATE_SETTINGS } from './settingActionType';
 import { writeToFile, fileExists } from '../../../utilities/utilityFunctions';
@@ -13,7 +13,7 @@ const getSettings = (dispatch: Dispatch): void => {
       updateSettings(dispatch);
     } else {
       const data = ini.parse(fs.readFileSync(SETTING.PATH).toString());
-      const settings: SettingReducerInterface = {
+      const settings: SettingReducer = {
         defaultCategory: data.defaultCategory,
         defaultLanguage: data.defaultLanguage
       };
@@ -26,7 +26,7 @@ const getSettings = (dispatch: Dispatch): void => {
 
 const updateSettings = (
   dispatch: Dispatch,
-  settings?: SettingReducerInterface
+  settings?: SettingReducer
 ): void => {
   try {
     const payload = settings || SETTING.DEFAULT;

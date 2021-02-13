@@ -24,7 +24,7 @@ import { getTags } from '../../redux/tag/tagAction';
 import { showMessage } from '../../../utilities/feUtilities';
 import './FoldersDisplay.styled.scss';
 
-interface FoldersDisplayInterface {
+interface FolderDisplay {
   openSettingDialog: () => void;
 }
 const defaultFolderDialogParams = {
@@ -32,9 +32,7 @@ const defaultFolderDialogParams = {
   dialogType: TAG_ACTION.ADD
 };
 
-const FoldersDisplay = ({
-  openSettingDialog
-}: FoldersDisplayInterface): ReactElement => {
+const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
   const dispatch = useDispatch();
   const { selectedFolders, foldersList, categories, languages } = useSelector(
     (state: RootState) => state.folder

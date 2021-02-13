@@ -6,12 +6,12 @@ import { RootState } from '../../../common/interfaces/feInterfaces';
 import { Pagination } from '../../components/commonComponents';
 import './Footer.styled.scss';
 
-interface FooterInterface {
+interface Footer {
   params: FolderFilterParams;
   updateParams: (newParams: Partial<FolderFilterParams>) => void;
 }
 
-const Footer = ({ params, updateParams }: FooterInterface): ReactElement => {
+const Footer = ({ params, updateParams }: Footer): ReactElement => {
   const { totalFolders } = useSelector((state: RootState) => state.folder);
 
   return (

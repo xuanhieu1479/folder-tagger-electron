@@ -13,7 +13,7 @@ import { CustomSuggest, CustomMultiSelect } from '../commonComponents';
 import { showMessage } from '../../../utilities/feUtilities';
 import { getTags, modifyTagsOfFolders } from '../../redux/tag/tagAction';
 
-interface DialogContentInterface {
+interface DialogContent {
   dialogType: TAG_ACTION;
   onClose: () => void;
 }
@@ -28,7 +28,7 @@ const defaultSuggestion = '';
 const DialogContent = ({
   dialogType,
   onClose
-}: DialogContentInterface): ReactElement => {
+}: DialogContent): ReactElement => {
   const dispatch = useDispatch();
   const { categories, languages, selectedFolders } = useSelector(
     (state: RootState) => state.folder

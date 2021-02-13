@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react';
 import { RadioGroup, Radio } from '@blueprintjs/core';
-import { SettingDefaultValueInterface } from '../../../common/interfaces/feInterfaces';
+import { SettingDefaultValue } from '../../../common/interfaces/feInterfaces';
 import { SEED_DATA } from '../../../common/variables/commonVariables';
 
-interface SettingDefaultValuesInterface {
-  defaultValueSetting: SettingDefaultValueInterface;
-  onUpdateSettings: (newSettings: SettingDefaultValueInterface) => void;
+interface SettingDefaultValues {
+  defaultValueSetting: SettingDefaultValue;
+  onUpdateSettings: (newSettings: SettingDefaultValue) => void;
 }
 
 const DefaultValueRadio = (): ReactElement => {
@@ -17,7 +17,7 @@ const DefaultValueRadio = (): ReactElement => {
 const SettingDefaultValues = ({
   defaultValueSetting,
   onUpdateSettings
-}: SettingDefaultValuesInterface): ReactElement => {
+}: SettingDefaultValues): ReactElement => {
   const { defaultCategory, defaultLanguage } = defaultValueSetting;
 
   const onChangeCategoryRadio = (event: React.FormEvent<HTMLInputElement>) => {

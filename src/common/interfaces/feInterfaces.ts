@@ -1,10 +1,10 @@
 import { Folder, Tags, TagRelations } from './commonInterfaces';
 
 interface RootState {
-  status: StatusReducerInterface;
-  folder: FolderReducerInterface;
-  tag: TagReducerInterface;
-  setting: SettingReducerInterface;
+  status: StatusReducer;
+  folder: FolderReducer;
+  tag: TagReducer;
+  setting: SettingReducer;
 }
 
 interface ReducerAction {
@@ -13,27 +13,27 @@ interface ReducerAction {
   payload?: any;
 }
 
-interface StatusReducerInterface {
+interface StatusReducer {
   isLoading: boolean;
   isDialogOpen: boolean;
 }
-interface FolderReducerInterface {
+interface FolderReducer {
   selectedFolders: Array<string>;
   foldersList: Array<Folder>;
   totalFolders: number;
   categories: Array<string>;
   languages: Array<string>;
 }
-interface TagReducerInterface {
+interface TagReducer {
   allTags: Array<Tags>;
   relations: TagRelations;
   clipboard: Array<Tags>;
 }
 // For the moment Setting only consists of default values.
 // But it probably will be expanded soon.
-type SettingReducerInterface = SettingDefaultValueInterface;
+type SettingReducer = SettingDefaultValue;
 
-interface SettingDefaultValueInterface {
+interface SettingDefaultValue {
   defaultCategory: string;
   defaultLanguage: string;
 }
@@ -41,9 +41,9 @@ interface SettingDefaultValueInterface {
 export {
   RootState,
   ReducerAction,
-  StatusReducerInterface,
-  FolderReducerInterface,
-  TagReducerInterface,
-  SettingReducerInterface,
-  SettingDefaultValueInterface
+  StatusReducer,
+  FolderReducer,
+  TagReducer,
+  SettingReducer,
+  SettingDefaultValue
 };

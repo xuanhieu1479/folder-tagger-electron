@@ -14,12 +14,12 @@ import { showMessage } from '../../../utilities/feUtilities';
 import { COPY_TAGS, GET_TAGS, LOAD_TAG_RELATIONS } from './tagActionType';
 import { startLoading, finishLoading } from '../status/statusAction';
 
-interface GetTagsOfOneFolderInterface {
+interface GetTagsOfOneFolder {
   tags: Array<Tags>;
   category: string | undefined;
   language: string | undefined;
 }
-interface ModifyTagsInterface {
+interface ModifyTags {
   selectedFolders: Array<string>;
   existingTags: Array<Tags>;
   newTags: Array<Tags>;
@@ -32,7 +32,7 @@ interface ModifyTagsInterface {
 const getTags = async (
   dispatch: Dispatch,
   folderLocation?: string
-): Promise<void | GetTagsOfOneFolderInterface> => {
+): Promise<void | GetTagsOfOneFolder> => {
   const getTagsForFolder = folderLocation !== undefined;
   try {
     const { data } = await axios.get(TAG_API.GET, {
@@ -79,7 +79,7 @@ const modifyTagsOfFolders = async ({
   language,
   action,
   onSuccess
-}: ModifyTagsInterface): Promise<void> => {
+}: ModifyTags): Promise<void> => {
   try {
     await axios.post(TAG_API.MODIFY, {
       folderLocations: selectedFolders,

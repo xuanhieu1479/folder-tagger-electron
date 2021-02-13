@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react';
 
-interface TotalPagesInterface {
+interface TotalPages {
   totalFolders: number;
 }
 
-const TotalPages = ({ totalFolders }: TotalPagesInterface): ReactElement => {
+const TotalPages = ({ totalFolders }: TotalPages): ReactElement => {
   return (
     <section className="footer_pagination_total-folders">
       Total folders found: {totalFolders}

@@ -6,7 +6,7 @@ import { MESSAGE } from '../../common/variables/commonVariables';
 import { showMessage } from '../../utilities/showMessage';
 import './styles/CustomMultiSelect.styled.scss';
 
-interface CustomMultiSelectInterface {
+interface CustomMultiSelect {
   itemKey: BreakDownTagsType;
   allItems: Array<string>;
   selectedItems: Array<string>;
@@ -21,7 +21,7 @@ const CustomMultiSelect = ({
   selectedItems,
   onSelectItem,
   onRemoveItem
-}: CustomMultiSelectInterface): ReactElement => {
+}: CustomMultiSelect): ReactElement => {
   const [inputValue, setInputvalue] = useState('');
 
   const filterItems: ItemPredicate<string> = (query, item) => {

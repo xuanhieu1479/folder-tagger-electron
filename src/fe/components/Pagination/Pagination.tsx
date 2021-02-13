@@ -5,7 +5,7 @@ import PaginationButtonsGroup from './PaginationButtonsGroup';
 import PaginationOptions from './PaginationOptions';
 import './Pagination.styled.scss';
 
-interface PaginationInterface {
+interface Pagination {
   totalFolders: number;
   pagesRangeDisplayed?: number;
   currentPage: number;
@@ -19,7 +19,7 @@ const Pagination = ({
   currentPage,
   itemsPerPage,
   updateParams
-}: PaginationInterface): ReactElement => {
+}: Pagination): ReactElement => {
   const totalPages = Math.ceil(totalFolders / itemsPerPage);
 
   return (

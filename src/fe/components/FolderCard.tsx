@@ -14,13 +14,13 @@ import FunctionsContext from '../context/FunctionsContext';
 import { showMessage } from '../../utilities/feUtilities';
 import './styles/FolderCard.styled.scss';
 
-interface ContextMenuBodyInterface {
+interface ContextMenuBody {
   onOpenFolderDialog: (dialogType: TAG_ACTION) => void;
 }
 
 const ContextMenuBody = ({
   onOpenFolderDialog
-}: ContextMenuBodyInterface): React.ReactElement => {
+}: ContextMenuBody): React.ReactElement => {
   const onClickAddTags = () => onOpenFolderDialog(TAG_ACTION.ADD);
   const onClickEditTags = () => onOpenFolderDialog(TAG_ACTION.EDIT);
   const onClickRemoveTags = () => onOpenFolderDialog(TAG_ACTION.REMOVE);
@@ -38,7 +38,7 @@ const ContextMenuBody = ({
   );
 };
 
-interface FolderCardInterface {
+interface FolderCard {
   id: string;
   folderLocation: string;
   thumbnailLocation?: string;
@@ -59,7 +59,7 @@ const FolderCard = ({
   onClick,
   addToSelectedList,
   isBeingSelected
-}: FolderCardInterface): ReactElement => {
+}: FolderCard): ReactElement => {
   const context = useContext(FunctionsContext);
   const { dialog } = context;
   const { onOpenFolderDialog } = dialog;

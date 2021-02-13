@@ -6,10 +6,10 @@ import {
 } from './folderActionType';
 import {
   ReducerAction,
-  FolderReducerInterface
+  FolderReducer
 } from '../../../common/interfaces/feInterfaces';
 
-export const folderInitState: FolderReducerInterface = {
+export const folderInitState: FolderReducer = {
   selectedFolders: [],
   foldersList: [],
   totalFolders: 0,
@@ -18,9 +18,9 @@ export const folderInitState: FolderReducerInterface = {
 };
 
 const statusReducer = (
-  state: FolderReducerInterface = folderInitState,
+  state: FolderReducer = folderInitState,
   action: ReducerAction
-): FolderReducerInterface => {
+): FolderReducer => {
   const data = action.payload || {};
   const {
     foldersList,

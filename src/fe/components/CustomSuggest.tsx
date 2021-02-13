@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
 
-interface CustomSuggestInterface {
+interface CustomSuggest {
   selectedItem: string;
   items: Array<string>;
   isDisabled?: boolean;
@@ -16,7 +16,7 @@ const CustomSuggest = ({
   isDisabled = false,
   className,
   updateSelectedItem
-}: CustomSuggestInterface): ReactElement => {
+}: CustomSuggest): ReactElement => {
   const onItemSelect = (newItem: string) => {
     updateSelectedItem(newItem);
   };

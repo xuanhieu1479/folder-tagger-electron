@@ -16,13 +16,13 @@ import {
   TagRelations,
   BreakDownTagsType
 } from '../../common/interfaces/commonInterfaces';
-import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
+import { QueryResult } from '../../common/interfaces/beInterfaces';
 import { MESSAGE, SETTING } from '../../common/variables/commonVariables';
 import { STATUS_CODE, TAG_ACTION } from '../../common/enums/commonEnums';
 import { writeToFile } from '../../utilities/utilityFunctions';
 import { logErrors } from '../logging';
 
-interface TagQueryResult extends QueryResultInterface {
+interface TagQueryResult extends QueryResult {
   tags?: Array<TagsInterface>;
   category?: string;
   language?: string;
@@ -39,7 +39,7 @@ interface ModifyTagsOfFolders extends TagsInterface {
   language: string | undefined;
   action: TAG_ACTION;
 }
-interface TagRelationQueryResult extends QueryResultInterface {
+interface TagRelationQueryResult extends QueryResult {
   relations?: TagRelations;
 }
 
@@ -157,7 +157,7 @@ export default class Tag {
 
   modifyTagsOfFolders = async (
     params: ModifyTagsOfFolders
-  ): Promise<QueryResultInterface> => {
+  ): Promise<QueryResult> => {
     const {
       folderLocations,
       existingTags,

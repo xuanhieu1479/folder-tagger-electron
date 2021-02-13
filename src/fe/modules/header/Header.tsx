@@ -6,7 +6,7 @@ import { PAGINATION, SEARCH } from '../../../common/variables/commonVariables';
 import { CustomSuggest } from '../../components/commonComponents';
 import './Header.styled.scss';
 
-interface HeaderInterface {
+interface Header {
   params: FolderFilterParams;
   updateParams: (newParams: Partial<FolderFilterParams>) => void;
   allCategories: Array<string>;
@@ -35,7 +35,7 @@ const Header = ({
   updateParams,
   allCategories,
   allLanguages
-}: HeaderInterface): ReactElement => {
+}: Header): ReactElement => {
   const [searchKeywords, setSearchKeywords] = useState('');
 
   const onChangeCategory = (newCategory: string) => {

@@ -5,7 +5,7 @@ import { PAGINATION } from '../../../common/variables/commonVariables';
 import PaginationButton from './PaginationButton';
 import './Pagination.styled.scss';
 
-interface PaginationButtonsGroupInterface {
+interface PaginationButtonsGroup {
   totalPages: number;
   pagesRangeDisplayed?: number;
   currentPage: number;
@@ -17,7 +17,7 @@ const PaginationButtonsGroup = ({
   pagesRangeDisplayed = PAGINATION.PAGES_RANGE_DISPLAYED,
   currentPage,
   updateParams
-}: PaginationButtonsGroupInterface): ReactElement => {
+}: PaginationButtonsGroup): ReactElement => {
   const [firstButtonInRange, setFirstButtonInRange] = useState(currentPage);
 
   useEffect(() => {

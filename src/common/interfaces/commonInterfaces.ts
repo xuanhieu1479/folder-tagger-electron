@@ -21,7 +21,7 @@ interface FolderFilterParams {
     wildcard?: Array<string>;
   };
 }
-interface TransferDataInterface {
+interface TransferData {
   FolderLocation: string;
   FolderName: string;
   Category: string;
@@ -46,7 +46,7 @@ interface TagRelations {
 export {
   Folder,
   FolderFilterParams,
-  TransferDataInterface,
+  TransferData,
   BreakDownTagsType,
   Tags,
   TagRelations

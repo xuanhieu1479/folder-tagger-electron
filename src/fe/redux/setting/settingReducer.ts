@@ -1,16 +1,16 @@
 import {
   ReducerAction,
-  SettingReducerInterface
+  SettingReducer
 } from '../../../common/interfaces/feInterfaces';
 import { SETTING } from '../../../common/variables/commonVariables';
 import { UPDATE_SETTINGS } from './settingActionType';
 
-export const settingInitState: SettingReducerInterface = SETTING.DEFAULT;
+export const settingInitState: SettingReducer = SETTING.DEFAULT;
 
 const statusReducer = (
-  state: SettingReducerInterface = settingInitState,
+  state: SettingReducer = settingInitState,
   action: ReducerAction
-): SettingReducerInterface => {
+): SettingReducer => {
   const data = action.payload || {};
   switch (action.type) {
     case UPDATE_SETTINGS:

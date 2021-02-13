@@ -7,7 +7,7 @@ import { RootState } from '../../common/interfaces/feInterfaces';
 import { copyTags } from '../redux/tag/tagAction';
 import './styles/ClipboardDialog.styled.scss';
 
-interface FolderDialogInterface {
+interface FolderDialog {
   isOpen: boolean;
   onClose: () => void;
 }
@@ -18,10 +18,7 @@ const defaultCheckedValues = {
   genre: false
 };
 
-const FolderDialog = ({
-  isOpen,
-  onClose
-}: FolderDialogInterface): ReactElement => {
+const FolderDialog = ({ isOpen, onClose }: FolderDialog): ReactElement => {
   const dispatch = useDispatch();
   const { selectedFolders } = useSelector((state: RootState) => state.folder);
   const [tagTypes, setTagTypes] = useState({

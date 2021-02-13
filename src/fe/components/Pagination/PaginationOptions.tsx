@@ -3,7 +3,7 @@ import { HTMLSelect } from '@blueprintjs/core';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import { PAGINATION } from '../../../common/variables/commonVariables';
 
-interface PaginationOptionsInterface {
+interface PaginationOptions {
   itemsPerPage: number;
   updateParams: (newParams: Partial<FolderFilterParams>) => void;
 }
@@ -11,7 +11,7 @@ interface PaginationOptionsInterface {
 const PaginationOptions = ({
   itemsPerPage,
   updateParams
-}: PaginationOptionsInterface): ReactElement => {
+}: PaginationOptions): ReactElement => {
   const onChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
     updateParams({
       currentPage: PAGINATION.DEFAULT.currentPage,

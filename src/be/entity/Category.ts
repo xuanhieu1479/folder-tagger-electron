@@ -1,11 +1,11 @@
 import { Entity, getRepository, OneToMany, PrimaryColumn } from 'typeorm';
 import { MESSAGE } from '../../common/variables/commonVariables';
 import { STATUS_CODE } from '../../common/enums/commonEnums';
-import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
+import { QueryResult } from '../../common/interfaces/beInterfaces';
 import { Folder } from './entity';
 import { logErrors } from '../logging';
 
-interface CategoryQueryResult extends QueryResultInterface {
+interface CategoryQueryResult extends QueryResult {
   categories: Array<string>;
 }
 

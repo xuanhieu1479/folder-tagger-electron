@@ -8,7 +8,7 @@ import {
 } from '../../../common/variables/commonVariables';
 import {
   FolderFilterParams,
-  TransferDataInterface
+  TransferData
 } from '../../../common/interfaces/commonInterfaces';
 import { GET_FOLDERS, GET_CATEGORIES, GET_LANGUAGES } from './folderActionType';
 import { showMessage } from '../../../utilities/feUtilities';
@@ -52,7 +52,7 @@ const addFolders = async (
 
 const importFolders = async (
   dispatch: Dispatch,
-  json: Array<TransferDataInterface>
+  json: Array<TransferData>
 ): Promise<void> => {
   try {
     startLoading(dispatch);

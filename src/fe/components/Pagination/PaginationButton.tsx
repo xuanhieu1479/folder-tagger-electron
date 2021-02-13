@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 
-interface PaginationButtonInterface {
+interface PaginationButton {
   text: string | number;
   onClick: () => void;
   intent?: Intent;
@@ -13,7 +13,7 @@ const PaginationButton = ({
   onClick,
   intent = Intent.PRIMARY,
   disabled
-}: PaginationButtonInterface): ReactElement => {
+}: PaginationButton): ReactElement => {
   return (
     <Button
       text={text}

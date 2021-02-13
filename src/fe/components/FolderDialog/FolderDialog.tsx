@@ -4,7 +4,7 @@ import { TAG_ACTION } from '../../../common/enums/commonEnums';
 import DialogContent from './DialogContent';
 import './FolderDialog.styled.scss';
 
-interface FolderDialogInterface {
+interface FolderDialog {
   isOpen: boolean;
   onClose: () => void;
   dialogType: TAG_ACTION;
@@ -14,7 +14,7 @@ const FolderDialog = ({
   isOpen,
   onClose,
   dialogType
-}: FolderDialogInterface): ReactElement => {
+}: FolderDialog): ReactElement => {
   return (
     <Dialog
       isOpen={isOpen}

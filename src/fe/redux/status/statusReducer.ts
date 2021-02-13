@@ -6,18 +6,18 @@ import {
 } from './statusActionType';
 import {
   ReducerAction,
-  StatusReducerInterface
+  StatusReducer
 } from '../../../common/interfaces/feInterfaces';
 
-export const statusInitState: StatusReducerInterface = {
+export const statusInitState: StatusReducer = {
   isLoading: false,
   isDialogOpen: false
 };
 
 const statusReducer = (
-  state: StatusReducerInterface = statusInitState,
+  state: StatusReducer = statusInitState,
   action: ReducerAction
-): StatusReducerInterface => {
+): StatusReducer => {
   switch (action.type) {
     case START_LOADING:
       return { ...state, isLoading: true };

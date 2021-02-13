@@ -3,15 +3,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Dialog, Tabs, Tab, TabId, Button, Intent } from '@blueprintjs/core';
 import {
   RootState,
-  SettingReducerInterface,
-  SettingDefaultValueInterface
+  SettingReducer,
+  SettingDefaultValue
 } from '../../../common/interfaces/feInterfaces';
 import { ELEMENT_ID } from '../../../common/variables/commonVariables';
 import SettingDefaultValues from './SettingDefaultValue';
 import { updateSettings } from '../../redux/setting/settingAction';
 import './SettingDialog.styled.scss';
 
-interface FolderDialogInterface {
+interface SettingDialog {
   isOpen: boolean;
   onClose: () => void;
   title: string;
@@ -21,13 +21,13 @@ const SettingDialog = ({
   isOpen,
   onClose,
   title
-}: FolderDialogInterface): ReactElement => {
+}: SettingDialog): ReactElement => {
   const dispatch = useDispatch();
   const [selectecdTabId, setSelectedTabId] = useState<TabId>(
     ELEMENT_ID.SETTING_DIALOG_TABS.defaultValue
   );
   const previousSettings = useSelector((state: RootState) => state.setting);
-  const [settings, setSettings] = useState<SettingReducerInterface>({
+  const [settings, setSettings] = useState<SettingReducer>({
     ...previousSettings
   });
 
@@ -39,7 +39,7 @@ const SettingDialog = ({
     setSelectedTabId(newTabId);
   };
 
-  const onUpdateSettings = (newSettings: SettingDefaultValueInterface) => {
+  const onUpdateSettings = (newSettings: SettingDefaultValue) => {
     setSettings({ ...settings, ...newSettings });
   };
 

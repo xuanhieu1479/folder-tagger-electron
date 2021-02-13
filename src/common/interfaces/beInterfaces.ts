@@ -1,8 +1,8 @@
 import { STATUS_CODE } from '../enums/commonEnums';
 
-interface QueryResultInterface {
+interface QueryResult {
   message: string;
   status: STATUS_CODE;
 }
 
-export { QueryResultInterface };
+export { QueryResult };

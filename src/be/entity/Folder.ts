@@ -14,10 +14,10 @@ import { Category, Language, Tag, TagType } from './entity';
 import {
   Folder as FolderInterface,
   FolderFilterParams,
-  TransferDataInterface,
+  TransferData,
   BreakDownTagsType
 } from '../../common/interfaces/commonInterfaces';
-import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
+import { QueryResult } from '../../common/interfaces/beInterfaces';
 import {
   MESSAGE,
   SEARCH,
@@ -32,7 +32,7 @@ import {
   writeToFile
 } from '../../utilities/utilityFunctions';
 
-interface FolderQueryResult extends QueryResultInterface {
+interface FolderQueryResult extends QueryResult {
   folders?: {
     foldersList: Array<Folder>;
     totalFolders: number;
@@ -369,9 +369,7 @@ export default class Folder {
    * There is an edge case that folderName will be duplicate
    * but since it's kinda complicated we need to handle it manually.
    */
-  import = async (
-    json: Array<TransferDataInterface>
-  ): Promise<QueryResultInterface> => {
+  import = async (json: Array<TransferData>): Promise<QueryResult> => {
     const manager = getManager();
     const folderRepository = getRepository(Folder);
     const tagRepository = getRepository(Tag);
@@ -379,7 +377,7 @@ export default class Folder {
     const allLanguages = await getRepository(Language).find();
     const allTagTypes = await getRepository(TagType).find();
     const upsertFolders: Array<Folder> = [];
-    const failedToImportFolders: Array<TransferDataInterface> = [];
+    const failedToImportFolders: Array<TransferData> = [];
     const newTags: Array<Tag> = [];
 
     const getFolderInDB = async (folderName: string) => {
@@ -490,7 +488,7 @@ export default class Folder {
     }
   };
 
-  export = async (): Promise<QueryResultInterface> => {
+  export = async (): Promise<QueryResult> => {
     try {
       const allFolders = await getRepository(Folder)
         .createQueryBuilder('folder')
@@ -525,10 +523,7 @@ export default class Folder {
                 case 'parody':
                 case 'character':
                 case 'genre':
-                  accumulator[tagKey] = [
-                    ...accumulator[tagKey],
-                    currentValue.TagName
-                  ];
+                  accumulator[tagKey].push(currentValue.TagName);
                   break;
               }
               return accumulator;

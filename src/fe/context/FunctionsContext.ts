@@ -1,11 +1,11 @@
 import { createContext } from 'react';
 import { TAG_ACTION } from '../../common/enums/commonEnums';
 
-interface DialogContextInterface {
+interface DialogContext {
   onOpenFolderDialog: (dialogType: TAG_ACTION) => void;
 }
 interface FunctionsContext {
-  dialog: DialogContextInterface;
+  dialog: DialogContext;
 }
 
 const defaultContextValue: FunctionsContext = {

@@ -1,19 +1,19 @@
 import { GET_TAGS, LOAD_TAG_RELATIONS, COPY_TAGS } from './tagActionType';
 import {
   ReducerAction,
-  TagReducerInterface
+  TagReducer
 } from '../../../common/interfaces/feInterfaces';
 
-export const tagInitState: TagReducerInterface = {
+export const tagInitState: TagReducer = {
   allTags: [],
   relations: { author_genre: {}, author_parody: {}, parody_character: {} },
   clipboard: []
 };
 
 const statusReducer = (
-  state: TagReducerInterface = tagInitState,
+  state: TagReducer = tagInitState,
   action: ReducerAction
-): TagReducerInterface => {
+): TagReducer => {
   const data = action.payload || {};
   const { allTags, relations, clipboard } = data;
   switch (action.type) {

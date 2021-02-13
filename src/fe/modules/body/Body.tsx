@@ -6,11 +6,11 @@ import { ELEMENT_ID } from '../../../common/variables/commonVariables';
 import { FolderCard } from '../../components/commonComponents';
 import './Body.styled.scss';
 
-interface BodyInterface {
+interface Body {
   updateSelectedFolders: (newSelectedFolders: Array<string>) => void;
 }
 
-const Body = ({ updateSelectedFolders }: BodyInterface): ReactElement => {
+const Body = ({ updateSelectedFolders }: Body): ReactElement => {
   const { isLoading } = useSelector((state: RootState) => state.status);
   const { foldersList, selectedFolders } = useSelector(
     (state: RootState) => state.folder
