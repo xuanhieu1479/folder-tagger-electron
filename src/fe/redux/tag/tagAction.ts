@@ -1,14 +1,17 @@
 import { Dispatch } from 'redux';
 import axios from 'axios';
 import fs from 'fs';
-import { Tags } from '../../../common/interfaces/commonInterfaces';
+import {
+  BreakDownTagsType,
+  Tags
+} from '../../../common/interfaces/commonInterfaces';
 import {
   TAG_API,
   MESSAGE,
   SETTING
 } from '../../../common/variables/commonVariables';
 import { showMessage } from '../../../utilities/feUtilities';
-import { GET_TAGS, LOAD_TAG_RELATIONS } from './tagActionType';
+import { COPY_TAGS, GET_TAGS, LOAD_TAG_RELATIONS } from './tagActionType';
 import { startLoading, finishLoading } from '../status/statusAction';
 
 interface GetTagsOfOneFolderInterface {
@@ -41,6 +44,28 @@ const getTags = async (
       type: GET_TAGS,
       payload: { allTags: tags }
     });
+  } catch (error) {
+    showMessage.error(error.response.data.message);
+  }
+};
+
+const copyTags = async (
+  dispatch: Dispatch,
+  folderLocation: string,
+  includedTagTypes: Array<BreakDownTagsType>,
+  onSuccess: () => void
+): Promise<void> => {
+  try {
+    const { data } = await axios.get(TAG_API.GET, {
+      params: { folderLocation, includedTagTypes }
+    });
+    const { tags } = data;
+    dispatch({
+      type: COPY_TAGS,
+      payload: { clipboard: tags }
+    });
+    showMessage.info(MESSAGE.COPY_FOLDER_TAGS_TO_CLIPBOARD(includedTagTypes));
+    onSuccess();
   } catch (error) {
     showMessage.error(error.response.data.message);
   }
@@ -100,6 +125,7 @@ const loadTagRelations = (dispatch: Dispatch): void => {
 
 export {
   getTags,
+  copyTags,
   modifyTagsOfFolders,
   calculateTagRelations,
   loadTagRelations

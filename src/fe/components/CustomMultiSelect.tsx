@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { MultiSelect, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
-import { BreakDownTagsType } from '../../common/interfaces/feInterfaces';
+import { BreakDownTagsType } from '../../common/interfaces/commonInterfaces';
 import { MESSAGE } from '../../common/variables/commonVariables';
 import { showMessage } from '../../utilities/showMessage';
 import './styles/CustomMultiSelect.styled.scss';

@@ -6,13 +6,15 @@ import {
   getRepository,
   getManager,
   EntityManager,
-  ManyToMany
+  ManyToMany,
+  Brackets
 } from 'typeorm';
 import _ from 'lodash';
 import { TagType, Folder, Category, Language } from './entity';
 import {
   Tags as TagsInterface,
-  TagRelations
+  TagRelations,
+  BreakDownTagsType
 } from '../../common/interfaces/commonInterfaces';
 import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
 import { MESSAGE, SETTING } from '../../common/variables/commonVariables';
@@ -27,6 +29,7 @@ interface TagQueryResult extends QueryResultInterface {
 }
 interface GetTagFilterParams {
   folderLocation?: string;
+  includedTagTypes?: Array<BreakDownTagsType>;
 }
 interface ModifyTagsOfFolders extends TagsInterface {
   folderLocations: Array<string>;
@@ -66,9 +69,11 @@ export default class Tag {
   Folders!: Folder[];
 
   get = async ({
-    folderLocation
+    folderLocation,
+    includedTagTypes
   }: GetTagFilterParams): Promise<TagQueryResult> => {
     const getTagsForFolder = folderLocation !== undefined;
+    const hasIncludedTagTypes = includedTagTypes !== undefined;
     const query = getRepository(Tag)
       .createQueryBuilder('tag')
       .select('tag.TagType', 'tagType')
@@ -77,6 +82,15 @@ export default class Tag {
       query
         .innerJoin('tag.Folders', 'folder')
         .where('folder.FolderLocation = :folderLocation', { folderLocation });
+    if (hasIncludedTagTypes)
+      query.andWhere(
+        new Brackets(q => {
+          includedTagTypes?.forEach(tagType => {
+            q.orWhere(`tag.TagType = :${tagType}`, { [tagType]: tagType });
+          });
+        })
+      );
+
     try {
       const tags = await query.getRawMany();
       if (getTagsForFolder) {
@@ -232,7 +246,6 @@ export default class Tag {
       .innerJoinAndSelect('tag.TagType', 'tagType')
       .select(['folder.FolderLocation', 'tagType.TagType', 'tag.TagName'])
       .getMany();
-    type TagTypeType = 'author' | 'parody' | 'character' | 'genre';
 
     const findFrequentTags = async (source: Record<string, Array<string>>) => {
       const getSourceWithFrequentTags = async () => {
@@ -287,7 +300,7 @@ export default class Tag {
         const authorParodyRelation = relation.author_parody;
         const authorGenreRelation = relation.author_genre;
         const tags = folder.Tags.reduce(
-          (accumulator: Record<TagTypeType, Array<string>>, tag) => {
+          (accumulator: Record<BreakDownTagsType, Array<string>>, tag) => {
             const { TagType } = tag.TagType;
             switch (TagType) {
               case 'author':

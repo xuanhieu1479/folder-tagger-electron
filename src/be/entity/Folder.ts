@@ -14,7 +14,8 @@ import { Category, Language, Tag, TagType } from './entity';
 import {
   Folder as FolderInterface,
   FolderFilterParams,
-  TransferDataInterface
+  TransferDataInterface,
+  BreakDownTagsType
 } from '../../common/interfaces/commonInterfaces';
 import { QueryResultInterface } from '../../common/interfaces/beInterfaces';
 import {
@@ -514,12 +515,22 @@ export default class Folder {
           Category: Category?.Category || null,
           Language: Language?.Language || null,
           Tags: Tags.reduce(
-            (accumulator: Record<string, Array<string>>, currentValue) => {
+            (
+              accumulator: Record<BreakDownTagsType, Array<string>>,
+              currentValue
+            ) => {
               const tagKey = currentValue.TagType.TagType;
-              accumulator[tagKey] = [
-                ...accumulator[tagKey],
-                currentValue.TagName
-              ];
+              switch (tagKey) {
+                case 'author':
+                case 'parody':
+                case 'character':
+                case 'genre':
+                  accumulator[tagKey] = [
+                    ...accumulator[tagKey],
+                    currentValue.TagName
+                  ];
+                  break;
+              }
               return accumulator;
             },
             { author: [], parody: [], character: [], genre: [] }

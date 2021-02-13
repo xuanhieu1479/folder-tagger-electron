@@ -9,6 +9,7 @@ import React, {
 } from 'react';
 import { Card, Tooltip, Menu, MenuItem, ContextMenu } from '@blueprintjs/core';
 import { TAG_ACTION } from '../../common/enums/commonEnums';
+import { MESSAGE } from '../../common/variables/commonVariables';
 import FunctionsContext from '../context/FunctionsContext';
 import { showMessage } from '../../utilities/feUtilities';
 import './styles/FolderCard.styled.scss';
@@ -86,7 +87,7 @@ const FolderCard = ({
 
   const onClickCardName = () => {
     navigator.clipboard.writeText(folderName);
-    showMessage.info("Copied folder's name to clipboard!");
+    showMessage.info(MESSAGE.COPY_FOLDER_NAME_TO_CLIPBOARD);
   };
 
   return (

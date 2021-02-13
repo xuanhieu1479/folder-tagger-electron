@@ -10,7 +10,10 @@ import {
 } from '../../../common/variables/commonVariables';
 import { TAG_ACTION } from '../../../common/enums/commonEnums';
 import FunctionsContext from '../../context/FunctionsContext';
-import { FolderDialog } from '../../components/commonComponents';
+import {
+  FolderDialog,
+  ClipboardDialog
+} from '../../components/commonComponents';
 import Header from '../header/Header';
 import Body from '../body/Body';
 import Footer from '../footer/Footer';
@@ -41,9 +44,10 @@ const FoldersDisplay = ({
   const foldersListRef = useRef(foldersList);
   const isDialogOpenRef = useRef(isDialogOpen);
   const [params, setParams] = useState(PAGINATION.DEFAULT);
-  const [folderDialogParams, setFolderDialogParams] = useState(
-    defaultFolderDialogParams
-  );
+  const [folderDialogParams, setFolderDialogParams] = useState({
+    ...defaultFolderDialogParams
+  });
+  const [isClipboardDialogOpen, setClipboardDialogOpen] = useState(false);
 
   useEffect(() => {
     const keyDownListerner = (event: KeyboardEvent) => {
@@ -66,6 +70,11 @@ const FoldersDisplay = ({
             break;
           case 't':
             openSettingDialog();
+            break;
+          case 'c':
+            if (selectedFolders.length === 1) onOpenClipboardDialog();
+            if (selectedFolders.length > 1)
+              showMessage.error(MESSAGE.CANNOT_COPY_TAG_MANY_FOLDERS);
             break;
         }
       } else {
@@ -195,8 +204,8 @@ const FoldersDisplay = ({
     const hasExactlyOneSelectedFolder = selectedFolders.length === 1;
     const hasSeveralSelectedFolders = selectedFolders.length > 1;
     const openFolderDialog = () => {
-      setFolderDialogParams({ isOpen: true, dialogType });
       onOpenDialog(dispatch);
+      setFolderDialogParams({ isOpen: true, dialogType });
     };
 
     switch (dialogType) {
@@ -212,7 +221,16 @@ const FoldersDisplay = ({
     }
   };
   const onCloseFolderDialog = () => {
-    setFolderDialogParams(defaultFolderDialogParams);
+    onCloseDialog(dispatch);
+    setFolderDialogParams({ ...defaultFolderDialogParams });
+  };
+
+  const onOpenClipboardDialog = () => {
+    onOpenDialog(dispatch);
+    setClipboardDialogOpen(true);
+  };
+  const onCloseClipboardDialog = () => {
+    setClipboardDialogOpen(false);
     onCloseDialog(dispatch);
   };
 
@@ -232,6 +250,10 @@ const FoldersDisplay = ({
         onClose={onCloseFolderDialog}
         isOpen={folderDialogParams.isOpen}
         dialogType={folderDialogParams.dialogType}
+      />
+      <ClipboardDialog
+        isOpen={isClipboardDialogOpen}
+        onClose={onCloseClipboardDialog}
       />
     </FunctionsContext.Provider>
   );

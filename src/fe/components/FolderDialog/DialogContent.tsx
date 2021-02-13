@@ -2,11 +2,11 @@ import React, { ReactElement, useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Intent } from '@blueprintjs/core';
 import _ from 'lodash';
-import { Tags } from '../../../common/interfaces/commonInterfaces';
 import {
-  RootState,
+  Tags,
   BreakDownTagsType
-} from '../../../common/interfaces/feInterfaces';
+} from '../../../common/interfaces/commonInterfaces';
+import { RootState } from '../../../common/interfaces/feInterfaces';
 import { MESSAGE } from '../../../common/variables/commonVariables';
 import { TAG_ACTION } from '../../../common/enums/commonEnums';
 import { CustomSuggest, CustomMultiSelect } from '../commonComponents';
@@ -33,13 +33,15 @@ const DialogContent = ({
   const { categories, languages, selectedFolders } = useSelector(
     (state: RootState) => state.folder
   );
-  const { relations } = useSelector((state: RootState) => state.tag);
+  const { relations, clipboard } = useSelector((state: RootState) => state.tag);
   const { parody_character, author_parody, author_genre } = relations;
   const { allTags } = useSelector((state: RootState) => state.tag);
-  const [tagSuggestions, setTagSuggestions] = useState(defaultSelectedTags);
+  const [tagSuggestions, setTagSuggestions] = useState({
+    ...defaultSelectedTags
+  });
   const [selectedCategory, setSelectedCategory] = useState(defaultSuggestion);
   const [selectedLanguage, setSelectedLanguage] = useState(defaultSuggestion);
-  const [selectedTags, setSelectedTags] = useState(defaultSelectedTags);
+  const [selectedTags, setSelectedTags] = useState({ ...defaultSelectedTags });
   const previousSelectedTags = useRef(selectedTags);
 
   useEffect(() => {
@@ -60,7 +62,45 @@ const DialogContent = ({
         setSelectedLanguage(selectedFolderLanguage);
       }
     };
+    const pasteTags = () => {
+      const brokenDownTags = breakDownTags(clipboard);
+      const newSelectedTags = _.reduce(
+        selectedTags,
+        (
+          accumulator: Record<BreakDownTagsType, Array<string>>,
+          tags,
+          tagKey
+        ) => {
+          switch (tagKey) {
+            case 'author':
+            case 'parody':
+            case 'character':
+            case 'genre':
+              accumulator[tagKey] = [
+                ...new Set([...tags, ...brokenDownTags[tagKey]])
+              ];
+              break;
+          }
+          return accumulator;
+        },
+        { author: [], parody: [], character: [], genre: [] }
+      );
+      setSelectedTags(newSelectedTags);
+    };
+    const keyDownListerner = (event: KeyboardEvent) => {
+      const isHoldingCtrl = event.ctrlKey;
+      if (!isHoldingCtrl) return;
+
+      switch (event.key) {
+        case 'v':
+          pasteTags();
+          break;
+      }
+    };
+
     if (dialogType === TAG_ACTION.EDIT) getSelectedFolderTags();
+    window.addEventListener('keydown', keyDownListerner);
+    return () => window.removeEventListener('keydown', keyDownListerner);
   }, []);
 
   useEffect(() => {

@@ -26,17 +26,13 @@ interface TransferDataInterface {
   FolderName: string;
   Category: string;
   Language: string;
-  Tags: {
-    author: Array<string>;
-    parody: Array<string>;
-    character: Array<string>;
-    genre: Array<string>;
-  };
+  Tags: Record<BreakDownTagsType, Array<string>>;
 }
 
 /**
  * Tag interfaces
  */
+type BreakDownTagsType = 'author' | 'parody' | 'character' | 'genre';
 interface Tags {
   tagType: string;
   tagName: string;
@@ -51,6 +47,7 @@ export {
   Folder,
   FolderFilterParams,
   TransferDataInterface,
+  BreakDownTagsType,
   Tags,
   TagRelations
 };

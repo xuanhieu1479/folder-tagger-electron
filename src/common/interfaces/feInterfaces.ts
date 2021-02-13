@@ -27,6 +27,7 @@ interface FolderReducerInterface {
 interface TagReducerInterface {
   allTags: Array<Tags>;
   relations: TagRelations;
+  clipboard: Array<Tags>;
 }
 // For the moment Setting only consists of default values.
 // But it probably will be expanded soon.
@@ -37,8 +38,6 @@ interface SettingDefaultValueInterface {
   defaultLanguage: string;
 }
 
-type BreakDownTagsType = 'author' | 'parody' | 'character' | 'genre';
-
 export {
   RootState,
   ReducerAction,
@@ -46,6 +45,5 @@ export {
   FolderReducerInterface,
   TagReducerInterface,
   SettingReducerInterface,
-  SettingDefaultValueInterface,
-  BreakDownTagsType
+  SettingDefaultValueInterface
 };
