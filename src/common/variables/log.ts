@@ -1,10 +1,10 @@
 import moment from 'moment';
-import { DATE_TIME } from '../enums/commonEnums';
+import { DateTime } from '../enums/commonEnums';
 
 const DIRECTORY = 'Log';
 
 const seperator = '-'.repeat(100);
-const NAME = `${moment().format(DATE_TIME.DATE_FILE_FORMAT)}.log`;
+const NAME = `${moment().format(DateTime.DateFileFormat)}.log`;
 const PATH = `${DIRECTORY}/${NAME}`;
 
 const LOG = {
@@ -14,7 +14,7 @@ const LOG = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ERROR_MESSAGE: (error: Error | any, origin: Promise<any> | string): string =>
     `${moment().format(
-      DATE_TIME.TIME_LOG_FORMAT
+      DateTime.TimeLogFormat
     )}\n\nError: ${error}\n\nOrigin: ${origin}\n\n${seperator}\n`
 };
 

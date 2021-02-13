@@ -8,22 +8,22 @@ import React, {
   createElement
 } from 'react';
 import { Card, Tooltip, Menu, MenuItem, ContextMenu } from '@blueprintjs/core';
-import { TAG_ACTION } from '../../common/enums/commonEnums';
+import { TagAction } from '../../common/enums/commonEnums';
 import { MESSAGE } from '../../common/variables/commonVariables';
 import FunctionsContext from '../context/FunctionsContext';
 import { showMessage } from '../../utilities/feUtilities';
 import './styles/FolderCard.styled.scss';
 
 interface ContextMenuBody {
-  onOpenFolderDialog: (dialogType: TAG_ACTION) => void;
+  onOpenFolderDialog: (dialogType: TagAction) => void;
 }
 
 const ContextMenuBody = ({
   onOpenFolderDialog
 }: ContextMenuBody): React.ReactElement => {
-  const onClickAddTags = () => onOpenFolderDialog(TAG_ACTION.ADD);
-  const onClickEditTags = () => onOpenFolderDialog(TAG_ACTION.EDIT);
-  const onClickRemoveTags = () => onOpenFolderDialog(TAG_ACTION.REMOVE);
+  const onClickAddTags = () => onOpenFolderDialog(TagAction.Add);
+  const onClickEditTags = () => onOpenFolderDialog(TagAction.Edit);
+  const onClickRemoveTags = () => onOpenFolderDialog(TagAction.Remove);
 
   return (
     <Menu>

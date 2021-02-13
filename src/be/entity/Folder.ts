@@ -23,7 +23,7 @@ import {
   SEARCH,
   BACKUP
 } from '../../common/variables/commonVariables';
-import { STATUS_CODE } from '../../common/enums/commonEnums';
+import { StatusCode } from '../../common/enums/commonEnums';
 import { logErrors } from '../logging';
 import {
   fileExists,
@@ -292,7 +292,7 @@ export default class Folder {
             totalFolders: 0
           },
           message: MESSAGE.INVALID_PARAMS,
-          status: STATUS_CODE.INVALID_DATA
+          status: StatusCode.InvalidData
         };
       }
       const result = await query
@@ -305,7 +305,7 @@ export default class Folder {
           totalFolders
         },
         message: MESSAGE.SUCCESS,
-        status: STATUS_CODE.SUCCESS
+        status: StatusCode.Success
       };
     } catch (error) {
       console.error('GET FOLDERS ERROR: ', error);
@@ -316,7 +316,7 @@ export default class Folder {
           totalFolders: 0
         },
         message: error.message,
-        status: STATUS_CODE.DB_ERROR
+        status: StatusCode.DbError
       };
     }
   };
@@ -335,7 +335,7 @@ export default class Folder {
         if (isAddingMultipleFoldesr) continue;
         return {
           message: MESSAGE.SPECIFIC_FOLDER_ALREADY_EXISTS(location),
-          status: STATUS_CODE.DB_ERROR
+          status: StatusCode.DbError
         };
       } else
         insertFolders.push(
@@ -351,14 +351,14 @@ export default class Folder {
       await manager.insert(Folder, insertFolders);
       return {
         message: MESSAGE.SUCCESS,
-        status: STATUS_CODE.SUCCESS
+        status: StatusCode.Success
       };
     } catch (error) {
       console.error('ADD FOLDERS ERROR: ', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,
-        status: STATUS_CODE.DB_ERROR
+        status: StatusCode.DbError
       };
     }
   };
@@ -476,14 +476,14 @@ export default class Folder {
       });
       return {
         message: MESSAGE.SUCCESS,
-        status: STATUS_CODE.SUCCESS
+        status: StatusCode.Success
       };
     } catch (error) {
       console.error('IMPORT FOLDERS ERROR: ', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,
-        status: STATUS_CODE.DB_ERROR
+        status: StatusCode.DbError
       };
     }
   };
@@ -540,14 +540,14 @@ export default class Folder {
 
       return {
         message: MESSAGE.SUCCESS,
-        status: STATUS_CODE.SUCCESS
+        status: StatusCode.Success
       };
     } catch (error) {
       console.error('EXPORT FOLDERS ERROR: ', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,
-        status: STATUS_CODE.DB_ERROR
+        status: StatusCode.DbError
       };
     }
   };

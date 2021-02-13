@@ -1,6 +1,6 @@
-import IPC_EVENT from './ipcEvent';
-import DATE_TIME from './dateTime';
-import STATUS_CODE from './statusCode';
-import TAG_ACTION from './tagAction';
+import IpcEvent from './ipcEvent';
+import DateTime from './dateTime';
+import StatusCode from './statusCode';
+import TagAction from './tagAction';
 
-export { IPC_EVENT, DATE_TIME, STATUS_CODE, TAG_ACTION };
+export { IpcEvent, DateTime, StatusCode, TagAction };

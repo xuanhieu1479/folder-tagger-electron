@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, OneToMany, getRepository } from 'typeorm';
 import { QueryResult } from '../../common/interfaces/beInterfaces';
 import { MESSAGE } from '../../common/variables/commonVariables';
-import { STATUS_CODE } from '../../common/enums/commonEnums';
+import { StatusCode } from '../../common/enums/commonEnums';
 import { Folder } from './entity';
 import { logErrors } from '../logging';
 
@@ -26,7 +26,7 @@ export default class Language {
       return {
         languages: result.map(item => item.language),
         message: MESSAGE.SUCCESS,
-        status: STATUS_CODE.SUCCESS
+        status: StatusCode.Success
       };
     } catch (error) {
       console.error('GET LANGUAGES ERROR: ', error);
@@ -34,7 +34,7 @@ export default class Language {
       return {
         languages: [],
         message: error.message,
-        status: STATUS_CODE.DB_ERROR
+        status: StatusCode.DbError
       };
     }
   };

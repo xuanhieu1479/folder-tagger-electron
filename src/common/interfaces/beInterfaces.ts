@@ -1,8 +1,8 @@
-import { STATUS_CODE } from '../enums/commonEnums';
+import { StatusCode } from '../enums/commonEnums';
 
 interface QueryResult {
   message: string;
-  status: STATUS_CODE;
+  status: StatusCode;
 }
 
 export { QueryResult };

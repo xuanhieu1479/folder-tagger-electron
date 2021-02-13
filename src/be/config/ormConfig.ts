@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { ConnectionOptions, FileLogger } from 'typeorm';
 import { DATABASE, LOG } from '../../common/variables/commonVariables';
-import { DATE_TIME } from '../../common/enums/commonEnums';
+import { DateTime } from '../../common/enums/commonEnums';
 import { Folder, Category, Language, Tag, TagType } from '../entity/entity';
 import { initDirectory } from '../../utilities/utilityFunctions';
 
@@ -19,7 +19,7 @@ const getLogPath = (): string => {
   const backtrackCount = (needToBeRemovedPath.match(/\\/g) || []).length;
   const backtrackString = '../'.repeat(backtrackCount);
   const result = `${backtrackString}/${LOG.DIRECTORY}/${moment().format(
-    DATE_TIME.DATE_FILE_FORMAT
+    DateTime.DateFileFormat
   )}-QUERY.log`;
   return result;
 };

@@ -1,6 +1,6 @@
 import { dialog, app, BrowserWindow } from 'electron';
 import fs from 'fs';
-import { IPC_EVENT } from '../../common/enums/commonEnums';
+import { IpcEvent } from '../../common/enums/commonEnums';
 
 const onAddFolder = (): void => {
   const directory = dialog.showOpenDialogSync({
@@ -10,7 +10,7 @@ const onAddFolder = (): void => {
   });
   if (directory) {
     const selectedDirectory = directory[0];
-    BrowserWindow.getFocusedWindow()?.webContents.send(IPC_EVENT.ADD_FOLDERS, {
+    BrowserWindow.getFocusedWindow()?.webContents.send(IpcEvent.AddFolders, {
       folderLocations: [selectedDirectory]
     });
   }
@@ -28,7 +28,7 @@ const onAddParentFolder = (): void => {
       .readdirSync(parentDirectory, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())
       .map(dirent => `${parentDirectory}\\${dirent.name}`);
-    BrowserWindow.getFocusedWindow()?.webContents.send(IPC_EVENT.ADD_FOLDERS, {
+    BrowserWindow.getFocusedWindow()?.webContents.send(IpcEvent.AddFolders, {
       folderLocations: subDirectories
     });
   }

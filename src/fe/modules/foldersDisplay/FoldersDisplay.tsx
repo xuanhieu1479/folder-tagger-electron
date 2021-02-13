@@ -8,7 +8,7 @@ import {
   ELEMENT_ID,
   MESSAGE
 } from '../../../common/variables/commonVariables';
-import { TAG_ACTION } from '../../../common/enums/commonEnums';
+import { TagAction } from '../../../common/enums/commonEnums';
 import FunctionsContext from '../../context/FunctionsContext';
 import {
   FolderDialog,
@@ -29,7 +29,7 @@ interface FolderDisplay {
 }
 const defaultFolderDialogParams = {
   isOpen: false,
-  dialogType: TAG_ACTION.ADD
+  dialogType: TagAction.Add
 };
 
 const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
@@ -58,13 +58,13 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
         if (isDialogOpen) return;
         switch (event.key) {
           case 'e':
-            onOpenFolderDialog(TAG_ACTION.ADD);
+            onOpenFolderDialog(TagAction.Add);
             break;
           case 's':
-            onOpenFolderDialog(TAG_ACTION.EDIT);
+            onOpenFolderDialog(TagAction.Edit);
             break;
           case 'd':
-            onOpenFolderDialog(TAG_ACTION.REMOVE);
+            onOpenFolderDialog(TagAction.Remove);
             break;
           case 't':
             openSettingDialog();
@@ -196,7 +196,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     scrollToNewlySelectedFolder();
   };
 
-  const onOpenFolderDialog = (dialogType: TAG_ACTION) => {
+  const onOpenFolderDialog = (dialogType: TagAction) => {
     const selectedFolders = selectedFoldersRef.current;
     const atLeastOneFolderIsBeingSelected = selectedFolders.length > 0;
     const hasExactlyOneSelectedFolder = selectedFolders.length === 1;
@@ -207,11 +207,11 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     };
 
     switch (dialogType) {
-      case TAG_ACTION.ADD:
-      case TAG_ACTION.REMOVE:
+      case TagAction.Add:
+      case TagAction.Remove:
         if (atLeastOneFolderIsBeingSelected) openFolderDialog();
         break;
-      case TAG_ACTION.EDIT:
+      case TagAction.Edit:
         if (hasSeveralSelectedFolders)
           showMessage.error(MESSAGE.CANNOT_EDIT_MANY_FOLDERS);
         if (hasExactlyOneSelectedFolder) openFolderDialog();

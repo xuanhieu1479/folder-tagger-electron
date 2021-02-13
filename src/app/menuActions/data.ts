@@ -1,6 +1,6 @@
 import { dialog, app, BrowserWindow } from 'electron';
 import fs from 'fs';
-import { IPC_EVENT } from '../../common/enums/commonEnums';
+import { IpcEvent } from '../../common/enums/commonEnums';
 
 const onImportData = (): void => {
   const file = dialog.showOpenDialogSync({
@@ -12,14 +12,14 @@ const onImportData = (): void => {
   if (file) {
     const json = file[0];
     const data = JSON.parse(fs.readFileSync(json).toString());
-    BrowserWindow.getFocusedWindow()?.webContents.send(IPC_EVENT.IMPORT_DATA, {
+    BrowserWindow.getFocusedWindow()?.webContents.send(IpcEvent.ImportData, {
       json: data
     });
   }
 };
 
 const onExportData = (): void => {
-  BrowserWindow.getFocusedWindow()?.webContents.send(IPC_EVENT.EXPORT_DATA);
+  BrowserWindow.getFocusedWindow()?.webContents.send(IpcEvent.ExportData);
 };
 
 export { onImportData, onExportData };

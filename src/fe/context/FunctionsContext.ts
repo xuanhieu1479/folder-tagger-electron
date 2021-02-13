@@ -1,8 +1,8 @@
 import { createContext } from 'react';
-import { TAG_ACTION } from '../../common/enums/commonEnums';
+import { TagAction } from '../../common/enums/commonEnums';
 
 interface DialogContext {
-  onOpenFolderDialog: (dialogType: TAG_ACTION) => void;
+  onOpenFolderDialog: (dialogType: TagAction) => void;
 }
 interface FunctionsContext {
   dialog: DialogContext;

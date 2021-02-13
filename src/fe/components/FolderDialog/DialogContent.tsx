@@ -8,13 +8,13 @@ import {
 } from '../../../common/interfaces/commonInterfaces';
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import { MESSAGE } from '../../../common/variables/commonVariables';
-import { TAG_ACTION } from '../../../common/enums/commonEnums';
+import { TagAction } from '../../../common/enums/commonEnums';
 import { CustomSuggest, CustomMultiSelect } from '../commonComponents';
 import { showMessage } from '../../../utilities/feUtilities';
 import { getTags, modifyTagsOfFolders } from '../../redux/tag/tagAction';
 
 interface DialogContent {
-  dialogType: TAG_ACTION;
+  dialogType: TagAction;
   onClose: () => void;
 }
 const defaultSelectedTags: Record<BreakDownTagsType, Array<string>> = {
@@ -98,7 +98,7 @@ const DialogContent = ({
       }
     };
 
-    if (dialogType === TAG_ACTION.EDIT) getSelectedFolderTags();
+    if (dialogType === TagAction.Edit) getSelectedFolderTags();
     window.addEventListener('keydown', keyDownListerner);
     return () => window.removeEventListener('keydown', keyDownListerner);
   }, []);
@@ -317,11 +317,11 @@ const DialogContent = ({
 
   const onSave = async () => {
     switch (dialogType) {
-      case TAG_ACTION.ADD:
-      case TAG_ACTION.EDIT:
+      case TagAction.Add:
+      case TagAction.Edit:
         upsertTagsToFolders();
         break;
-      case TAG_ACTION.REMOVE:
+      case TagAction.Remove:
         removeTagsFromFolders();
         break;
     }
@@ -369,7 +369,7 @@ const DialogContent = ({
           <CustomSuggest
             selectedItem={selectedCategory}
             items={categories}
-            isDisabled={dialogType === TAG_ACTION.REMOVE}
+            isDisabled={dialogType === TagAction.Remove}
             updateSelectedItem={setSelectedCategory}
           />
         </div>
@@ -380,7 +380,7 @@ const DialogContent = ({
           <CustomSuggest
             selectedItem={selectedLanguage}
             items={languages}
-            isDisabled={dialogType === TAG_ACTION.REMOVE}
+            isDisabled={dialogType === TagAction.Remove}
             updateSelectedItem={setSelectedLanguage}
           />
         </div>

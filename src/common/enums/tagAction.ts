@@ -1,7 +1,7 @@
-enum TAG_ACTION {
-  ADD = 'Add Tags',
-  EDIT = 'Edit Tags',
-  REMOVE = 'Remove Tags'
+enum TagAction {
+  Add = 'Add Tags',
+  Edit = 'Edit Tags',
+  Remove = 'Remove Tags'
 }
 
-export default TAG_ACTION;
+export default TagAction;

@@ -1,7 +1,7 @@
-enum STATUS_CODE {
-  SUCCESS = 200,
-  INVALID_DATA = 400,
-  DB_ERROR = 500
+enum StatusCode {
+  Success = 200,
+  InvalidData = 400,
+  DbError = 500
 }
 
-export default STATUS_CODE;
+export default StatusCode;

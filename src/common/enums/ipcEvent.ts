@@ -1,9 +1,9 @@
-enum IPC_EVENT {
-  ADD_FOLDERS = 'ADD_FOLDERS',
-  OPEN_SETTING = 'OPEN_SETTING',
-  IMPORT_DATA = 'IMPORT_DATA',
-  EXPORT_DATA = 'EXPORT_DATA',
-  CALCULATE_TAGS_RELATION = 'CALCULATE_TAGS_RELATION'
+enum IpcEvent {
+  AddFolders = 'Add Folders',
+  OpenSetting = 'Open Setting',
+  ImportData = 'Import Data',
+  ExportData = 'Export Data',
+  CalculateTagRelations = 'Calculate Tag Relations'
 }
 
-export default IPC_EVENT;
+export default IpcEvent;

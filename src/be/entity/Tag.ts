@@ -18,7 +18,7 @@ import {
 } from '../../common/interfaces/commonInterfaces';
 import { QueryResult } from '../../common/interfaces/beInterfaces';
 import { MESSAGE, SETTING } from '../../common/variables/commonVariables';
-import { STATUS_CODE, TAG_ACTION } from '../../common/enums/commonEnums';
+import { StatusCode, TagAction } from '../../common/enums/commonEnums';
 import { writeToFile } from '../../utilities/utilityFunctions';
 import { logErrors } from '../logging';
 
@@ -37,7 +37,7 @@ interface ModifyTagsOfFolders extends TagsInterface {
   newTags: Array<TagsInterface>;
   category: string | undefined;
   language: string | undefined;
-  action: TAG_ACTION;
+  action: TagAction;
 }
 interface TagRelationQueryResult extends QueryResult {
   relations?: TagRelations;
@@ -104,20 +104,20 @@ export default class Tag {
           category,
           language,
           message: MESSAGE.SUCCESS,
-          status: STATUS_CODE.SUCCESS
+          status: StatusCode.Success
         };
       }
       return {
         tags,
         message: MESSAGE.SUCCESS,
-        status: STATUS_CODE.SUCCESS
+        status: StatusCode.Success
       };
     } catch (error) {
       console.error('GET TAGS ERROR:', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,
-        status: STATUS_CODE.DB_ERROR
+        status: StatusCode.DbError
       };
     }
   };
@@ -174,7 +174,7 @@ export default class Tag {
     // there is no need for the tags they
     // are currently holding.
     // Since they all will be overwritten anyway.
-    if (action !== TAG_ACTION.EDIT)
+    if (action !== TagAction.Edit)
       insertFoldersQuery.leftJoinAndSelect('folder.Tags', 'Tag');
 
     const insertFolders = await insertFoldersQuery.getMany();
@@ -203,13 +203,13 @@ export default class Tag {
         if (newCategory) folder.Category = newCategory;
         if (newLanguage) folder.Language = newLanguage;
         switch (action) {
-          case TAG_ACTION.ADD:
+          case TagAction.Add:
             folder.Tags = [...folder.Tags, ...foundTags, ...newlyCreatedTags];
             break;
-          case TAG_ACTION.EDIT:
+          case TagAction.Edit:
             folder.Tags = [...foundTags, ...newlyCreatedTags];
             break;
-          case TAG_ACTION.REMOVE:
+          case TagAction.Remove:
             _.pullAllBy(folder.Tags, foundTags, 'TagId');
             break;
         }
@@ -227,14 +227,14 @@ export default class Tag {
       });
       return {
         message: MESSAGE.SUCCESS,
-        status: STATUS_CODE.SUCCESS
+        status: StatusCode.Success
       };
     } catch (error) {
       console.error('MODIFY FOLDERS TAGS ERROR:', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,
-        status: STATUS_CODE.DB_ERROR
+        status: StatusCode.DbError
       };
     }
   };
@@ -375,14 +375,14 @@ export default class Tag {
       return {
         relations,
         message: MESSAGE.SUCCESS,
-        status: STATUS_CODE.SUCCESS
+        status: StatusCode.Success
       };
     } catch (error) {
       console.error('CALCULATE TAGS RELATION ERROR:', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,
-        status: STATUS_CODE.DB_ERROR
+        status: StatusCode.DbError
       };
     }
   };

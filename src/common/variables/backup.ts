@@ -1,14 +1,14 @@
 import moment from 'moment';
-import { DATE_TIME } from '../enums/commonEnums';
+import { DateTime } from '../enums/commonEnums';
 
 const DIRECTORY = 'Backup';
 
 const NAME_FAILED_IMPORT = `${moment().format(
-  DATE_TIME.DATE_TIME_FILE_FORMAT
+  DateTime.DateTimeFileFormat
 )}-FAILED.json`;
 const PATH_FAILED_IMPORT = `${DIRECTORY}/${NAME_FAILED_IMPORT}`;
 const NAME_EXPORT = `${moment().format(
-  DATE_TIME.DATE_TIME_FILE_FORMAT
+  DateTime.DateTimeFileFormat
 )}-BACKUP.json`;
 const PATH_EXPORT = `${DIRECTORY}/${NAME_EXPORT}`;
 

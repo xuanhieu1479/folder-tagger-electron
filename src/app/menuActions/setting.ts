@@ -1,13 +1,13 @@
 import { BrowserWindow } from 'electron';
-import { IPC_EVENT } from '../../common/enums/commonEnums';
+import { IpcEvent } from '../../common/enums/commonEnums';
 
 const onOpenSetting = (): void => {
-  BrowserWindow.getFocusedWindow()?.webContents.send(IPC_EVENT.OPEN_SETTING);
+  BrowserWindow.getFocusedWindow()?.webContents.send(IpcEvent.OpenSetting);
 };
 
 const calculateTagsRelation = (): void => {
   BrowserWindow.getFocusedWindow()?.webContents.send(
-    IPC_EVENT.CALCULATE_TAGS_RELATION
+    IpcEvent.CalculateTagRelations
   );
 };
 

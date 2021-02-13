@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
 import { Dispatch } from 'redux';
-import { IPC_EVENT } from '../../common/enums/commonEnums';
+import { IpcEvent } from '../../common/enums/commonEnums';
 import {
   addFolders,
   exportFolders,
@@ -12,31 +12,31 @@ const initIpcEventListeners = (
   dispatch: Dispatch,
   onOpenSettingDialog: () => void
 ): void => {
-  ipcRenderer.on(IPC_EVENT.ADD_FOLDERS, (_event, data) => {
+  ipcRenderer.on(IpcEvent.AddFolders, (_event, data) => {
     const { folderLocations } = data;
     addFolders(dispatch, folderLocations);
   });
-  ipcRenderer.on(IPC_EVENT.OPEN_SETTING, () => {
+  ipcRenderer.on(IpcEvent.OpenSetting, () => {
     onOpenSettingDialog();
   });
-  ipcRenderer.on(IPC_EVENT.IMPORT_DATA, (_event, data) => {
+  ipcRenderer.on(IpcEvent.ImportData, (_event, data) => {
     const { json } = data;
     importFolders(dispatch, json);
   });
-  ipcRenderer.on(IPC_EVENT.EXPORT_DATA, () => {
+  ipcRenderer.on(IpcEvent.ExportData, () => {
     exportFolders(dispatch);
   });
-  ipcRenderer.on(IPC_EVENT.CALCULATE_TAGS_RELATION, () => {
+  ipcRenderer.on(IpcEvent.CalculateTagRelations, () => {
     calculateTagRelations(dispatch);
   });
 };
 
 const clearIpcEventListerners = (): void => {
-  ipcRenderer.removeAllListeners(IPC_EVENT.ADD_FOLDERS);
-  ipcRenderer.removeAllListeners(IPC_EVENT.OPEN_SETTING);
-  ipcRenderer.removeAllListeners(IPC_EVENT.IMPORT_DATA);
-  ipcRenderer.removeAllListeners(IPC_EVENT.EXPORT_DATA);
-  ipcRenderer.removeAllListeners(IPC_EVENT.CALCULATE_TAGS_RELATION);
+  ipcRenderer.removeAllListeners(IpcEvent.AddFolders);
+  ipcRenderer.removeAllListeners(IpcEvent.OpenSetting);
+  ipcRenderer.removeAllListeners(IpcEvent.ImportData);
+  ipcRenderer.removeAllListeners(IpcEvent.ExportData);
+  ipcRenderer.removeAllListeners(IpcEvent.CalculateTagRelations);
 };
 
 export { initIpcEventListeners, clearIpcEventListerners };
