@@ -30,6 +30,10 @@ const SettingDialog = ({
   const [settings, setSettings] = useState<SettingReducer>({
     ...previousSettings
   });
+  const defaultValueSettings: SettingDefaultValue = {
+    defaultCategory: settings.defaultCategory,
+    defaultLanguage: settings.defaultLanguage
+  };
 
   useEffect(() => {
     setSettings(previousSettings);
@@ -39,7 +43,7 @@ const SettingDialog = ({
     setSelectedTabId(newTabId);
   };
 
-  const onUpdateSettings = (newSettings: SettingDefaultValue) => {
+  const onUpdateSettings = (newSettings: Partial<SettingReducer>) => {
     setSettings({ ...settings, ...newSettings });
   };
 
@@ -67,7 +71,7 @@ const SettingDialog = ({
           panel={
             <div className="setting-dialog_tab-panel">
               <SettingDefaultValues
-                defaultValueSetting={settings}
+                defaultValueSettings={defaultValueSettings}
                 onUpdateSettings={onUpdateSettings}
               />
             </div>

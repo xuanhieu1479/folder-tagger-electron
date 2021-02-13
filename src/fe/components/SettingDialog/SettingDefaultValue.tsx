@@ -4,7 +4,7 @@ import { SettingDefaultValue } from '../../../common/interfaces/feInterfaces';
 import { SEED_DATA } from '../../../common/variables/commonVariables';
 
 interface SettingDefaultValues {
-  defaultValueSetting: SettingDefaultValue;
+  defaultValueSettings: SettingDefaultValue;
   onUpdateSettings: (newSettings: SettingDefaultValue) => void;
 }
 
@@ -15,10 +15,10 @@ const DefaultValueRadio = (): ReactElement => {
 };
 
 const SettingDefaultValues = ({
-  defaultValueSetting,
+  defaultValueSettings,
   onUpdateSettings
 }: SettingDefaultValues): ReactElement => {
-  const { defaultCategory, defaultLanguage } = defaultValueSetting;
+  const { defaultCategory, defaultLanguage } = defaultValueSettings;
 
   const onChangeCategoryRadio = (event: React.FormEvent<HTMLInputElement>) => {
     onUpdateSettings({
