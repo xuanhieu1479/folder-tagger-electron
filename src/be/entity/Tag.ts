@@ -12,9 +12,9 @@ import {
 import _ from 'lodash';
 import { TagType, Folder, Category, Language } from './entity';
 import {
-  Tags as TagsInterface,
+  Tag as TagInterface,
   TagRelations,
-  BreakDownTagsType
+  BreakDownTagType
 } from '../../common/interfaces/commonInterfaces';
 import { QueryResult } from '../../common/interfaces/beInterfaces';
 import { MESSAGE, SETTING } from '../../common/variables/commonVariables';
@@ -23,18 +23,18 @@ import { writeToFile } from '../../utilities/utilityFunctions';
 import { logErrors } from '../logging';
 
 interface TagQueryResult extends QueryResult {
-  tags?: Array<TagsInterface>;
+  tags?: TagInterface[];
   category?: string;
   language?: string;
 }
 interface GetTagFilterParams {
   folderLocation?: string;
-  includedTagTypes?: Array<BreakDownTagsType>;
+  includedTagTypes?: BreakDownTagType[];
 }
-interface ModifyTagsOfFolders extends TagsInterface {
-  folderLocations: Array<string>;
-  existingTags: Array<TagsInterface>;
-  newTags: Array<TagsInterface>;
+interface ModifyTagsOfFolders extends TagInterface {
+  folderLocations: string[];
+  existingTags: TagInterface[];
+  newTags: TagInterface[];
   category?: string;
   language?: string;
   action: TagAction;
@@ -123,9 +123,9 @@ export default class Tag {
   };
 
   create = async (
-    newTags: Array<TagsInterface>,
+    newTags: TagInterface[],
     transactionManager?: EntityManager
-  ): Promise<Array<Tag>> => {
+  ): Promise<Tag[]> => {
     const typesOfNewTags = newTags.map(newTag => newTag.tagType);
     const tagTypes = await getRepository(TagType)
       .createQueryBuilder()
@@ -191,7 +191,7 @@ export default class Tag {
           .getOne()
       : undefined;
 
-    const updateFoldersTag = async (newlyCreatedTags: Array<Tag>) => {
+    const updateFoldersTag = async (newlyCreatedTags: Tag[]) => {
       const tagIds = existingTags.map(tag =>
         getTagId(tag.tagType, tag.tagName)
       );
@@ -218,7 +218,7 @@ export default class Tag {
 
     try {
       await getManager().transaction(async transactionManager => {
-        let newlyCreatedTags: Array<Tag> = [];
+        let newlyCreatedTags: Tag[] = [];
         if (!_.isEmpty(newTags)) {
           newlyCreatedTags = await this.create(newTags, transactionManager);
         }
@@ -247,7 +247,7 @@ export default class Tag {
       .select(['folder.FolderLocation', 'tagType.TagType', 'tag.TagName'])
       .getMany();
 
-    const findFrequentTags = async (source: Record<string, Array<string>>) => {
+    const findFrequentTags = async (source: Record<string, string[]>) => {
       const getSourceWithFrequentTags = async () => {
         const newSource = { ...source };
         for (const parentTag of Object.keys(newSource)) {
@@ -276,7 +276,7 @@ export default class Tag {
           );
           newSource[parentTag] = _.reduce(
             childrenTagsPresence,
-            (childrenTags: Array<string>, count, tag) => {
+            (childrenTags: string[], count, tag) => {
               if (
                 count >=
                 numberOfFoldersWithParentTag * TAG_FREQUENT_THRESHOLD
@@ -300,7 +300,7 @@ export default class Tag {
         const authorParodyRelation = relation.author_parody;
         const authorGenreRelation = relation.author_genre;
         const tags = folder.Tags.reduce(
-          (accumulator: Record<BreakDownTagsType, Array<string>>, tag) => {
+          (accumulator: Record<BreakDownTagType, string[]>, tag) => {
             const { TagType } = tag.TagType;
             switch (TagType) {
               case 'author':

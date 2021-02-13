@@ -4,7 +4,7 @@ import { Suggest, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
 
 interface CustomSuggest {
   selectedItem: string;
-  items: Array<string>;
+  items: string[];
   isDisabled?: boolean;
   className?: string;
   updateSelectedItem: (newItem: string) => void;

@@ -6,7 +6,7 @@ import { Folder } from './entity';
 import { logErrors } from '../logging';
 
 interface LanguageQueryResult extends QueryResult {
-  languages: Array<string>;
+  languages: string[];
 }
 
 @Entity()

@@ -2,8 +2,8 @@ import { Dispatch } from 'redux';
 import axios from 'axios';
 import fs from 'fs';
 import {
-  BreakDownTagsType,
-  Tags
+  BreakDownTagType,
+  Tag
 } from '../../../common/interfaces/commonInterfaces';
 import {
   TAG_API,
@@ -15,14 +15,14 @@ import { COPY_TAGS, GET_TAGS, LOAD_TAG_RELATIONS } from './tagActionType';
 import { startLoading, finishLoading } from '../status/statusAction';
 
 interface GetTagsOfOneFolder {
-  tags: Array<Tags>;
+  tags: Tag[];
   category?: string;
   language?: string;
 }
 interface ModifyTags {
-  selectedFolders: Array<string>;
-  existingTags: Array<Tags>;
-  newTags: Array<Tags>;
+  selectedFolders: string[];
+  existingTags: Tag[];
+  newTags: Tag[];
   category?: string;
   language?: string;
   action: string;
@@ -52,7 +52,7 @@ const getTags = async (
 const copyTags = async (
   dispatch: Dispatch,
   folderLocation: string,
-  includedTagTypes: Array<BreakDownTagsType>,
+  includedTagTypes: BreakDownTagType[],
   onSuccess: () => void
 ): Promise<void> => {
   try {

@@ -2,7 +2,7 @@ import React, { ReactElement, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { Dialog, Checkbox, Label, Button, Intent } from '@blueprintjs/core';
-import { BreakDownTagsType } from '../../common/interfaces/commonInterfaces';
+import { BreakDownTagType } from '../../common/interfaces/commonInterfaces';
 import { RootState } from '../../common/interfaces/feInterfaces';
 import { copyTags } from '../redux/tag/tagAction';
 import './styles/ClipboardDialog.styled.scss';
@@ -54,7 +54,7 @@ const FolderDialog = ({ isOpen, onClose }: FolderDialog): ReactElement => {
   }, [tagTypes]);
 
   const onChangeCheckBox = (
-    tagKey: BreakDownTagsType,
+    tagKey: BreakDownTagType,
     event: React.FormEvent<HTMLInputElement>
   ) => {
     setTagTypes({
@@ -80,7 +80,7 @@ const FolderDialog = ({ isOpen, onClose }: FolderDialog): ReactElement => {
   const onCopyTags = () => {
     const includedTagTypes = _.reduce(
       tagTypes,
-      (accumulator: Array<BreakDownTagsType>, isChecked, tagType) => {
+      (accumulator: BreakDownTagType[], isChecked, tagType) => {
         switch (tagType) {
           case 'author':
           case 'parody':

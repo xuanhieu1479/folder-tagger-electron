@@ -52,7 +52,7 @@ const addFolders = async (
 
 const importFolders = async (
   dispatch: Dispatch,
-  json: Array<TransferData>
+  json: TransferData[]
 ): Promise<void> => {
   try {
     startLoading(dispatch);

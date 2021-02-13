@@ -6,7 +6,7 @@ import { Folder } from './entity';
 import { logErrors } from '../logging';
 
 interface CategoryQueryResult extends QueryResult {
-  categories: Array<string>;
+  categories: string[];
 }
 
 @Entity()

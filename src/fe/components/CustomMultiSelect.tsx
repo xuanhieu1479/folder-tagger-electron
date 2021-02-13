@@ -1,17 +1,17 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { MultiSelect, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
-import { BreakDownTagsType } from '../../common/interfaces/commonInterfaces';
+import { BreakDownTagType } from '../../common/interfaces/commonInterfaces';
 import { MESSAGE } from '../../common/variables/commonVariables';
 import { showMessage } from '../../utilities/showMessage';
 import './styles/CustomMultiSelect.styled.scss';
 
 interface CustomMultiSelect {
-  itemKey: BreakDownTagsType;
-  allItems: Array<string>;
-  selectedItems: Array<string>;
-  onSelectItem: (itemKey: BreakDownTagsType, selectedItem: string) => void;
-  onRemoveItem: (itemKey: BreakDownTagsType, removedItem: string) => void;
+  itemKey: BreakDownTagType;
+  allItems: string[];
+  selectedItems: string[];
+  onSelectItem: (itemKey: BreakDownTagType, selectedItem: string) => void;
+  onRemoveItem: (itemKey: BreakDownTagType, removedItem: string) => void;
 }
 const noSpecialCharactersRegex = new RegExp(/[^A-Za-z0-9\s]/g);
 

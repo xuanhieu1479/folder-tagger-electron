@@ -1,4 +1,4 @@
-import { Folder, Tags, TagRelations } from './commonInterfaces';
+import { Folder, Tag, TagRelations } from './commonInterfaces';
 
 interface RootState {
   status: StatusReducer;
@@ -18,16 +18,16 @@ interface StatusReducer {
   isDialogOpen: boolean;
 }
 interface FolderReducer {
-  selectedFolders: Array<string>;
-  foldersList: Array<Folder>;
+  selectedFolders: string[];
+  foldersList: Folder[];
   totalFolders: number;
-  categories: Array<string>;
-  languages: Array<string>;
+  categories: string[];
+  languages: string[];
 }
 interface TagReducer {
-  allTags: Array<Tags>;
+  allTags: Tag[];
   relations: TagRelations;
-  clipboard: Array<Tags>;
+  clipboard: Tag[];
 }
 // For the moment Setting only consists of default values.
 // But it probably will be expanded soon.

@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button, Intent } from '@blueprintjs/core';
 import _ from 'lodash';
 import {
-  Tags,
-  BreakDownTagsType
+  Tag,
+  BreakDownTagType
 } from '../../../common/interfaces/commonInterfaces';
 import { RootState } from '../../../common/interfaces/feInterfaces';
 import { MESSAGE } from '../../../common/variables/commonVariables';
@@ -17,7 +17,7 @@ interface DialogContent {
   dialogType: TagAction;
   onClose: () => void;
 }
-const defaultSelectedTags: Record<BreakDownTagsType, Array<string>> = {
+const defaultSelectedTags: Record<BreakDownTagType, string[]> = {
   author: [],
   parody: [],
   character: [],
@@ -66,11 +66,7 @@ const DialogContent = ({
       const brokenDownTags = breakDownTags(clipboard);
       const newSelectedTags = _.reduce(
         selectedTags,
-        (
-          accumulator: Record<BreakDownTagsType, Array<string>>,
-          tags,
-          tagKey
-        ) => {
+        (accumulator: Record<BreakDownTagType, string[]>, tags, tagKey) => {
           switch (tagKey) {
             case 'author':
             case 'parody':
@@ -140,7 +136,7 @@ const DialogContent = ({
       if (!_.isEmpty(author_parody)) {
         const authorsHaveThisParody = _.reduce(
           author_parody,
-          (accumulator: Array<string>, parodies, author) => {
+          (accumulator: string[], parodies, author) => {
             if (parodies.includes(newParody)) accumulator.push(author);
             return accumulator;
           },
@@ -181,7 +177,7 @@ const DialogContent = ({
       const newGenre = _.last(selectedTags.genre) as string;
       const authorsHaveThisGenre = _.reduce(
         author_genre,
-        (accumulator: Array<string>, genres, author) => {
+        (accumulator: string[], genres, author) => {
           if (genres.includes(newGenre)) accumulator.push(author);
           return accumulator;
         },
@@ -197,8 +193,8 @@ const DialogContent = ({
    * and not a newly created tag.
    */
   const checkNewlySelectedTag = (
-    selectedTags: Array<string>,
-    tagType: BreakDownTagsType
+    selectedTags: string[],
+    tagType: BreakDownTagType
   ) => {
     const isAddingTag =
       selectedTags.length > previousSelectedTags.current[tagType].length;
@@ -212,8 +208,8 @@ const DialogContent = ({
     return false;
   };
   const bringCertainTagSuggestionsToFront = (
-    tagKey: BreakDownTagsType,
-    certainTagSuggestions: Array<string>
+    tagKey: BreakDownTagType,
+    certainTagSuggestions: string[]
   ) => {
     setTagSuggestions(prevState => {
       return {
@@ -226,13 +222,13 @@ const DialogContent = ({
     });
   };
 
-  const onSelectTag = (tagKey: BreakDownTagsType, selectedTag: string) => {
+  const onSelectTag = (tagKey: BreakDownTagType, selectedTag: string) => {
     const isDeselecting = selectedTags[tagKey].includes(selectedTag);
     if (isDeselecting) onRemoveTag(tagKey, selectedTag);
     else onAddTag(tagKey, selectedTag);
   };
 
-  const onAddTag = (tagKey: BreakDownTagsType, addedTag: string) => {
+  const onAddTag = (tagKey: BreakDownTagType, addedTag: string) => {
     const isNewTag = !allTags.find(
       tag => tag.tagType === tagKey && tag.tagName === addedTag
     );
@@ -247,7 +243,7 @@ const DialogContent = ({
         };
       });
   };
-  const onRemoveTag = (tagKey: BreakDownTagsType, removedTag: string) => {
+  const onRemoveTag = (tagKey: BreakDownTagType, removedTag: string) => {
     const isNewTag = !allTags.find(
       tag => tag.tagType === tagKey && tag.tagName === removedTag
     );
@@ -266,10 +262,10 @@ const DialogContent = ({
       });
   };
 
-  const breakDownTags = (source: Array<Tags>) => {
+  const breakDownTags = (source: Tag[]) => {
     return source.reduce(
-      (accumulator: Record<BreakDownTagsType, Array<string>>, currentValue) => {
-        const newValue: Record<BreakDownTagsType, Array<string>> = {
+      (accumulator: Record<BreakDownTagType, string[]>, currentValue) => {
+        const newValue: Record<BreakDownTagType, string[]> = {
           ...accumulator
         };
         switch (currentValue.tagType) {
@@ -285,7 +281,7 @@ const DialogContent = ({
     );
   };
   const transformSelectedTags = () => {
-    const defaultResult: Array<Tags> = [];
+    const defaultResult: Tag[] = [];
     const result = _.reduce(
       selectedTags,
       (accumulator, value, key) => {
@@ -299,9 +295,9 @@ const DialogContent = ({
     );
     return result;
   };
-  const getNewlyCreatedTags = (selectedTags: Array<Tags>) => {
-    const newTags: Array<Tags> = [];
-    const existingTags: Array<Tags> = [];
+  const getNewlyCreatedTags = (selectedTags: Tag[]) => {
+    const newTags: Tag[] = [];
+    const existingTags: Tag[] = [];
     selectedTags.forEach(selectedTag => {
       const selectedTagAlreadyExists =
         allTags.find(

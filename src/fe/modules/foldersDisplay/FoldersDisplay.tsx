@@ -80,7 +80,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
         const folderCardElements = document
           .getElementById(ELEMENT_ID.FOLDER_CARD_CONTAINER)
           ?.querySelectorAll(`[id^=${ELEMENT_ID.FOLDER_CARD('')}]`);
-        const folderCardsOffsetTop: Array<number> = [];
+        const folderCardsOffsetTop: number[] = [];
         if (folderCardElements)
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           folderCardElements.forEach((element: any) =>
@@ -172,7 +172,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
   const updateParams = (newParams: Partial<FolderFilterParams>): void => {
     setParams({ ...params, ...newParams });
   };
-  const updateSelectedFolders = (newSelectedFolders: Array<string>): void => {
+  const updateSelectedFolders = (newSelectedFolders: string[]): void => {
     const foldersList = foldersListRef.current.map(folder => folder.location);
     const scrollToNewlySelectedFolder = () => {
       const selectedFolderJustNow = _.last(newSelectedFolders);

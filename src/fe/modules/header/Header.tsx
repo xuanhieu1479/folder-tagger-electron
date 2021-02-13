@@ -9,8 +9,8 @@ import './Header.styled.scss';
 interface Header {
   params: FolderFilterParams;
   updateParams: (newParams: Partial<FolderFilterParams>) => void;
-  allCategories: Array<string>;
-  allLanguages: Array<string>;
+  allCategories: string[];
+  allLanguages: string[];
 }
 type TagKeyType =
   | 'name'
@@ -83,7 +83,7 @@ const Header = ({
 
   const generateTagsFromSearchKeywords = () => {
     let searchQuery = searchKeywords;
-    const tags: Partial<Record<TagKeyType, Array<string>>> = {};
+    const tags: Partial<Record<TagKeyType, string[]>> = {};
     const getTagsByTagKeyFromSearchKeywords = (tagKey: string) => {
       const tagKeyRegex = `${tagKey}:`;
       const searchRegex = new RegExp(

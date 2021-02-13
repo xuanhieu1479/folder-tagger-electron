@@ -15,7 +15,7 @@ import {
   Folder as FolderInterface,
   FolderFilterParams,
   TransferData,
-  BreakDownTagsType
+  BreakDownTagType
 } from '../../common/interfaces/commonInterfaces';
 import { QueryResult } from '../../common/interfaces/beInterfaces';
 import {
@@ -34,7 +34,7 @@ import {
 
 interface FolderQueryResult extends QueryResult {
   folders?: {
-    foldersList: Array<Folder>;
+    foldersList: Folder[];
     totalFolders: number;
   };
 }
@@ -121,7 +121,7 @@ export default class Folder {
     // Get records that match all conditions.
     // REFERENCE: https://stackoverflow.com/a/4768499/12183494
     const createDynamicQueriesForTags = (
-      tagsArray: Array<string>,
+      tagsArray: string[],
       tagKey: string,
       isWildcard: boolean
     ) => {
@@ -321,9 +321,9 @@ export default class Folder {
     }
   };
 
-  add = async (folders: Array<FolderInterface>): Promise<FolderQueryResult> => {
+  add = async (folders: FolderInterface[]): Promise<FolderQueryResult> => {
     const isAddingMultipleFoldesr = folders.length > 1;
-    const insertFolders: Array<Folder> = [];
+    const insertFolders: Folder[] = [];
     const manager = getManager();
 
     // Foreach does not support async await
@@ -369,16 +369,16 @@ export default class Folder {
    * There is an edge case that folderName will be duplicate
    * but since it's kinda complicated we need to handle it manually.
    */
-  import = async (json: Array<TransferData>): Promise<QueryResult> => {
+  import = async (json: TransferData[]): Promise<QueryResult> => {
     const manager = getManager();
     const folderRepository = getRepository(Folder);
     const tagRepository = getRepository(Tag);
     const allCategories = await getRepository(Category).find();
     const allLanguages = await getRepository(Language).find();
     const allTagTypes = await getRepository(TagType).find();
-    const upsertFolders: Array<Folder> = [];
-    const failedToImportFolders: Array<TransferData> = [];
-    const newTags: Array<Tag> = [];
+    const upsertFolders: Folder[] = [];
+    const failedToImportFolders: TransferData[] = [];
+    const newTags: Tag[] = [];
 
     const getFolderInDB = async (folderName: string) => {
       return await folderRepository
@@ -409,8 +409,8 @@ export default class Folder {
         language => language.Language === Language
       );
       const updateOrCreateFolders = async (folder: Folder) => {
-        const folderTags: Array<Tag> = [];
-        const transferTags: Record<string, Array<string>> = { ...Tags };
+        const folderTags: Tag[] = [];
+        const transferTags: Record<string, string[]> = { ...Tags };
         const getFolderTags = async () => {
           for (const tagType of Object.keys(transferTags)) {
             const tagTypeInDatabase = allTagTypes.find(
@@ -513,10 +513,7 @@ export default class Folder {
           Category: Category?.Category || null,
           Language: Language?.Language || null,
           Tags: Tags.reduce(
-            (
-              accumulator: Record<BreakDownTagsType, Array<string>>,
-              currentValue
-            ) => {
+            (accumulator: Record<BreakDownTagType, string[]>, currentValue) => {
               const tagKey = currentValue.TagType.TagType;
               switch (tagKey) {
                 case 'author':

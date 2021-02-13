@@ -13,12 +13,12 @@ interface FolderFilterParams {
   category?: string;
   language?: string;
   tags?: {
-    name?: Array<string>;
-    author?: Array<string>;
-    parody?: Array<string>;
-    character?: Array<string>;
-    genre?: Array<string>;
-    wildcard?: Array<string>;
+    name?: string[];
+    author?: string[];
+    parody?: string[];
+    character?: string[];
+    genre?: string[];
+    wildcard?: string[];
   };
 }
 interface TransferData {
@@ -26,28 +26,28 @@ interface TransferData {
   FolderName: string;
   Category: string;
   Language: string;
-  Tags: Record<BreakDownTagsType, Array<string>>;
+  Tags: Record<BreakDownTagType, string[]>;
 }
 
 /**
  * Tag interfaces
  */
-type BreakDownTagsType = 'author' | 'parody' | 'character' | 'genre';
-interface Tags {
+type BreakDownTagType = 'author' | 'parody' | 'character' | 'genre';
+interface Tag {
   tagType: string;
   tagName: string;
 }
 interface TagRelations {
-  parody_character: Record<string, Array<string>>;
-  author_parody: Record<string, Array<string>>;
-  author_genre: Record<string, Array<string>>;
+  parody_character: Record<string, string[]>;
+  author_parody: Record<string, string[]>;
+  author_genre: Record<string, string[]>;
 }
 
 export {
   Folder,
   FolderFilterParams,
   TransferData,
-  BreakDownTagsType,
-  Tags,
+  BreakDownTagType,
+  Tag,
   TagRelations
 };

@@ -35,7 +35,7 @@ router.get(CONTROLLER_PATH.GET, async (req: Request, res: Response) => {
 
 router.post(CONTROLLER_PATH.ADD, async (req: Request, res: Response) => {
   const { folderLocations } = req.body;
-  const params: Array<FolderInterface> = [];
+  const params: FolderInterface[] = [];
   for (const folderLocation of folderLocations) {
     params.push({
       location: folderLocation,

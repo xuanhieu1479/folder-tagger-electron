@@ -7,7 +7,7 @@ import { FolderCard } from '../../components/commonComponents';
 import './Body.styled.scss';
 
 interface Body {
-  updateSelectedFolders: (newSelectedFolders: Array<string>) => void;
+  updateSelectedFolders: (newSelectedFolders: string[]) => void;
 }
 
 const Body = ({ updateSelectedFolders }: Body): ReactElement => {
@@ -95,7 +95,7 @@ const Body = ({ updateSelectedFolders }: Body): ReactElement => {
     }
   };
 
-  const renderFolders = (): Array<ReactElement> => {
+  const renderFolders = (): ReactElement[] => {
     return foldersList.map((folder, index) => {
       return (
         <FolderCard
