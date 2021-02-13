@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react';
+import React, { ReactElement, useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { Dialog, Checkbox, Label, Button, Intent } from '@blueprintjs/core';
@@ -28,12 +28,24 @@ const FolderDialog = ({ isOpen, onClose }: FolderDialog): ReactElement => {
   const [isAllCheckboxIndetermidate, setAllCheckboxIndeterminate] = useState(
     false
   );
+  const tagTypesRef = useRef(tagTypes);
 
   useEffect(() => {
-    if (isOpen) setTagTypes({ ...defaultCheckedValues });
+    const onKeyDownListerner = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        onOK();
+      }
+    };
+
+    if (isOpen) {
+      setTagTypes({ ...defaultCheckedValues });
+      window.addEventListener('keydown', onKeyDownListerner);
+    }
+    return () => window.removeEventListener('keydown', onKeyDownListerner);
   }, [isOpen]);
 
   useEffect(() => {
+    tagTypesRef.current = tagTypes;
     const checkedTagTypes = _.filter(tagTypes, isChecked => isChecked);
     const checkedTagTypesCount = checkedTagTypes.length;
     const allTagTypesCount = Object.keys(tagTypes).length;
@@ -73,11 +85,8 @@ const FolderDialog = ({ isOpen, onClose }: FolderDialog): ReactElement => {
     });
   };
 
-  const onSuccess = () => {
-    onClose();
-  };
-
-  const onCopyTags = () => {
+  const onOK = () => {
+    const tagTypes = tagTypesRef.current;
     const includedTagTypes = _.reduce(
       tagTypes,
       (accumulator: BreakDownTagType[], isChecked, tagType) => {
@@ -94,7 +103,7 @@ const FolderDialog = ({ isOpen, onClose }: FolderDialog): ReactElement => {
       []
     );
     if (!_.isEmpty(includedTagTypes))
-      copyTags(dispatch, selectedFolders[0], includedTagTypes, onSuccess);
+      copyTags(dispatch, selectedFolders[0], includedTagTypes, onClose);
     else onClose();
   };
 
@@ -137,7 +146,7 @@ const FolderDialog = ({ isOpen, onClose }: FolderDialog): ReactElement => {
         <Button
           intent={Intent.PRIMARY}
           className="clipboard-dialog_save-button"
-          onClick={onCopyTags}
+          onClick={onOK}
         >
           OK
         </Button>
