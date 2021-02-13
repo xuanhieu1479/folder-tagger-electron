@@ -16,15 +16,15 @@ import { startLoading, finishLoading } from '../status/statusAction';
 
 interface GetTagsOfOneFolder {
   tags: Array<Tags>;
-  category: string | undefined;
-  language: string | undefined;
+  category?: string;
+  language?: string;
 }
 interface ModifyTags {
   selectedFolders: Array<string>;
   existingTags: Array<Tags>;
   newTags: Array<Tags>;
-  category?: string | undefined;
-  language?: string | undefined;
+  category?: string;
+  language?: string;
   action: string;
   onSuccess: () => void;
 }

@@ -35,8 +35,8 @@ interface ModifyTagsOfFolders extends TagsInterface {
   folderLocations: Array<string>;
   existingTags: Array<TagsInterface>;
   newTags: Array<TagsInterface>;
-  category: string | undefined;
-  language: string | undefined;
+  category?: string;
+  language?: string;
   action: TagAction;
 }
 interface TagRelationQueryResult extends QueryResult {
