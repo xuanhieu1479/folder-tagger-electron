@@ -23,6 +23,7 @@ const CustomMultiSelect = ({
   onRemoveItem
 }: CustomMultiSelect): ReactElement => {
   const [inputValue, setInputvalue] = useState('');
+  const [isPopoverOpen, setPopoverOpen] = useState(false);
 
   const filterItems: ItemPredicate<string> = (query, item) => {
     return item.toLocaleLowerCase().includes(query.toLocaleLowerCase());
@@ -45,6 +46,26 @@ const CustomMultiSelect = ({
   };
   const onCreatItem = (query: string) => {
     return query.replace(noSpecialCharactersRegex, '');
+  };
+
+  const onKeyDownInput = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const isHoldingShift = event.shiftKey;
+    const isHoldingAlt = event.altKey;
+
+    if (!isHoldingAlt && !isHoldingShift) {
+      setPopoverOpen(true);
+    }
+    if (isHoldingAlt) {
+      const { activeElement } = document;
+      if (activeElement instanceof HTMLElement) activeElement.blur();
+    }
+    if (event.key === 'Enter' && !isPopoverOpen) event.stopPropagation();
+  };
+  const onBlurInput = () => {
+    setPopoverOpen(false);
+  };
+  const onQueryChange = (query: string) => {
+    if (query === '') setPopoverOpen(false);
   };
 
   const renderSelectItems: ItemRenderer<string> = (
@@ -79,7 +100,7 @@ const CustomMultiSelect = ({
   return (
     <MultiSelect
       fill={true}
-      resetOnSelect={true}
+      resetOnQuery={false}
       items={allItems}
       query={inputValue}
       selectedItems={selectedItems}
@@ -90,14 +111,20 @@ const CustomMultiSelect = ({
       tagRenderer={item => item}
       tagInputProps={{
         onRemove,
-        inputProps: { value: inputValue, onChange: onInputChange }
+        inputProps: {
+          value: inputValue,
+          onChange: onInputChange,
+          onKeyDown: onKeyDownInput,
+          onBlur: onBlurInput
+        }
       }}
       itemPredicate={filterItems}
       popoverProps={{
         minimal: true,
+        isOpen: isPopoverOpen,
         popoverClassName: 'custom-multi-select_popover'
       }}
-      openOnKeyDown={true}
+      onQueryChange={onQueryChange}
     />
   );
 };

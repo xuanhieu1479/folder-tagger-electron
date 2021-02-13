@@ -85,11 +85,16 @@ const DialogContent = ({
     };
     const keyDownListerner = (event: KeyboardEvent) => {
       const isHoldingCtrl = event.ctrlKey;
-      if (!isHoldingCtrl) return;
+      const isHoldingAlt = event.altKey;
 
       switch (event.key) {
         case 'v':
+          if (!isHoldingCtrl) return;
           pasteTags();
+          break;
+        case 'Enter':
+          if (!isHoldingAlt) return;
+          onSave();
           break;
       }
     };

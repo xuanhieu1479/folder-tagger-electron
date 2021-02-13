@@ -13,7 +13,7 @@ axiosConfig();
 
 const App = (): ReactElement => {
   const dispatch = useDispatch();
-  const [isSettingDialogOpen, setIsSettingDialogOpen] = useState(false);
+  const [isSettingDialogOpen, setSettingDialogOpen] = useState(false);
 
   useEffect(() => {
     initIpcEventListeners(dispatch, onOpenSettingDialog);
@@ -28,11 +28,11 @@ const App = (): ReactElement => {
   }, []);
 
   const onOpenSettingDialog = () => {
-    setIsSettingDialogOpen(true);
+    setSettingDialogOpen(true);
     onOpenDialog(dispatch);
   };
   const onCloseSettingDialog = () => {
-    setIsSettingDialogOpen(false);
+    setSettingDialogOpen(false);
     onCloseDialog(dispatch);
   };
 
