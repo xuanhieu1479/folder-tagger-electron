@@ -9,7 +9,6 @@ import {
   getManager,
   Brackets
 } from 'typeorm';
-import fs from 'fs';
 import _ from 'lodash';
 import { Category, Language, Tag, TagType } from './entity';
 import {
@@ -22,7 +21,8 @@ import { QueryResult } from '../../common/interfaces/beInterfaces';
 import {
   MESSAGE,
   SEARCH,
-  BACKUP
+  BACKUP,
+  PAGINATION
 } from '../../common/variables/commonVariables';
 import { StatusCode } from '../../common/enums/commonEnums';
 import { logErrors } from '../logging';
@@ -296,10 +296,10 @@ export default class Folder {
           status: StatusCode.InvalidData
         };
       }
-      const result = await query
-        .offset(skipQuantity)
-        .limit(itemsPerPage)
-        .getRawMany();
+      if (isRandom) query.limit(_.last(PAGINATION.ITEMS_PER_PAGE));
+      else query.offset(skipQuantity).limit(itemsPerPage);
+
+      const result = await query.getRawMany();
       return {
         folders: {
           foldersList: result,

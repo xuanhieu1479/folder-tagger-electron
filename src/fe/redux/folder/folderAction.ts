@@ -11,6 +11,7 @@ import {
   TransferData
 } from '../../../common/interfaces/commonInterfaces';
 import { GET_FOLDERS, GET_CATEGORIES, GET_LANGUAGES } from './folderActionType';
+import { SET_RANDOM, UNSET_RANDOM } from '../status/statusActionType';
 import { showMessage } from '../../../utilities/feUtilities';
 import { startLoading, finishLoading } from '../status/statusAction';
 
@@ -20,6 +21,7 @@ const getFolders = async (
 ): Promise<void> => {
   try {
     startLoading(dispatch);
+    const { isRandom } = params;
     const { data } = await axios.get(FOLDER_API.GET, { params });
     const { foldersList, totalFolders } = data.folders;
     dispatch({
@@ -29,6 +31,8 @@ const getFolders = async (
         totalFolders
       }
     });
+    if (isRandom) dispatch({ type: SET_RANDOM, payload: { isRandom } });
+    else dispatch({ type: UNSET_RANDOM, payload: { isRandom } });
   } catch (error) {
     showMessage.error(error);
   } finally {

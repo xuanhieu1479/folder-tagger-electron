@@ -2,7 +2,9 @@ import {
   START_LOADING,
   FINISH_LOADING,
   OPEN_DIALOG,
-  CLOSE_DIALOG
+  CLOSE_DIALOG,
+  SET_RANDOM,
+  UNSET_RANDOM
 } from './statusActionType';
 import {
   ReducerAction,
@@ -11,7 +13,8 @@ import {
 
 export const statusInitState: StatusReducer = {
   isLoading: false,
-  isDialogOpen: false
+  isDialogOpen: false,
+  isRandom: false
 };
 
 const statusReducer = (
@@ -27,6 +30,10 @@ const statusReducer = (
       return { ...state, isDialogOpen: true };
     case CLOSE_DIALOG:
       return { ...state, isDialogOpen: false };
+    case SET_RANDOM:
+      return { ...state, isRandom: true };
+    case UNSET_RANDOM:
+      return { ...state, isRandom: false };
     default:
       return state;
   }

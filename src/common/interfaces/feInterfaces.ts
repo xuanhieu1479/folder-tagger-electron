@@ -16,6 +16,7 @@ interface ReducerAction {
 interface StatusReducer {
   isLoading: boolean;
   isDialogOpen: boolean;
+  isRandom: boolean;
 }
 interface FolderReducer {
   selectedFolders: string[];

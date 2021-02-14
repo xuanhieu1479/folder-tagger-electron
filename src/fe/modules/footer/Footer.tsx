@@ -13,15 +13,18 @@ interface Footer {
 
 const Footer = ({ params, updateParams }: Footer): ReactElement => {
   const { totalFolders } = useSelector((state: RootState) => state.folder);
+  const { isRandom } = useSelector((state: RootState) => state.status);
 
   return (
     <footer className="footer_container">
-      <Pagination
-        currentPage={params.currentPage || PAGINATION.DEFAULT.currentPage}
-        itemsPerPage={params.itemsPerPage || PAGINATION.DEFAULT.itemsPerPage}
-        updateParams={updateParams}
-        totalFolders={totalFolders}
-      />
+      {!isRandom ? (
+        <Pagination
+          currentPage={params.currentPage || PAGINATION.DEFAULT.currentPage}
+          itemsPerPage={params.itemsPerPage || PAGINATION.DEFAULT.itemsPerPage}
+          updateParams={updateParams}
+          totalFolders={totalFolders}
+        />
+      ) : null}
     </footer>
   );
 };
