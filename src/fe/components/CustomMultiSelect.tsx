@@ -1,4 +1,5 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
+import _ from 'lodash';
 import { MenuItem } from '@blueprintjs/core';
 import { MultiSelect, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
 import { BreakDownTagType } from '../../common/interfaces/commonInterfaces';
@@ -67,7 +68,7 @@ const CustomMultiSelect = ({
         activeElement.blur();
         setPopoverProps({ ...popoverProps, isOpen: false });
       }
-    }
+    } else setPopoverProps(_.omit(popoverProps, 'isOpen'));
   };
 
   const renderSelectItems: ItemRenderer<string> = (
