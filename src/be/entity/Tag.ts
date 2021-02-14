@@ -42,6 +42,9 @@ interface ModifyTagsOfFolders extends TagInterface {
 interface TagRelationQueryResult extends QueryResult {
   relations?: TagRelations;
 }
+interface RemoveAllTagsFromFolders {
+  folderLocations?: string[];
+}
 
 // A 51% instead of 50% will ensure an author will only have a single main parody
 // while an increasing of 1% won't affect much to other kinds of tag.
@@ -402,6 +405,38 @@ export default class Tag {
       };
     } catch (error) {
       console.error('CLEAR TAGS ERROR:', error);
+      logErrors(error.message, error.stack);
+      return {
+        message: error.message,
+        status: StatusCode.DbError
+      };
+    }
+  };
+
+  removeAllTagsFromFolders = async ({
+    folderLocations
+  }: RemoveAllTagsFromFolders): Promise<QueryResult> => {
+    if (!folderLocations)
+      return {
+        message: MESSAGE.INVALID_PARAMS,
+        status: StatusCode.InvalidData
+      };
+
+    const selectedFolders = await getRepository(Folder)
+      .createQueryBuilder()
+      .whereInIds(folderLocations)
+      .getMany();
+    selectedFolders.forEach(folder => (folder.Tags = []));
+
+    try {
+      const manager = getManager();
+      manager.save(selectedFolders);
+      return {
+        message: MESSAGE.SUCCESS,
+        status: StatusCode.Success
+      };
+    } catch (error) {
+      console.error('REMOVE ALL TAGS FROM FOLDERS ERROR:', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,

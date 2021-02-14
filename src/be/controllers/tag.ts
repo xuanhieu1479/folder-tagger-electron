@@ -27,4 +27,10 @@ router.get(CONTROLLER_PATH.CLEAR, async (_req: Request, res: Response) => {
   res.status(status).json({ message });
 });
 
+router.get(CONTROLLER_PATH.REMOVE, async (req: Request, res: Response) => {
+  const params = req.query;
+  const { status, message } = await tag.removeAllTagsFromFolders(params);
+  res.status(status).json({ message });
+});
+
 export default router;

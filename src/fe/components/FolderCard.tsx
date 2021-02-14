@@ -6,36 +6,14 @@ import React, {
   useContext,
   createElement
 } from 'react';
-import { Card, Tooltip, Menu, MenuItem, ContextMenu } from '@blueprintjs/core';
-import { TagAction } from '../../common/enums/commonEnums';
+import { useSelector } from 'react-redux';
+import { Card, Tooltip, ContextMenu } from '@blueprintjs/core';
+import { RootState } from '../../common/interfaces/feInterfaces';
 import { MESSAGE } from '../../common/variables/commonVariables';
 import FunctionsContext from '../context/FunctionsContext';
 import { showMessage, getAppLocation } from '../../utilities/feUtilities';
+import CustomContextMenu from './CustomContextMenu';
 import './styles/FolderCard.styled.scss';
-
-interface ContextMenuBody {
-  onOpenFolderDialog: (dialogType: TagAction) => void;
-}
-
-const ContextMenuBody = ({
-  onOpenFolderDialog
-}: ContextMenuBody): React.ReactElement => {
-  const onClickAddTags = () => onOpenFolderDialog(TagAction.Add);
-  const onClickEditTags = () => onOpenFolderDialog(TagAction.Edit);
-  const onClickRemoveTags = () => onOpenFolderDialog(TagAction.Remove);
-
-  return (
-    <Menu>
-      <MenuItem text="Add Tags" onClick={onClickAddTags} label="Ctrl + E" />
-      <MenuItem text="Edit Tags" onClick={onClickEditTags} label="Ctrl + S" />
-      <MenuItem
-        text="Remove Tags"
-        onClick={onClickRemoveTags}
-        label="Ctrl + D"
-      />
-    </Menu>
-  );
-};
 
 interface FolderCard {
   id: string;
@@ -57,10 +35,12 @@ const FolderCard = ({
   addToSelectedList,
   isBeingSelected
 }: FolderCard): ReactElement => {
+  const { selectedFolders } = useSelector((state: RootState) => state.folder);
   const context = useContext(FunctionsContext);
   const { dialog } = context;
-  const { onOpenFolderDialog } = dialog;
+  const { onOpenFolderDialog, onOpenClipboardDialog } = dialog;
   const isBeingSelectedRef = useRef(isBeingSelected);
+  const selectedFoldersRef = useRef(selectedFolders);
 
   useEffect(() => {
     const folderCardElement = document.getElementById(id);
@@ -68,7 +48,11 @@ const FolderCard = ({
       folderCardElement.oncontextmenu = event => {
         if (!isBeingSelectedRef.current) addToSelectedList(folderLocation);
         ContextMenu.show(
-          createElement(ContextMenuBody, { onOpenFolderDialog }),
+          createElement(CustomContextMenu, {
+            selectedFolders: selectedFoldersRef.current,
+            onOpenFolderDialog,
+            onOpenClipboardDialog
+          }),
           {
             left: event.clientX,
             top: event.clientY
@@ -81,6 +65,9 @@ const FolderCard = ({
   useEffect(() => {
     isBeingSelectedRef.current = isBeingSelected;
   }, [isBeingSelected]);
+  useEffect(() => {
+    selectedFoldersRef.current = selectedFolders;
+  }, [selectedFolders]);
 
   const onClickCardName = () => {
     navigator.clipboard.writeText(folderName);

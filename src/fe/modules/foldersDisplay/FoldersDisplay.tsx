@@ -233,7 +233,9 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
   };
 
   return (
-    <FunctionsContext.Provider value={{ dialog: { onOpenFolderDialog } }}>
+    <FunctionsContext.Provider
+      value={{ dialog: { onOpenFolderDialog, onOpenClipboardDialog } }}
+    >
       <section className="folder-display_container">
         <Header
           params={params}

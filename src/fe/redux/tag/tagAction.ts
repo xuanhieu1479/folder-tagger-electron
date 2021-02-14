@@ -137,11 +137,23 @@ const clearUnusedTags = async (dispatch: Dispatch): Promise<void> => {
   }
 };
 
+const removeAllTagsFromFolders = async (
+  folderLocations: string[]
+): Promise<void> => {
+  try {
+    await axios.get(TAG_API.REMOVE, { params: { folderLocations } });
+    showMessage.success(MESSAGE.SUCCESS);
+  } catch (error) {
+    showMessage.error(error);
+  }
+};
+
 export {
   getTags,
   copyTags,
   modifyTagsOfFolders,
   calculateTagRelations,
   loadTagRelations,
-  clearUnusedTags
+  clearUnusedTags,
+  removeAllTagsFromFolders
 };
