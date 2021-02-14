@@ -9,7 +9,7 @@ const writeToFile = (
   fileDirectory: string,
   filePath: string,
   fileContent: string,
-  overWrite = false,
+  overWrite = true,
   insertFromTop = false
 ): void => {
   initDirectory(fileDirectory);

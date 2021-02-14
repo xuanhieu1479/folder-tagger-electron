@@ -369,8 +369,7 @@ export default class Tag {
       writeToFile(
         SETTING.DIRECTORY,
         SETTING.RELATION_PATH,
-        JSON.stringify(relations, null, 2),
-        true
+        JSON.stringify(relations, null, 2)
       );
       return {
         relations,
