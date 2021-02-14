@@ -13,6 +13,11 @@ interface CustomMultiSelect {
   onSelectItem: (itemKey: BreakDownTagType, selectedItem: string) => void;
   onRemoveItem: (itemKey: BreakDownTagType, removedItem: string) => void;
 }
+interface PopoverProps {
+  minimal: boolean;
+  isOpen?: boolean;
+  popoverClassName: string;
+}
 const noSpecialCharactersRegex = new RegExp(/[^A-Za-z0-9\s]/g);
 
 const CustomMultiSelect = ({
@@ -23,7 +28,10 @@ const CustomMultiSelect = ({
   onRemoveItem
 }: CustomMultiSelect): ReactElement => {
   const [inputValue, setInputvalue] = useState('');
-  const [isPopoverOpen, setPopoverOpen] = useState(false);
+  const [popoverProps, setPopoverProps] = useState<PopoverProps>({
+    minimal: true,
+    popoverClassName: 'custom-multi-select_popover'
+  });
 
   const filterItems: ItemPredicate<string> = (query, item) => {
     return item.toLocaleLowerCase().includes(query.toLocaleLowerCase());
@@ -52,20 +60,14 @@ const CustomMultiSelect = ({
     const isHoldingShift = event.shiftKey;
     const isHoldingAlt = event.altKey;
 
-    if (!isHoldingAlt && !isHoldingShift) {
-      setPopoverOpen(true);
-    }
+    if (isHoldingAlt || isHoldingShift) event.stopPropagation();
     if (isHoldingAlt) {
       const { activeElement } = document;
-      if (activeElement instanceof HTMLElement) activeElement.blur();
+      if (activeElement instanceof HTMLElement) {
+        activeElement.blur();
+        setPopoverProps({ ...popoverProps, isOpen: false });
+      }
     }
-    if (event.key === 'Enter' && !isPopoverOpen) event.stopPropagation();
-  };
-  const onBlurInput = () => {
-    setPopoverOpen(false);
-  };
-  const onQueryChange = (query: string) => {
-    if (query === '') setPopoverOpen(false);
   };
 
   const renderSelectItems: ItemRenderer<string> = (
@@ -114,17 +116,12 @@ const CustomMultiSelect = ({
         inputProps: {
           value: inputValue,
           onChange: onInputChange,
-          onKeyDown: onKeyDownInput,
-          onBlur: onBlurInput
+          onKeyDown: onKeyDownInput
         }
       }}
       itemPredicate={filterItems}
-      popoverProps={{
-        minimal: true,
-        isOpen: isPopoverOpen,
-        popoverClassName: 'custom-multi-select_popover'
-      }}
-      onQueryChange={onQueryChange}
+      popoverProps={{ ...popoverProps }}
+      openOnKeyDown={true}
     />
   );
 };
