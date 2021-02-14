@@ -8,9 +8,8 @@ import {
   onOpenDevtool,
   onReload,
   onExportData,
-  onClearNonexistentFolders,
-  onClearUnusedTags,
-  onUpdateMissingThumbnails
+  onClearFoldersUpdateThumbnails,
+  onClearUnusedTags
 } from './menuActions/menuActions';
 
 const menuTemplate = [
@@ -39,16 +38,12 @@ const menuTemplate = [
         click: calculateTagsRelation
       },
       {
-        label: 'Clear Nonexistent Folders',
-        click: onClearNonexistentFolders
+        label: 'Clear Folders And Update Thumbnails',
+        click: onClearFoldersUpdateThumbnails
       },
       {
         label: 'Clear Unused Tags',
         click: onClearUnusedTags
-      },
-      {
-        label: 'Update Missing Thumbnails',
-        click: onUpdateMissingThumbnails
       }
     ]
   },

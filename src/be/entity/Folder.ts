@@ -551,23 +551,39 @@ export default class Folder {
   };
 
   clear = async (): Promise<QueryResult> => {
-    const allFolders: Partial<FolderInterface>[] = await getRepository(Folder)
+    const allFolders = await getRepository(Folder)
       .createQueryBuilder('folder')
-      .select('folder.FolderLocation', 'location')
-      .getRawMany();
-    const nonExistentFolders: string[] = [];
+      .select(['folder.FolderLocation', 'folder.FolderThumbnail'])
+      .getMany();
+    const nonExistentFolders: Folder[] = [];
+    const updatedThumbnailFolders: Folder[] = [];
     allFolders.forEach(folder => {
-      const { location } = folder;
-      if (location && !fs.existsSync(location))
-        nonExistentFolders.push(location);
+      const { FolderLocation, FolderThumbnail } = folder;
+      if (!fileExists(FolderLocation)) nonExistentFolders.push(folder);
+      else if (!fileExists(FolderThumbnail) || !FolderThumbnail) {
+        const newThumbnail = getFolderThumbnail(FolderLocation);
+        if (newThumbnail) {
+          folder.FolderThumbnail = newThumbnail;
+          updatedThumbnailFolders.push(folder);
+        }
+      }
     });
 
     try {
-      await getRepository(Folder)
-        .createQueryBuilder('folder')
-        .delete()
-        .whereInIds(nonExistentFolders)
-        .execute();
+      const deletedFolders = nonExistentFolders.map(
+        folder => folder.FolderLocation
+      );
+      const manager = getManager();
+      await manager.transaction(async transactionManager => {
+        await transactionManager.remove(nonExistentFolders);
+        await transactionManager.save(updatedThumbnailFolders);
+      });
+      if (!_.isEmpty(deletedFolders))
+        writeToFile(
+          BACKUP.DIRECTORY,
+          BACKUP.PATH_DELETE,
+          JSON.stringify(deletedFolders, null, 2)
+        );
       return {
         message: MESSAGE.SUCCESS,
         status: StatusCode.Success

@@ -10,9 +10,10 @@ import {
   MESSAGE,
   SETTING
 } from '../../../common/variables/commonVariables';
-import { showMessage } from '../../../utilities/feUtilities';
 import { COPY_TAGS, GET_TAGS, LOAD_TAG_RELATIONS } from './tagActionType';
 import { startLoading, finishLoading } from '../status/statusAction';
+import { fileExists } from '../../../utilities/directoryUtilities';
+import { showMessage } from '../../../utilities/feUtilities';
 
 interface GetTagsOfOneFolder {
   tags: Tag[];
@@ -112,7 +113,7 @@ const calculateTagRelations = async (dispatch: Dispatch): Promise<void> => {
 
 const loadTagRelations = (dispatch: Dispatch): void => {
   try {
-    if (fs.existsSync(SETTING.RELATION_PATH)) {
+    if (fileExists(SETTING.RELATION_PATH)) {
       const relations = JSON.parse(
         fs.readFileSync(SETTING.RELATION_PATH).toString()
       );

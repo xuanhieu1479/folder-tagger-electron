@@ -97,9 +97,12 @@ const getLanguages = async (dispatch: Dispatch): Promise<void> => {
   }
 };
 
-const clearNonexistentFolders = async (dispatch: Dispatch): Promise<void> => {
+const clearFoldersUpdateThumbnails = async (
+  dispatch: Dispatch
+): Promise<void> => {
   try {
     startLoading(dispatch);
+    await axios.get(FOLDER_API.EXPORT);
     await axios.get(FOLDER_API.CLEAR);
     showMessage.success(MESSAGE.SUCCESS);
   } catch (error) {
@@ -116,5 +119,5 @@ export {
   exportFolders,
   getCategories,
   getLanguages,
-  clearNonexistentFolders
+  clearFoldersUpdateThumbnails
 };

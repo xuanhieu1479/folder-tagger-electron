@@ -12,12 +12,16 @@ const NAME_EXPORT = `${moment().format(
 )}-BACKUP.json`;
 const PATH_EXPORT = `${DIRECTORY}/${NAME_EXPORT}`;
 
+const NAME_DELETED = `${moment().format(
+  DateTime.DateTimeFileFormat
+)}-DELETED.json`;
+const PATH_DELETE = `${DIRECTORY}/${NAME_DELETED}`;
+
 const BACKUP = {
   DIRECTORY,
-  NAME_FAILED_IMPORT,
   PATH_FAILED_IMPORT,
-  NAME_EXPORT,
-  PATH_EXPORT
+  PATH_EXPORT,
+  PATH_DELETE
 };
 
 export default BACKUP;

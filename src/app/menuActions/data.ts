@@ -21,24 +21,18 @@ const onExportData = (): void => {
   BrowserWindow.getFocusedWindow()?.webContents.send(IpcEvent.ExportData);
 };
 
-const onClearNonexistentFolders = (): void => {
+const onClearFoldersUpdateThumbnails = (): void => {
   BrowserWindow.getFocusedWindow()?.webContents.send(
-    IpcEvent.ClearNonexistentFolders
+    IpcEvent.ClearFoldersUpdateThumbnails
   );
 };
 const onClearUnusedTags = (): void => {
   BrowserWindow.getFocusedWindow()?.webContents.send(IpcEvent.ClearUnusedTags);
 };
-const onUpdateMissingThumbnails = (): void => {
-  BrowserWindow.getFocusedWindow()?.webContents.send(
-    IpcEvent.UpdateMissingThumbnails
-  );
-};
 
 export {
   onImportData,
   onExportData,
-  onClearNonexistentFolders,
-  onClearUnusedTags,
-  onUpdateMissingThumbnails
+  onClearFoldersUpdateThumbnails,
+  onClearUnusedTags
 };

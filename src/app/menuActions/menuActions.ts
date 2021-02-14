@@ -3,9 +3,8 @@ import { onOpenSetting, calculateTagsRelation } from './setting';
 import {
   onImportData,
   onExportData,
-  onClearNonexistentFolders,
-  onClearUnusedTags,
-  onUpdateMissingThumbnails
+  onClearFoldersUpdateThumbnails,
+  onClearUnusedTags
 } from './data';
 import { onOpenDevtool, onReload } from './debug';
 
@@ -16,9 +15,8 @@ export {
   calculateTagsRelation,
   onImportData,
   onExportData,
-  onClearNonexistentFolders,
+  onClearFoldersUpdateThumbnails,
   onClearUnusedTags,
-  onUpdateMissingThumbnails,
   onOpenDevtool,
   onReload
 };
