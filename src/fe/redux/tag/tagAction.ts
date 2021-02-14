@@ -46,7 +46,7 @@ const getTags = async (
       payload: { allTags: tags }
     });
   } catch (error) {
-    showMessage.error(error.response.data.message);
+    showMessage.error(error);
   }
 };
 
@@ -68,7 +68,7 @@ const copyTags = async (
     showMessage.info(MESSAGE.COPY_FOLDER_TAGS_TO_CLIPBOARD(includedTagTypes));
     onSuccess();
   } catch (error) {
-    showMessage.error(error.response.data.message);
+    showMessage.error(error);
   }
 };
 
@@ -92,7 +92,7 @@ const modifyTagsOfFolders = async ({
     });
     onSuccess();
   } catch (error) {
-    showMessage.error(error.response.data.message);
+    showMessage.error(error);
   }
 };
 
@@ -106,7 +106,7 @@ const calculateTagRelations = async (dispatch: Dispatch): Promise<void> => {
       showMessage.success(MESSAGE.SUCCESS);
     } else showMessage.info(MESSAGE.CANNOT_CALCULATE_TAG_RELATIONS);
   } catch (error) {
-    showMessage.error(error.response.data.message);
+    showMessage.error(error);
   } finally {
     finishLoading(dispatch);
   }
@@ -131,7 +131,7 @@ const clearUnusedTags = async (dispatch: Dispatch): Promise<void> => {
     await axios.get(TAG_API.CLEAR);
     showMessage.success(MESSAGE.SUCCESS);
   } catch (error) {
-    showMessage.error(error.response.data.message);
+    showMessage.error(error);
   } finally {
     finishLoading(dispatch);
   }

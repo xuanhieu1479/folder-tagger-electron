@@ -30,7 +30,7 @@ const getFolders = async (
       }
     });
   } catch (error) {
-    showMessage.error(error.response.data.message);
+    showMessage.error(error);
   } finally {
     finishLoading(dispatch);
   }
@@ -44,7 +44,7 @@ const addFolders = async (
     startLoading(dispatch);
     await axios.post(FOLDER_API.ADD, { folderLocations });
   } catch (error) {
-    showMessage.error(error.response.data.message);
+    showMessage.error(error);
   } finally {
     finishLoading(dispatch);
   }
@@ -59,7 +59,7 @@ const importFolders = async (
     await axios.post(FOLDER_API.IMPORT, { json });
     showMessage.success(MESSAGE.SUCCESS);
   } catch (error) {
-    showMessage.error(error.response.data.message);
+    showMessage.error(error);
   } finally {
     finishLoading(dispatch);
   }
@@ -71,7 +71,7 @@ const exportFolders = async (dispatch: Dispatch): Promise<void> => {
     await axios.get(FOLDER_API.EXPORT);
     showMessage.success(MESSAGE.SUCCESS);
   } catch (error) {
-    showMessage.error(error.response.data.message);
+    showMessage.error(error);
   } finally {
     finishLoading(dispatch);
   }
@@ -83,7 +83,7 @@ const getCategories = async (dispatch: Dispatch): Promise<void> => {
     const { categories } = data;
     dispatch({ type: GET_CATEGORIES, payload: { categories } });
   } catch (error) {
-    showMessage.error(error.response.data.message);
+    showMessage.error(error);
   }
 };
 
@@ -93,7 +93,7 @@ const getLanguages = async (dispatch: Dispatch): Promise<void> => {
     const { languages } = data;
     dispatch({ type: GET_LANGUAGES, payload: { languages } });
   } catch (error) {
-    showMessage.error(error.response.data.message);
+    showMessage.error(error);
   }
 };
 
@@ -106,7 +106,7 @@ const clearFoldersUpdateThumbnails = async (
     await axios.get(FOLDER_API.CLEAR);
     showMessage.success(MESSAGE.SUCCESS);
   } catch (error) {
-    showMessage.error(error.response.data.message);
+    showMessage.error(error);
   } finally {
     finishLoading(dispatch);
   }
