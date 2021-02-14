@@ -17,9 +17,28 @@ const onImportData = (): void => {
     });
   }
 };
-
 const onExportData = (): void => {
   BrowserWindow.getFocusedWindow()?.webContents.send(IpcEvent.ExportData);
 };
 
-export { onImportData, onExportData };
+const onClearNonexistentFolders = (): void => {
+  BrowserWindow.getFocusedWindow()?.webContents.send(
+    IpcEvent.ClearNonexistentFolders
+  );
+};
+const onClearUnusedTags = (): void => {
+  BrowserWindow.getFocusedWindow()?.webContents.send(IpcEvent.ClearUnusedTags);
+};
+const onUpdateMissingThumbnails = (): void => {
+  BrowserWindow.getFocusedWindow()?.webContents.send(
+    IpcEvent.UpdateMissingThumbnails
+  );
+};
+
+export {
+  onImportData,
+  onExportData,
+  onClearNonexistentFolders,
+  onClearUnusedTags,
+  onUpdateMissingThumbnails
+};

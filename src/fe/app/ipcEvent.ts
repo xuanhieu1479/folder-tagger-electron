@@ -4,7 +4,8 @@ import { IpcEvent } from '../../common/enums/commonEnums';
 import {
   addFolders,
   exportFolders,
-  importFolders
+  importFolders,
+  clearNonexistentFolders
 } from '../redux/folder/folderAction';
 import { calculateTagRelations } from '../redux/tag/tagAction';
 
@@ -25,6 +26,9 @@ const initIpcEventListeners = (
   });
   ipcRenderer.on(IpcEvent.ExportData, () => {
     exportFolders(dispatch);
+  });
+  ipcRenderer.on(IpcEvent.ClearNonexistentFolders, () => {
+    clearNonexistentFolders(dispatch);
   });
   ipcRenderer.on(IpcEvent.CalculateTagRelations, () => {
     calculateTagRelations(dispatch);

@@ -59,4 +59,9 @@ router.get(CONTROLLER_PATH.EXPORT, async (_req: Request, res: Response) => {
   res.status(status).json({ message });
 });
 
+router.get(CONTROLLER_PATH.CLEAR, async (_req: Request, res: Response) => {
+  const { status, message } = await folder.clear();
+  res.status(status).json({ message });
+});
+
 export default router;

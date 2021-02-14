@@ -7,7 +7,10 @@ import {
   onImportData,
   onOpenDevtool,
   onReload,
-  onExportData
+  onExportData,
+  onClearNonexistentFolders,
+  onClearUnusedTags,
+  onUpdateMissingThumbnails
 } from './menuActions/menuActions';
 
 const menuTemplate = [
@@ -34,6 +37,18 @@ const menuTemplate = [
       {
         label: 'Calculate Tags Relation',
         click: calculateTagsRelation
+      },
+      {
+        label: 'Clear Nonexistent Folders',
+        click: onClearNonexistentFolders
+      },
+      {
+        label: 'Clear Unused Tags',
+        click: onClearUnusedTags
+      },
+      {
+        label: 'Update Missing Thumbnails',
+        click: onUpdateMissingThumbnails
       }
     ]
   },

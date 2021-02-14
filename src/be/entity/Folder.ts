@@ -9,6 +9,7 @@ import {
   getManager,
   Brackets
 } from 'typeorm';
+import fs from 'fs';
 import _ from 'lodash';
 import { Category, Language, Tag, TagType } from './entity';
 import {
@@ -541,6 +542,38 @@ export default class Folder {
       };
     } catch (error) {
       console.error('EXPORT FOLDERS ERROR: ', error);
+      logErrors(error.message, error.stack);
+      return {
+        message: error.message,
+        status: StatusCode.DbError
+      };
+    }
+  };
+
+  clear = async (): Promise<QueryResult> => {
+    const allFolders: Partial<FolderInterface>[] = await getRepository(Folder)
+      .createQueryBuilder('folder')
+      .select('folder.FolderLocation', 'location')
+      .getRawMany();
+    const nonExistentFolders: string[] = [];
+    allFolders.forEach(folder => {
+      const { location } = folder;
+      if (location && !fs.existsSync(location))
+        nonExistentFolders.push(location);
+    });
+
+    try {
+      await getRepository(Folder)
+        .createQueryBuilder('folder')
+        .delete()
+        .whereInIds(nonExistentFolders)
+        .execute();
+      return {
+        message: MESSAGE.SUCCESS,
+        status: StatusCode.Success
+      };
+    } catch (error) {
+      console.error('CLEAR FOLDERS ERROR: ', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,
