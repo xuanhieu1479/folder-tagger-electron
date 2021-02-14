@@ -12,7 +12,7 @@ import {
 } from '../../../common/variables/commonVariables';
 import { COPY_TAGS, GET_TAGS, LOAD_TAG_RELATIONS } from './tagActionType';
 import { startLoading, finishLoading } from '../status/statusAction';
-import { fileExists } from '../../../utilities/directoryUtilities';
+import { fileExists } from '../../../utilities/utilityFunctions';
 import { showMessage } from '../../../utilities/feUtilities';
 
 interface GetTagsOfOneFolder {
@@ -101,9 +101,10 @@ const calculateTagRelations = async (dispatch: Dispatch): Promise<void> => {
     startLoading(dispatch);
     const { data } = await axios.get(TAG_API.CALCULATE_RELATION);
     const { relations } = data;
-    if (relations)
+    if (relations) {
       dispatch({ type: LOAD_TAG_RELATIONS, payload: { relations } });
-    showMessage.success(MESSAGE.SUCCESS);
+      showMessage.success(MESSAGE.SUCCESS);
+    } else showMessage.info(MESSAGE.CANNOT_CALCULATE_TAG_RELATIONS);
   } catch (error) {
     showMessage.error(error.response.data.message);
   } finally {
@@ -124,10 +125,23 @@ const loadTagRelations = (dispatch: Dispatch): void => {
   }
 };
 
+const clearUnusedTags = async (dispatch: Dispatch): Promise<void> => {
+  try {
+    startLoading(dispatch);
+    await axios.get(TAG_API.CLEAR);
+    showMessage.success(MESSAGE.SUCCESS);
+  } catch (error) {
+    showMessage.error(error.response.data.message);
+  } finally {
+    finishLoading(dispatch);
+  }
+};
+
 export {
   getTags,
   copyTags,
   modifyTagsOfFolders,
   calculateTagRelations,
-  loadTagRelations
+  loadTagRelations,
+  clearUnusedTags
 };

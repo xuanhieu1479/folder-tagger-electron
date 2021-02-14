@@ -19,7 +19,9 @@ const MESSAGE = {
     });
     return `Copied folder's ${copiedTagTypes} to clipboard!`;
   },
-  SPECIAL_CHARACTERS_FORBIDDEN: 'Special characters are not allowed!'
+  SPECIAL_CHARACTERS_FORBIDDEN: 'Special characters are not allowed!',
+  CANNOT_CALCULATE_TAG_RELATIONS:
+    'Not enough information to calculate tag relations'
 };
 
 export default MESSAGE;

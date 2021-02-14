@@ -22,4 +22,9 @@ router.get(CONTROLLER_PATH.CALCULATE, async (_req: Request, res: Response) => {
   res.status(status).json({ relations, message });
 });
 
+router.get(CONTROLLER_PATH.CLEAR, async (_req: Request, res: Response) => {
+  const { status, message } = await tag.clear();
+  res.status(status).json({ message });
+});
+
 export default router;

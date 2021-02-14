@@ -1,4 +1,3 @@
-import { remote } from 'electron';
 import React, {
   ReactElement,
   MouseEvent,
@@ -11,7 +10,7 @@ import { Card, Tooltip, Menu, MenuItem, ContextMenu } from '@blueprintjs/core';
 import { TagAction } from '../../common/enums/commonEnums';
 import { MESSAGE } from '../../common/variables/commonVariables';
 import FunctionsContext from '../context/FunctionsContext';
-import { showMessage } from '../../utilities/feUtilities';
+import { showMessage, getAppLocation } from '../../utilities/feUtilities';
 import './styles/FolderCard.styled.scss';
 
 interface ContextMenuBody {
@@ -47,9 +46,7 @@ interface FolderCard {
   addToSelectedList: (folderLocation: string) => void;
   isBeingSelected: boolean;
 }
-
-const { app } = remote;
-const defaultThumbnail = `${app.getAppPath()}\\.webpack\\renderer\\Asset\\default-thumbnail.jpg`;
+const defaultThumbnail = `${getAppLocation()}\\.webpack\\renderer\\Asset\\default-thumbnail.jpg`;
 
 const FolderCard = ({
   id,

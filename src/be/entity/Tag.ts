@@ -385,4 +385,28 @@ export default class Tag {
       };
     }
   };
+
+  clear = async (): Promise<QueryResult> => {
+    const unusedTags = await getRepository(Tag)
+      .createQueryBuilder('tag')
+      .leftJoin('tag.Folders', 'folder')
+      .where('folder.FolderLocation IS NULL')
+      .getMany();
+
+    try {
+      const manager = getManager();
+      await manager.remove(unusedTags);
+      return {
+        message: MESSAGE.SUCCESS,
+        status: StatusCode.Success
+      };
+    } catch (error) {
+      console.error('CLEAR TAGS ERROR:', error);
+      logErrors(error.message, error.stack);
+      return {
+        message: error.message,
+        status: StatusCode.DbError
+      };
+    }
+  };
 }

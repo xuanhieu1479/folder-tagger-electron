@@ -7,7 +7,7 @@ import {
   importFolders,
   clearFoldersUpdateThumbnails
 } from '../redux/folder/folderAction';
-import { calculateTagRelations } from '../redux/tag/tagAction';
+import { calculateTagRelations, clearUnusedTags } from '../redux/tag/tagAction';
 
 const initIpcEventListeners = (
   dispatch: Dispatch,
@@ -30,6 +30,9 @@ const initIpcEventListeners = (
   ipcRenderer.on(IpcEvent.ClearFoldersUpdateThumbnails, () => {
     clearFoldersUpdateThumbnails(dispatch);
   });
+  ipcRenderer.on(IpcEvent.ClearUnusedTags, () => {
+    clearUnusedTags(dispatch);
+  });
   ipcRenderer.on(IpcEvent.CalculateTagRelations, () => {
     calculateTagRelations(dispatch);
   });
@@ -40,6 +43,8 @@ const clearIpcEventListerners = (): void => {
   ipcRenderer.removeAllListeners(IpcEvent.OpenSetting);
   ipcRenderer.removeAllListeners(IpcEvent.ImportData);
   ipcRenderer.removeAllListeners(IpcEvent.ExportData);
+  ipcRenderer.removeAllListeners(IpcEvent.ClearFoldersUpdateThumbnails);
+  ipcRenderer.removeAllListeners(IpcEvent.ClearUnusedTags);
   ipcRenderer.removeAllListeners(IpcEvent.CalculateTagRelations);
 };
 
