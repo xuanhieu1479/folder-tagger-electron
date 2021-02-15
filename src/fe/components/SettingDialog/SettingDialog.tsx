@@ -3,11 +3,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Dialog, Tabs, Tab, TabId, Button, Intent } from '@blueprintjs/core';
 import {
   RootState,
-  SettingReducer,
-  SettingDefaultValue
+  SettingReducer
 } from '../../../common/interfaces/feInterfaces';
-import { ELEMENT_ID } from '../../../common/variables/commonVariables';
+import { ELEMENT_ID, MESSAGE } from '../../../common/variables/commonVariables';
+import {
+  fileExists,
+  getFolderExtension
+} from '../../../utilities/directoryUtilities';
+import { showMessage } from '../../../utilities/feUtilities';
 import SettingDefaultValues from './SettingDefaultValue';
+import SettingShortcuts from './SettingShortcuts';
 import { updateSettings } from '../../redux/setting/settingAction';
 import './SettingDialog.styled.scss';
 
@@ -16,6 +21,7 @@ interface SettingDialog {
   onClose: () => void;
   title: string;
 }
+const defaultSelectedTabId = ELEMENT_ID.SETTING_DIALOG_TABS.defaultValue;
 
 const SettingDialog = ({
   isOpen,
@@ -23,20 +29,17 @@ const SettingDialog = ({
   title
 }: SettingDialog): ReactElement => {
   const dispatch = useDispatch();
-  const [selectecdTabId, setSelectedTabId] = useState<TabId>(
-    ELEMENT_ID.SETTING_DIALOG_TABS.defaultValue
+  const [selectedTabId, setSelectedTabId] = useState<TabId>(
+    defaultSelectedTabId
   );
   const previousSettings = useSelector((state: RootState) => state.setting);
   const [settings, setSettings] = useState<SettingReducer>({
     ...previousSettings
   });
-  const defaultValueSettings: SettingDefaultValue = {
-    defaultCategory: settings.defaultCategory,
-    defaultLanguage: settings.defaultLanguage
-  };
 
   useEffect(() => {
     setSettings(previousSettings);
+    setSelectedTabId(defaultSelectedTabId);
   }, [isOpen]);
 
   const onChangeTab = (newTabId: TabId) => {
@@ -48,6 +51,21 @@ const SettingDialog = ({
   };
 
   const onSave = () => {
+    const { defaultExternalProgram } = settings.shortcut;
+    const externalProgramPathHasChange =
+      defaultExternalProgram !==
+      previousSettings.shortcut.defaultExternalProgram;
+    if (externalProgramPathHasChange) {
+      if (!fileExists(defaultExternalProgram)) {
+        showMessage.error(MESSAGE.EXTERNAL_PROGRAM_PATH_INCORRECT);
+        setSelectedTabId(ELEMENT_ID.SETTING_DIALOG_TABS.shortcut);
+        return;
+      } else if (getFolderExtension(defaultExternalProgram) !== 'exe') {
+        showMessage.error(MESSAGE.EXTERNAL_PROGRAM_INVALID);
+        setSelectedTabId(ELEMENT_ID.SETTING_DIALOG_TABS.shortcut);
+        return;
+      }
+    }
     updateSettings(dispatch, settings);
     onClose();
   };
@@ -62,7 +80,7 @@ const SettingDialog = ({
       <Tabs
         large={true}
         id={ELEMENT_ID.SETTING_DIALOG_TABS.container}
-        selectedTabId={selectecdTabId}
+        selectedTabId={selectedTabId}
         onChange={onChangeTab}
       >
         <Tab
@@ -71,7 +89,19 @@ const SettingDialog = ({
           panel={
             <div className="setting-dialog_tab-panel">
               <SettingDefaultValues
-                defaultValueSettings={defaultValueSettings}
+                defaultValueSettings={{ ...settings.defaultValue }}
+                onUpdateSettings={onUpdateSettings}
+              />
+            </div>
+          }
+        />
+        <Tab
+          id={ELEMENT_ID.SETTING_DIALOG_TABS.shortcut}
+          title="Shortcut"
+          panel={
+            <div className="setting-dialog_tab-panel">
+              <SettingShortcuts
+                shortcutSettings={{ ...settings.shortcut }}
                 onUpdateSettings={onUpdateSettings}
               />
             </div>

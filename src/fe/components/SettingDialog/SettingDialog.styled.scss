@@ -5,6 +5,9 @@
   .bp3-tabs {
     padding: 5px 25px;
   }
+  .bp3-tab:focus {
+    outline: unset;
+  }
   .setting-dialog_tab-panel {
     height: 300px;
     display: flex;
@@ -17,13 +20,14 @@
       margin-bottom: 20px;
 
       .setting-dialog_tab-panel_row_title {
-        width: 50px;
+        width: 75px;
         font-size: 16px;
         text-align: right;
+        margin-right: 30px;
+        text-align: left;
       }
-      .setting-dialog_tab-panel_row_radios {
+      .setting-dialog_tab-panel_row_content {
         flex: 1;
-        margin-left: 40px;
       }
       .setting-dialog_tab-panel_radio {
         text-transform: capitalize;

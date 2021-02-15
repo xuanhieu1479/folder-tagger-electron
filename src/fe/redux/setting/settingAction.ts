@@ -14,8 +14,8 @@ const getSettings = (dispatch: Dispatch): void => {
     } else {
       const data = ini.parse(fs.readFileSync(SETTING.PATH).toString());
       const settings: SettingReducer = {
-        defaultCategory: data.defaultCategory,
-        defaultLanguage: data.defaultLanguage
+        defaultValue: { ...SETTING.DEFAULT.defaultValue, ...data.defaultValue },
+        shortcut: { ...SETTING.DEFAULT.shortcut, ...data.shortcut }
       };
       updateSettings(dispatch, settings);
     }

@@ -9,8 +9,13 @@ const SETTING = {
   NAME,
   PATH,
   DEFAULT: {
-    defaultCategory: '',
-    defaultLanguage: ''
+    defaultValue: {
+      defaultCategory: '',
+      defaultLanguage: ''
+    },
+    shortcut: {
+      defaultExternalProgram: ''
+    }
   },
   RELATION_PATH
 };

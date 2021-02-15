@@ -31,12 +31,17 @@ interface TagReducer {
   relations: TagRelations;
   clipboard: Tag[];
 }
-// For the moment Setting only consists of default values.
-// But it probably will be expanded soon.
-type SettingReducer = SettingDefaultValue;
+interface SettingReducer {
+  defaultValue: SettingDefaultValue;
+  shortcut: SettingShortcut;
+}
+
 interface SettingDefaultValue {
   defaultCategory: string;
   defaultLanguage: string;
+}
+interface SettingShortcut {
+  defaultExternalProgram: string;
 }
 
 interface DialogContext {
@@ -60,5 +65,6 @@ export {
   TagReducer,
   SettingReducer,
   SettingDefaultValue,
+  SettingShortcut,
   FunctionsContext
 };

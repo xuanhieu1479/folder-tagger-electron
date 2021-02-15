@@ -33,6 +33,9 @@ const writeToFile = (
 const getFolderName = (folderLocation: string): string => {
   return folderLocation.split('\\').pop() || 'Error Name';
 };
+const getFolderExtension = (folderLocation: string): string => {
+  return folderLocation.split('.').pop() || 'Error Extension';
+};
 const getFolderThumbnail = (folderLocation: string): string | undefined => {
   const defaultThumbnail = `${folderLocation}\\folder.jpg`;
   if (fs.existsSync(defaultThumbnail)) return defaultThumbnail;
@@ -48,5 +51,6 @@ export {
   fileExists,
   writeToFile,
   getFolderName,
+  getFolderExtension,
   getFolderThumbnail
 };

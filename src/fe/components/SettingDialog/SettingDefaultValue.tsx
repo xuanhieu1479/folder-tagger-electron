@@ -1,11 +1,14 @@
 import React, { ReactElement } from 'react';
 import { RadioGroup, Radio } from '@blueprintjs/core';
-import { SettingDefaultValue } from '../../../common/interfaces/feInterfaces';
+import {
+  SettingReducer,
+  SettingDefaultValue
+} from '../../../common/interfaces/feInterfaces';
 import { SEED_DATA } from '../../../common/variables/commonVariables';
 
 interface SettingDefaultValues {
   defaultValueSettings: SettingDefaultValue;
-  onUpdateSettings: (newSettings: SettingDefaultValue) => void;
+  onUpdateSettings: (newSettings: Partial<SettingReducer>) => void;
 }
 
 const DefaultValueRadio = (): ReactElement => {
@@ -21,23 +24,29 @@ const SettingDefaultValues = ({
   const { defaultCategory, defaultLanguage } = defaultValueSettings;
 
   const onChangeCategoryRadio = (event: React.FormEvent<HTMLInputElement>) => {
-    onUpdateSettings({
-      defaultCategory: event.currentTarget.value,
-      defaultLanguage
-    });
+    const newSettings = {
+      defaultValue: {
+        defaultCategory: event.currentTarget.value,
+        defaultLanguage
+      }
+    };
+    onUpdateSettings(newSettings);
   };
   const onChangeLanguageRadio = (event: React.FormEvent<HTMLInputElement>) => {
-    onUpdateSettings({
-      defaultCategory,
-      defaultLanguage: event.currentTarget.value
-    });
+    const newSettings = {
+      defaultValue: {
+        defaultCategory,
+        defaultLanguage: event.currentTarget.value
+      }
+    };
+    onUpdateSettings(newSettings);
   };
 
   return (
     <>
       <div className="setting-dialog_tab-panel_row">
         <div className="setting-dialog_tab-panel_row_title">Category</div>
-        <div className="setting-dialog_tab-panel_row_radios">
+        <div className="setting-dialog_tab-panel_row_content">
           <RadioGroup
             inline={true}
             onChange={onChangeCategoryRadio}
@@ -57,7 +66,7 @@ const SettingDefaultValues = ({
       </div>
       <div className="setting-dialog_tab-panel_row">
         <div className="setting-dialog_tab-panel_row_title">Language</div>
-        <div className="setting-dialog_tab-panel_row_radios">
+        <div className="setting-dialog_tab-panel_row_content">
           <RadioGroup
             inline={true}
             onChange={onChangeLanguageRadio}
