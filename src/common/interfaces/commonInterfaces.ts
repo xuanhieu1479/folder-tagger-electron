@@ -12,14 +12,7 @@ interface FolderFilterParams {
   isRandom?: boolean;
   category?: string;
   language?: string;
-  tags?: {
-    name?: string[];
-    author?: string[];
-    parody?: string[];
-    character?: string[];
-    genre?: string[];
-    wildcard?: string[];
-  };
+  tags?: Partial<Record<SearchTagType, string[]>>;
 }
 interface TransferData {
   FolderLocation: string;
@@ -33,6 +26,13 @@ interface TransferData {
  * Tag interfaces
  */
 type BreakDownTagType = 'author' | 'parody' | 'character' | 'genre';
+type SearchTagType =
+  | 'name'
+  | 'author'
+  | 'parody'
+  | 'character'
+  | 'genre'
+  | 'wildcard';
 interface Tag {
   tagType: string;
   tagName: string;
@@ -48,6 +48,7 @@ export {
   FolderFilterParams,
   TransferData,
   BreakDownTagType,
+  SearchTagType,
   Tag,
   TagRelations
 };

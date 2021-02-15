@@ -37,6 +37,7 @@ interface SettingReducer {
 }
 
 interface SettingDefaultValue {
+  defaultSearchParams: string;
   defaultCategory: string;
   defaultLanguage: string;
 }
@@ -49,8 +50,8 @@ interface DialogContext {
   onOpenClipboardDialog: () => void;
 }
 interface DirectoryContext {
-  onOpenFolderLocation: () => void;
-  onPassSelectedFolderToExternalProgram: () => void;
+  onOpenFolderInExplorer: () => void;
+  onOpenFolderInExternalProgram: () => void;
 }
 interface FunctionsContext {
   dialog: DialogContext;

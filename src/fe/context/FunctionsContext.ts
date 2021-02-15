@@ -7,8 +7,8 @@ const defaultContextValue: FunctionsContext = {
     onOpenClipboardDialog: () => undefined
   },
   directory: {
-    onOpenFolderLocation: () => undefined,
-    onPassSelectedFolderToExternalProgram: () => undefined
+    onOpenFolderInExplorer: () => undefined,
+    onOpenFolderInExternalProgram: () => undefined
   }
 };
 const FunctionsContext = createContext(defaultContextValue);

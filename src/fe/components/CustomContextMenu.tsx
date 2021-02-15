@@ -14,19 +14,15 @@ const CustomContextMenu = ({
   directory
 }: CustomContextMenu): React.ReactElement => {
   const { onOpenFolderDialog, onOpenClipboardDialog } = dialog;
-  const {
-    onOpenFolderLocation,
-    onPassSelectedFolderToExternalProgram
-  } = directory;
+  const { onOpenFolderInExplorer, onOpenFolderInExternalProgram } = directory;
 
   const onClickAddTags = () => onOpenFolderDialog(TagAction.Add);
   const onClickEditTags = () => onOpenFolderDialog(TagAction.Edit);
   const onClickRemoveTags = () => onOpenFolderDialog(TagAction.Remove);
   const onClickCopyTags = () => onOpenClipboardDialog();
   const onClickRemoveAllTags = () => removeAllTagsFromFolders(selectedFolders);
-  const onClickOpenFolder = () => onOpenFolderLocation();
-  const onClickExecuteEternalProgram = () =>
-    onPassSelectedFolderToExternalProgram();
+  const onClickOpenFolder = () => onOpenFolderInExplorer();
+  const onClickExecuteEternalProgram = () => onOpenFolderInExternalProgram();
 
   return (
     <Menu>

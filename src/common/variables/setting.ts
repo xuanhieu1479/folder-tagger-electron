@@ -10,6 +10,7 @@ const SETTING = {
   PATH,
   DEFAULT: {
     defaultValue: {
+      defaultSearchParams: '',
       defaultCategory: '',
       defaultLanguage: ''
     },

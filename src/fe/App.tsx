@@ -14,12 +14,15 @@ axiosConfig();
 const App = (): ReactElement => {
   const dispatch = useDispatch();
   const [isSettingDialogOpen, setSettingDialogOpen] = useState(false);
+  const [isSettingsLoaded, setSettingsLoaded] = useState(false);
 
   useEffect(() => {
+    const onSuccessGetSettings = () => setSettingsLoaded(true);
+
     initIpcEventListeners(dispatch, onOpenSettingDialog);
     getCategories(dispatch);
     getLanguages(dispatch);
-    getSettings(dispatch);
+    getSettings(dispatch, onSuccessGetSettings);
     loadTagRelations(dispatch);
 
     return () => {
@@ -38,7 +41,9 @@ const App = (): ReactElement => {
 
   return (
     <>
-      <FoldersDisplay openSettingDialog={onOpenSettingDialog} />
+      {isSettingsLoaded ? (
+        <FoldersDisplay openSettingDialog={onOpenSettingDialog} />
+      ) : null}
       <SettingDialog
         isOpen={isSettingDialogOpen}
         onClose={onCloseSettingDialog}

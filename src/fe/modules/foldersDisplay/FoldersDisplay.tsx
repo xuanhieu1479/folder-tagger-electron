@@ -24,7 +24,8 @@ import { getTags } from '../../redux/tag/tagAction';
 import {
   showMessage,
   openDirectory,
-  runExternalProgram
+  runExternalProgram,
+  generateTagsFromSearchKeywords
 } from '../../../utilities/feUtilities';
 import './FoldersDisplay.styled.scss';
 
@@ -42,14 +43,19 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     (state: RootState) => state.folder
   );
   const { isDialogOpen } = useSelector((state: RootState) => state.status);
+  const { defaultValue, shortcut } = useSelector(
+    (state: RootState) => state.setting
+  );
   const selectedFoldersRef = useRef(selectedFolders);
   const foldersListRef = useRef(foldersList);
   const isDialogOpenRef = useRef(isDialogOpen);
+  const externalProgramPathRef = useRef(shortcut.defaultExternalProgram);
   const [params, setParams] = useState(PAGINATION.DEFAULT);
   const [folderDialogParams, setFolderDialogParams] = useState({
     ...defaultFolderDialogParams
   });
   const [isClipboardDialogOpen, setClipboardDialogOpen] = useState(false);
+  const [isFirstRender, setFirstRender] = useState(true);
 
   useEffect(() => {
     const keyDownListerner = async (event: KeyboardEvent) => {
@@ -77,10 +83,10 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
             onOpenClipboardDialog();
             break;
           case 'w':
-            onOpenFolderLocation();
+            onOpenFolderInExplorer();
             break;
           case 'q':
-            onPassSelectedFolderToExternalProgram();
+            onOpenFolderInExternalProgram();
             break;
         }
       } else {
@@ -164,14 +170,23 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
         ?.scrollTo({ top: 0 });
     };
 
-    getNewFolders();
+    const { defaultSearchParams } = defaultValue;
+    if (!defaultSearchParams || !isFirstRender) getNewFolders();
+    else {
+      const initialSearchParams = generateTagsFromSearchKeywords(
+        defaultSearchParams
+      );
+      getFolders(dispatch, { ...params, tags: initialSearchParams });
+      setFirstRender(false);
+    }
   }, [params]);
 
   useEffect(() => {
     selectedFoldersRef.current = selectedFolders;
     foldersListRef.current = foldersList;
     isDialogOpenRef.current = isDialogOpen;
-  }, [selectedFolders, foldersList, isDialogOpen]);
+    externalProgramPathRef.current = shortcut.defaultExternalProgram;
+  }, [selectedFolders, foldersList, isDialogOpen, shortcut]);
 
   useEffect(() => {
     if (!folderDialogParams.isOpen) getTags(dispatch);
@@ -245,15 +260,16 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     onCloseDialog(dispatch);
   };
 
-  const onOpenFolderLocation = () => {
+  const onOpenFolderInExplorer = () => {
     const selectedFolders = selectedFoldersRef.current;
     if (selectedFolders.length === 1) openDirectory(selectedFolders[0]);
   };
-  const onPassSelectedFolderToExternalProgram = () => {
+  const onOpenFolderInExternalProgram = () => {
     const selectedFolders = selectedFoldersRef.current;
-    const externalProgramPath =
-      'E:\\Data\\Programs\\Basic Programs\\Mangareader\\mangareader.exe';
-    if (selectedFolders.length === 1)
+    const externalProgramPath = externalProgramPathRef.current;
+    if (!externalProgramPath)
+      showMessage.info(MESSAGE.EXTERNAL_PROGRAM_UNAVAILABLE);
+    else if (selectedFolders.length === 1)
       runExternalProgram(externalProgramPath, [selectedFolders[0]]);
   };
 
@@ -265,8 +281,8 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
           onOpenClipboardDialog
         },
         directory: {
-          onOpenFolderLocation,
-          onPassSelectedFolderToExternalProgram
+          onOpenFolderInExplorer,
+          onOpenFolderInExternalProgram
         }
       }}
     >

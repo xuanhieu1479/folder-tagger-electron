@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { RadioGroup, Radio } from '@blueprintjs/core';
+import { RadioGroup, Radio, InputGroup } from '@blueprintjs/core';
 import {
   SettingReducer,
   SettingDefaultValue
@@ -21,29 +21,45 @@ const SettingDefaultValues = ({
   defaultValueSettings,
   onUpdateSettings
 }: SettingDefaultValues): ReactElement => {
-  const { defaultCategory, defaultLanguage } = defaultValueSettings;
+  const {
+    defaultSearchParams,
+    defaultCategory,
+    defaultLanguage
+  } = defaultValueSettings;
+
+  const onChangeSearchParamsInput = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.currentTarget;
+    onUpdateSettings({
+      defaultValue: { ...defaultValueSettings, defaultSearchParams: value }
+    });
+  };
 
   const onChangeCategoryRadio = (event: React.FormEvent<HTMLInputElement>) => {
-    const newSettings = {
-      defaultValue: {
-        defaultCategory: event.currentTarget.value,
-        defaultLanguage
-      }
-    };
-    onUpdateSettings(newSettings);
+    const { value } = event.currentTarget;
+    onUpdateSettings({
+      defaultValue: { ...defaultValueSettings, defaultCategory: value }
+    });
   };
   const onChangeLanguageRadio = (event: React.FormEvent<HTMLInputElement>) => {
-    const newSettings = {
-      defaultValue: {
-        defaultCategory,
-        defaultLanguage: event.currentTarget.value
-      }
-    };
-    onUpdateSettings(newSettings);
+    const { value } = event.currentTarget;
+    onUpdateSettings({
+      defaultValue: { ...defaultValueSettings, defaultLanguage: value }
+    });
   };
 
   return (
     <>
+      <div className="setting-dialog_tab-panel_row">
+        <div className="setting-dialog_tab-panel_row_title">Search</div>
+        <div className="setting-dialog_tab-panel_row_content">
+          <InputGroup
+            value={defaultSearchParams}
+            onChange={onChangeSearchParamsInput}
+          />
+        </div>
+      </div>
       <div className="setting-dialog_tab-panel_row">
         <div className="setting-dialog_tab-panel_row_title">Category</div>
         <div className="setting-dialog_tab-panel_row_content">

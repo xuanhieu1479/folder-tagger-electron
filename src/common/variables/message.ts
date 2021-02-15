@@ -7,6 +7,8 @@ const MESSAGE = {
     `${folderlocation}\nalready exists in database`,
   DIRECTORY_DOES_NOT_EXIST: (directoryPath: string): string =>
     `${directoryPath}\ndoes not exist!`,
+  EXTERNAL_PROGRAM_UNAVAILABLE:
+    'You have not set up an external program. Please do so in settings menu.',
   EXTERNAL_PROGRAM_PATH_INCORRECT: 'External program path is incorrect!',
   EXTERNAL_PROGRAM_INVALID: 'Provided path is not a program!',
   INVALID_PARAMS: 'The parameters are invalid',

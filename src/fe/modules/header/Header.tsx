@@ -4,6 +4,7 @@ import { InputGroup, Button, Intent, Icon, Tooltip } from '@blueprintjs/core';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import { PAGINATION, SEARCH } from '../../../common/variables/commonVariables';
 import { CustomSuggest } from '../../components/commonComponents';
+import { generateTagsFromSearchKeywords } from '../../../utilities/feUtilities';
 import './Header.styled.scss';
 
 interface Header {
@@ -12,23 +13,7 @@ interface Header {
   allCategories: string[];
   allLanguages: string[];
 }
-type TagKeyType =
-  | 'name'
-  | 'author'
-  | 'parody'
-  | 'character'
-  | 'genre'
-  | 'wildcard';
 const allOption = 'all';
-const {
-  COMMON_TERMS,
-  END_OF_TAGS_CHARACTER,
-  MINIMUM_LETTERS,
-  TAG_KEYS
-} = SEARCH;
-const alternativeEndOfTagsRegex = `(${TAG_KEYS.map(
-  (tagKey, index) => `${index > 0 ? '|' : ''}${tagKey}:`
-).join('')})`;
 
 const Header = ({
   params,
@@ -56,64 +41,12 @@ const Header = ({
   };
 
   const onSearch = () => {
-    const tags = generateTagsFromSearchKeywords();
+    const tags = generateTagsFromSearchKeywords(searchKeywords);
     updateParams({ tags, isRandom: false, ...PAGINATION.DEFAULT });
   };
   const onRandomize = () => {
-    const tags = generateTagsFromSearchKeywords();
+    const tags = generateTagsFromSearchKeywords(searchKeywords);
     updateParams({ tags, isRandom: true, ...PAGINATION.DEFAULT });
-  };
-
-  const sanitizeSearchKeywords = (
-    searchQuery: string,
-    miniMumLetters = MINIMUM_LETTERS
-  ) => {
-    return [
-      ...new Set(
-        searchQuery
-          .trim()
-          .replace(/\s+/, ' ')
-          .split(' ')
-          .filter(
-            tag => tag.length >= miniMumLetters && !COMMON_TERMS.includes(tag)
-          )
-      )
-    ];
-  };
-
-  const generateTagsFromSearchKeywords = () => {
-    let searchQuery = searchKeywords;
-    const tags: Partial<Record<TagKeyType, string[]>> = {};
-    const getTagsByTagKeyFromSearchKeywords = (tagKey: string) => {
-      const tagKeyRegex = `${tagKey}:`;
-      const searchRegex = new RegExp(
-        `(?<=${tagKeyRegex})(.*?)(?=(\\${END_OF_TAGS_CHARACTER}|${alternativeEndOfTagsRegex}|$))`,
-        'gi'
-      );
-      searchQuery = searchQuery
-        .replace(searchRegex, match => {
-          switch (tagKey) {
-            case 'parody':
-            case 'character':
-              tags[tagKey] = sanitizeSearchKeywords(match, 2);
-              break;
-            case 'name':
-            case 'author':
-            case 'genre':
-              tags[tagKey] = sanitizeSearchKeywords(match);
-              break;
-          }
-          return '';
-        })
-        .replace(tagKeyRegex, '');
-    };
-
-    TAG_KEYS.forEach(tagKey => getTagsByTagKeyFromSearchKeywords(tagKey));
-    const wildcardTags = sanitizeSearchKeywords(
-      searchQuery.replace(END_OF_TAGS_CHARACTER, '')
-    );
-    if (!_.isEmpty(wildcardTags)) tags['wildcard'] = wildcardTags;
-    return tags;
   };
 
   return (

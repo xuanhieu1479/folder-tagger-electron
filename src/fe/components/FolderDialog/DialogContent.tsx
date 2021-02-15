@@ -34,6 +34,7 @@ const DialogContent = ({
     (state: RootState) => state.folder
   );
   const { relations, clipboard } = useSelector((state: RootState) => state.tag);
+  const { defaultValue } = useSelector((state: RootState) => state.setting);
   const { parody_character, author_parody, author_genre } = relations;
   const { allTags } = useSelector((state: RootState) => state.tag);
   const [tagSuggestions, setTagSuggestions] = useState({
@@ -99,7 +100,15 @@ const DialogContent = ({
       }
     };
 
-    if (dialogType === TagAction.Edit) getSelectedFolderTags();
+    switch (dialogType) {
+      case TagAction.Edit:
+        getSelectedFolderTags();
+        break;
+      case TagAction.Add:
+        setSelectedCategory(defaultValue.defaultCategory);
+        setSelectedLanguage(defaultValue.defaultLanguage);
+        break;
+    }
     window.addEventListener('keydown', keyDownListerner);
     return () => window.removeEventListener('keydown', keyDownListerner);
   }, []);

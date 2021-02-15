@@ -7,7 +7,7 @@ import { UPDATE_SETTINGS } from './settingActionType';
 import { writeToFile, fileExists } from '../../../utilities/utilityFunctions';
 import { showMessage } from '../../../utilities/feUtilities';
 
-const getSettings = (dispatch: Dispatch): void => {
+const getSettings = (dispatch: Dispatch, onSuccess: () => void): void => {
   try {
     if (!fileExists(SETTING.PATH)) {
       updateSettings(dispatch);
@@ -18,6 +18,7 @@ const getSettings = (dispatch: Dispatch): void => {
         shortcut: { ...SETTING.DEFAULT.shortcut, ...data.shortcut }
       };
       updateSettings(dispatch, settings);
+      onSuccess();
     }
   } catch (error) {
     showMessage.error(error);
