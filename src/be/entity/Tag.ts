@@ -179,6 +179,13 @@ export default class Tag {
     // Since they all will be overwritten anyway.
     if (action !== TagAction.Edit)
       insertFoldersQuery.leftJoinAndSelect('folder.Tags', 'Tag');
+    // Need this to avoid overwriting current category or language
+    if (action === TagAction.Add) {
+      if (category)
+        insertFoldersQuery.leftJoinAndSelect('folder.Category', 'category');
+      if (language)
+        insertFoldersQuery.leftJoinAndSelect('folder.Language', 'language');
+    }
 
     const insertFolders = await insertFoldersQuery.getMany();
     const newCategory = category
@@ -203,14 +210,16 @@ export default class Tag {
         .whereInIds(tagIds)
         .getMany();
       for (const folder of insertFolders) {
-        if (newCategory) folder.Category = newCategory;
-        if (newLanguage) folder.Language = newLanguage;
         switch (action) {
           case TagAction.Add:
             folder.Tags = [...folder.Tags, ...foundTags, ...newlyCreatedTags];
+            if (newCategory && !folder.Category) folder.Category = newCategory;
+            if (newLanguage && !folder.Language) folder.Language = newLanguage;
             break;
           case TagAction.Edit:
             folder.Tags = [...foundTags, ...newlyCreatedTags];
+            if (newCategory) folder.Category = newCategory;
+            if (newLanguage) folder.Language = newLanguage;
             break;
           case TagAction.Remove:
             _.pullAllBy(folder.Tags, foundTags, 'TagId');
