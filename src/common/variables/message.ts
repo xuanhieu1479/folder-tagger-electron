@@ -5,6 +5,8 @@ const MESSAGE = {
   FOLDER_ALREADY_EXISTS: 'This directory already exists in database',
   SPECIFIC_FOLDER_ALREADY_EXISTS: (folderlocation: string): string =>
     `${folderlocation}\nalready exists in database`,
+  DIRECTORY_DOES_NOT_EXIST: (directoryPath: string): string =>
+    `${directoryPath}\ndoes not exist!`,
   INVALID_PARAMS: 'The parameters are invalid',
   CANNOT_EDIT_MANY_FOLDERS: 'Only one folder can be edited at a time!',
   CANNOT_COPY_TAG_MANY_FOLDERS: 'Cannot copy tags from multiple folders!',

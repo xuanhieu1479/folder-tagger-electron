@@ -21,7 +21,11 @@ import { onOpenDialog, onCloseDialog } from '../../redux/status/statusAction';
 import { SELECT_FOLDERS } from '../../redux/folder/folderActionType';
 import { getFolders } from '../../redux/folder/folderAction';
 import { getTags } from '../../redux/tag/tagAction';
-import { showMessage } from '../../../utilities/feUtilities';
+import {
+  showMessage,
+  openDirectory,
+  runExternalProgram
+} from '../../../utilities/feUtilities';
 import './FoldersDisplay.styled.scss';
 
 interface FolderDisplay {
@@ -48,7 +52,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
   const [isClipboardDialogOpen, setClipboardDialogOpen] = useState(false);
 
   useEffect(() => {
-    const keyDownListerner = (event: KeyboardEvent) => {
+    const keyDownListerner = async (event: KeyboardEvent) => {
       const isDialogOpen = isDialogOpenRef.current;
       const selectedFolders = selectedFoldersRef.current;
       const foldersList = foldersListRef.current.map(folder => folder.location);
@@ -70,9 +74,13 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
             openSettingDialog();
             break;
           case 'c':
-            if (selectedFolders.length === 1) onOpenClipboardDialog();
-            if (selectedFolders.length > 1)
-              showMessage.error(MESSAGE.CANNOT_COPY_TAG_MANY_FOLDERS);
+            onOpenClipboardDialog();
+            break;
+          case 'w':
+            onOpenFolderLocation();
+            break;
+          case 'q':
+            onPassSelectedFolderToExternalProgram();
             break;
         }
       } else {
@@ -224,17 +232,43 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
   };
 
   const onOpenClipboardDialog = () => {
-    onOpenDialog(dispatch);
-    setClipboardDialogOpen(true);
+    const selectedFolders = selectedFoldersRef.current;
+    if (selectedFolders.length > 1)
+      showMessage.error(MESSAGE.CANNOT_COPY_TAG_MANY_FOLDERS);
+    else if (selectedFolders.length === 1) {
+      onOpenDialog(dispatch);
+      setClipboardDialogOpen(true);
+    }
   };
   const onCloseClipboardDialog = () => {
     setClipboardDialogOpen(false);
     onCloseDialog(dispatch);
   };
 
+  const onOpenFolderLocation = () => {
+    const selectedFolders = selectedFoldersRef.current;
+    if (selectedFolders.length === 1) openDirectory(selectedFolders[0]);
+  };
+  const onPassSelectedFolderToExternalProgram = () => {
+    const selectedFolders = selectedFoldersRef.current;
+    const externalProgramPath =
+      'E:\\Data\\Programs\\Basic Programs\\Mangareader\\mangareader.exe';
+    if (selectedFolders.length === 1)
+      runExternalProgram(externalProgramPath, [selectedFolders[0]]);
+  };
+
   return (
     <FunctionsContext.Provider
-      value={{ dialog: { onOpenFolderDialog, onOpenClipboardDialog } }}
+      value={{
+        dialog: {
+          onOpenFolderDialog,
+          onOpenClipboardDialog
+        },
+        directory: {
+          onOpenFolderLocation,
+          onPassSelectedFolderToExternalProgram
+        }
+      }}
     >
       <section className="folder-display_container">
         <Header

@@ -37,8 +37,7 @@ const FolderCard = ({
 }: FolderCard): ReactElement => {
   const { selectedFolders } = useSelector((state: RootState) => state.folder);
   const context = useContext(FunctionsContext);
-  const { dialog } = context;
-  const { onOpenFolderDialog, onOpenClipboardDialog } = dialog;
+  const { dialog, directory } = context;
   const isBeingSelectedRef = useRef(isBeingSelected);
   const selectedFoldersRef = useRef(selectedFolders);
 
@@ -50,8 +49,8 @@ const FolderCard = ({
         ContextMenu.show(
           createElement(CustomContextMenu, {
             selectedFolders: selectedFoldersRef.current,
-            onOpenFolderDialog,
-            onOpenClipboardDialog
+            dialog,
+            directory
           }),
           {
             left: event.clientX,

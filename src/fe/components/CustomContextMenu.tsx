@@ -1,27 +1,46 @@
 import React from 'react';
 import { Menu, MenuItem, Divider } from '@blueprintjs/core';
+import { FunctionsContext } from '../../common/interfaces/feInterfaces';
 import { TagAction } from '../../common/enums/commonEnums';
 import { removeAllTagsFromFolders } from '../redux/tag/tagAction';
 
-interface CustomContextMenu {
+interface CustomContextMenu extends FunctionsContext {
   selectedFolders: string[];
-  onOpenFolderDialog: (dialogType: TagAction) => void;
-  onOpenClipboardDialog: () => void;
 }
 
 const CustomContextMenu = ({
   selectedFolders,
-  onOpenFolderDialog,
-  onOpenClipboardDialog
+  dialog,
+  directory
 }: CustomContextMenu): React.ReactElement => {
+  const { onOpenFolderDialog, onOpenClipboardDialog } = dialog;
+  const {
+    onOpenFolderLocation,
+    onPassSelectedFolderToExternalProgram
+  } = directory;
+
   const onClickAddTags = () => onOpenFolderDialog(TagAction.Add);
   const onClickEditTags = () => onOpenFolderDialog(TagAction.Edit);
   const onClickRemoveTags = () => onOpenFolderDialog(TagAction.Remove);
   const onClickCopyTags = () => onOpenClipboardDialog();
   const onClickRemoveAllTags = () => removeAllTagsFromFolders(selectedFolders);
+  const onClickOpenFolder = () => onOpenFolderLocation();
+  const onClickExecuteEternalProgram = () =>
+    onPassSelectedFolderToExternalProgram();
 
   return (
     <Menu>
+      <MenuItem
+        text="Open In Mangareader"
+        onClick={onClickExecuteEternalProgram}
+        label="Ctrl + Q"
+      />
+      <MenuItem
+        text="Open In Explorer"
+        onClick={onClickOpenFolder}
+        label="Ctrl + W"
+      />
+      <Divider />
       <MenuItem text="Add Tags" onClick={onClickAddTags} label="Ctrl + E" />
       <MenuItem text="Edit Tags" onClick={onClickEditTags} label="Ctrl + S" />
       <MenuItem

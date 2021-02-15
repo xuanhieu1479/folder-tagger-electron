@@ -1,4 +1,5 @@
 import { Folder, Tag, TagRelations } from './commonInterfaces';
+import { TagAction } from '../enums/commonEnums';
 
 interface RootState {
   status: StatusReducer;
@@ -33,10 +34,22 @@ interface TagReducer {
 // For the moment Setting only consists of default values.
 // But it probably will be expanded soon.
 type SettingReducer = SettingDefaultValue;
-
 interface SettingDefaultValue {
   defaultCategory: string;
   defaultLanguage: string;
+}
+
+interface DialogContext {
+  onOpenFolderDialog: (dialogType: TagAction) => void;
+  onOpenClipboardDialog: () => void;
+}
+interface DirectoryContext {
+  onOpenFolderLocation: () => void;
+  onPassSelectedFolderToExternalProgram: () => void;
+}
+interface FunctionsContext {
+  dialog: DialogContext;
+  directory: DirectoryContext;
 }
 
 export {
@@ -46,5 +59,6 @@ export {
   FolderReducer,
   TagReducer,
   SettingReducer,
-  SettingDefaultValue
+  SettingDefaultValue,
+  FunctionsContext
 };

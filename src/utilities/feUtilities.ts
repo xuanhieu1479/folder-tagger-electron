@@ -1,8 +1,11 @@
 import { remote } from 'electron';
+import exec from 'child_process';
 import { AxiosError } from 'axios';
 import { Position, Toaster, Intent } from '@blueprintjs/core';
+import { MESSAGE } from '../common/variables/commonVariables';
+import { fileExists } from './directoryUtilities';
 
-const { app, BrowserWindow } = remote;
+const { app, BrowserWindow, shell } = remote;
 const successTimeout = 1000;
 const infoTimeout = 5000;
 const errorTimeout = 2500;
@@ -46,4 +49,32 @@ const reload = (): void => {
   BrowserWindow.getFocusedWindow()?.reload();
 };
 
-export { showMessage, getAppLocation, reload };
+const openDirectory = (directoryPath: string): void => {
+  try {
+    if (!fileExists(directoryPath))
+      throw new Error(MESSAGE.DIRECTORY_DOES_NOT_EXIST(directoryPath));
+    shell.openPath(directoryPath);
+  } catch (error) {
+    showMessage.error(error);
+  }
+};
+
+const runExternalProgram = (
+  externalProgrampath: string,
+  passedArguments: string[]
+): void => {
+  try {
+    const parsedArguments = passedArguments.map(argument => `${argument}\\`);
+    exec.execFileSync(externalProgrampath, parsedArguments);
+  } catch (error) {
+    showMessage.error(error);
+  }
+};
+
+export {
+  showMessage,
+  getAppLocation,
+  reload,
+  openDirectory,
+  runExternalProgram
+};
