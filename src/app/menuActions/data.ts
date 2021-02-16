@@ -21,6 +21,10 @@ const onExportData = (): void => {
   BrowserWindow.getFocusedWindow()?.webContents.send(IpcEvent.ExportData);
 };
 
+const onManageTags = (): void => {
+  BrowserWindow.getFocusedWindow()?.webContents.send(IpcEvent.OpenManageTags);
+};
+
 const onClearFoldersUpdateThumbnails = (): void => {
   BrowserWindow.getFocusedWindow()?.webContents.send(
     IpcEvent.ClearFoldersUpdateThumbnails
@@ -33,6 +37,7 @@ const onClearUnusedTags = (): void => {
 export {
   onImportData,
   onExportData,
+  onManageTags,
   onClearFoldersUpdateThumbnails,
   onClearUnusedTags
 };

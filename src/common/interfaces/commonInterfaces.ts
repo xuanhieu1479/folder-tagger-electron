@@ -33,6 +33,7 @@ type SearchTagType =
   | 'character'
   | 'genre'
   | 'wildcard';
+type ManageTagsSortType = 'Tag Name' | 'Used Times';
 interface Tag {
   tagType: string;
   tagName: string;
@@ -42,6 +43,13 @@ interface TagRelations {
   author_parody: Record<string, string[]>;
   author_genre: Record<string, string[]>;
 }
+interface ManagedTag extends Tag {
+  usedTimes: number;
+}
+interface ManageTagsFilterParams {
+  filterBy: BreakDownTagType;
+  sortBy: ManageTagsSortType;
+}
 
 export {
   Folder,
@@ -50,5 +58,8 @@ export {
   BreakDownTagType,
   SearchTagType,
   Tag,
-  TagRelations
+  TagRelations,
+  ManagedTag,
+  ManageTagsSortType,
+  ManageTagsFilterParams
 };

@@ -3,14 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { Dialog, Checkbox, Label, Button, Intent } from '@blueprintjs/core';
 import { BreakDownTagType } from '../../common/interfaces/commonInterfaces';
-import { RootState } from '../../common/interfaces/feInterfaces';
+import { RootState, CommonDialog } from '../../common/interfaces/feInterfaces';
 import { copyTags } from '../redux/tag/tagAction';
 import './styles/ClipboardDialog.styled.scss';
 
-interface FolderDialog {
-  isOpen: boolean;
-  onClose: () => void;
-}
 const defaultCheckedValues = {
   author: true,
   parody: false,
@@ -18,7 +14,7 @@ const defaultCheckedValues = {
   genre: false
 };
 
-const FolderDialog = ({ isOpen, onClose }: FolderDialog): ReactElement => {
+const ClipboardDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
   const dispatch = useDispatch();
   const { selectedFolders } = useSelector((state: RootState) => state.folder);
   const [tagTypes, setTagTypes] = useState({
@@ -155,4 +151,4 @@ const FolderDialog = ({ isOpen, onClose }: FolderDialog): ReactElement => {
   );
 };
 
-export default FolderDialog;
+export default ClipboardDialog;

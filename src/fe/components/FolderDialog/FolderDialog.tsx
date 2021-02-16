@@ -1,12 +1,11 @@
 import React, { ReactElement } from 'react';
 import { Dialog } from '@blueprintjs/core';
+import { CommonDialog } from '../../../common/interfaces/feInterfaces';
 import { TagAction } from '../../../common/enums/commonEnums';
 import DialogContent from './DialogContent';
 import './FolderDialog.styled.scss';
 
-interface FolderDialog {
-  isOpen: boolean;
-  onClose: () => void;
+interface FolderDialog extends CommonDialog {
   dialogType: TagAction;
 }
 

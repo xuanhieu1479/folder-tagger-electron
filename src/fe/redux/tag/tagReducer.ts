@@ -1,4 +1,9 @@
-import { GET_TAGS, LOAD_TAG_RELATIONS, COPY_TAGS } from './tagActionType';
+import {
+  GET_TAGS,
+  LOAD_TAG_RELATIONS,
+  COPY_TAGS,
+  GET_MANAGED_TAGS
+} from './tagActionType';
 import {
   ReducerAction,
   TagReducer
@@ -6,8 +11,9 @@ import {
 
 export const tagInitState: TagReducer = {
   allTags: [],
-  relations: { author_genre: {}, author_parody: {}, parody_character: {} },
-  clipboard: []
+  managedTags: [],
+  clipboard: [],
+  relations: { author_genre: {}, author_parody: {}, parody_character: {} }
 };
 
 const statusReducer = (
@@ -15,7 +21,7 @@ const statusReducer = (
   action: ReducerAction
 ): TagReducer => {
   const data = action.payload || {};
-  const { allTags, relations, clipboard } = data;
+  const { allTags, relations, clipboard, managedTags } = data;
   switch (action.type) {
     case GET_TAGS:
       return { ...state, allTags };
@@ -23,6 +29,8 @@ const statusReducer = (
       return { ...state, relations };
     case COPY_TAGS:
       return { ...state, clipboard };
+    case GET_MANAGED_TAGS:
+      return { ...state, managedTags };
     default:
       return state;
   }

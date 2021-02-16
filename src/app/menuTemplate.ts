@@ -9,7 +9,8 @@ import {
   onReload,
   onExportData,
   onClearFoldersUpdateThumbnails,
-  onClearUnusedTags
+  onClearUnusedTags,
+  onManageTags
 } from './menuActions/menuActions';
 
 const menuTemplate = [
@@ -58,6 +59,10 @@ const menuTemplate = [
       {
         label: 'Export Data',
         click: onExportData
+      },
+      {
+        label: 'Manage Tags',
+        click: onManageTags
       }
     ]
   },

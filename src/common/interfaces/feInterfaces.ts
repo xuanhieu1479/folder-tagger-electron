@@ -1,4 +1,4 @@
-import { Folder, Tag, TagRelations } from './commonInterfaces';
+import { Folder, Tag, ManagedTag, TagRelations } from './commonInterfaces';
 import { TagAction } from '../enums/commonEnums';
 
 interface RootState {
@@ -28,8 +28,9 @@ interface FolderReducer {
 }
 interface TagReducer {
   allTags: Tag[];
-  relations: TagRelations;
+  managedTags: ManagedTag[];
   clipboard: Tag[];
+  relations: TagRelations;
 }
 interface SettingReducer {
   defaultValue: SettingDefaultValue;
@@ -63,6 +64,11 @@ interface FunctionsContext {
   directory: DirectoryContext;
 }
 
+interface CommonDialog {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
 export {
   RootState,
   ReducerAction,
@@ -72,5 +78,6 @@ export {
   SettingReducer,
   SettingDefaultValue,
   SettingShortcut,
-  FunctionsContext
+  FunctionsContext,
+  CommonDialog
 };

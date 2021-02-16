@@ -3,6 +3,7 @@ import { onOpenSetting, calculateTagsRelation } from './setting';
 import {
   onImportData,
   onExportData,
+  onManageTags,
   onClearFoldersUpdateThumbnails,
   onClearUnusedTags
 } from './data';
@@ -15,6 +16,7 @@ export {
   calculateTagsRelation,
   onImportData,
   onExportData,
+  onManageTags,
   onClearFoldersUpdateThumbnails,
   onClearUnusedTags,
   onOpenDevtool,

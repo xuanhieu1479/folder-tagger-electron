@@ -3,14 +3,20 @@ import axios from 'axios';
 import fs from 'fs';
 import {
   BreakDownTagType,
-  Tag
+  Tag,
+  ManageTagsFilterParams
 } from '../../../common/interfaces/commonInterfaces';
 import {
   TAG_API,
   MESSAGE,
   SETTING
 } from '../../../common/variables/commonVariables';
-import { COPY_TAGS, GET_TAGS, LOAD_TAG_RELATIONS } from './tagActionType';
+import {
+  COPY_TAGS,
+  GET_TAGS,
+  LOAD_TAG_RELATIONS,
+  GET_MANAGED_TAGS
+} from './tagActionType';
 import { startLoading, finishLoading } from '../status/statusAction';
 import { fileExists } from '../../../utilities/utilityFunctions';
 import { showMessage } from '../../../utilities/feUtilities';
@@ -148,6 +154,19 @@ const removeAllTagsFromFolders = async (
   }
 };
 
+const getManagedTags = async (
+  dispatch: Dispatch,
+  params: ManageTagsFilterParams
+): Promise<void> => {
+  try {
+    const { data } = await axios.get(TAG_API.MANAGE, { params });
+    const { managedTags } = data;
+    dispatch({ type: GET_MANAGED_TAGS, payload: { managedTags } });
+  } catch (error) {
+    showMessage.error(error);
+  }
+};
+
 export {
   getTags,
   copyTags,
@@ -155,5 +174,6 @@ export {
   calculateTagRelations,
   loadTagRelations,
   clearUnusedTags,
-  removeAllTagsFromFolders
+  removeAllTagsFromFolders,
+  getManagedTags
 };

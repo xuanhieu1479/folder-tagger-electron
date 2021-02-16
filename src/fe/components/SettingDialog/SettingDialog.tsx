@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Dialog, Tabs, Tab, TabId, Button, Intent } from '@blueprintjs/core';
 import {
   RootState,
-  SettingReducer
+  SettingReducer,
+  CommonDialog
 } from '../../../common/interfaces/feInterfaces';
 import { ELEMENT_ID, MESSAGE } from '../../../common/variables/commonVariables';
 import {
@@ -16,18 +17,9 @@ import SettingShortcuts from './SettingShortcuts';
 import { updateSettings } from '../../redux/setting/settingAction';
 import './SettingDialog.styled.scss';
 
-interface SettingDialog {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-}
 const defaultSelectedTabId = ELEMENT_ID.SETTING_DIALOG_TABS.defaultValue;
 
-const SettingDialog = ({
-  isOpen,
-  onClose,
-  title
-}: SettingDialog): ReactElement => {
+const SettingDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
   const dispatch = useDispatch();
   const [selectedTabId, setSelectedTabId] = useState<TabId>(
     defaultSelectedTabId
@@ -74,7 +66,7 @@ const SettingDialog = ({
     <Dialog
       isOpen={isOpen}
       onClose={onClose}
-      title={title}
+      title="Settings"
       className="setting-dialog_container"
     >
       <Tabs

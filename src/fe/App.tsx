@@ -2,7 +2,7 @@ import React, { ReactElement, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import axiosConfig from './config/axiosConfig';
 import { initIpcEventListeners, clearIpcEventListerners } from './app/ipcEvent';
-import { SettingDialog } from './components/commonComponents';
+import { SettingDialog, ManageTagsDialog } from './components/commonComponents';
 import FoldersDisplay from './modules/foldersDisplay/FoldersDisplay';
 import { onOpenDialog, onCloseDialog } from './redux/status/statusAction';
 import { getCategories, getLanguages } from './redux/folder/folderAction';
@@ -14,12 +14,17 @@ axiosConfig();
 const App = (): ReactElement => {
   const dispatch = useDispatch();
   const [isSettingDialogOpen, setSettingDialogOpen] = useState(false);
+  const [isManageTagsDialogOpen, setManageTagsDialogOpen] = useState(false);
   const [isSettingsLoaded, setSettingsLoaded] = useState(false);
 
   useEffect(() => {
     const onSuccessGetSettings = () => setSettingsLoaded(true);
 
-    initIpcEventListeners(dispatch, onOpenSettingDialog);
+    initIpcEventListeners(
+      dispatch,
+      onOpenSettingDialog,
+      onOpenManageTagsDialog
+    );
     getCategories(dispatch);
     getLanguages(dispatch);
     getSettings(dispatch, onSuccessGetSettings);
@@ -39,6 +44,15 @@ const App = (): ReactElement => {
     onCloseDialog(dispatch);
   };
 
+  const onOpenManageTagsDialog = () => {
+    setManageTagsDialogOpen(true);
+    onOpenDialog(dispatch);
+  };
+  const onCloseManageTagsDialog = () => {
+    setManageTagsDialogOpen(false);
+    onCloseDialog(dispatch);
+  };
+
   return (
     <>
       {isSettingsLoaded ? (
@@ -47,7 +61,10 @@ const App = (): ReactElement => {
       <SettingDialog
         isOpen={isSettingDialogOpen}
         onClose={onCloseSettingDialog}
-        title="Settings"
+      />
+      <ManageTagsDialog
+        isOpen={isManageTagsDialogOpen}
+        onClose={onCloseManageTagsDialog}
       />
     </>
   );

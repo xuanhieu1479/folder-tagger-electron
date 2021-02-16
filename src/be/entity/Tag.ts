@@ -14,7 +14,9 @@ import { TagType, Folder, Category, Language } from './entity';
 import {
   Tag as TagInterface,
   TagRelations,
-  BreakDownTagType
+  BreakDownTagType,
+  ManagedTag,
+  ManageTagsFilterParams
 } from '../../common/interfaces/commonInterfaces';
 import { QueryResult } from '../../common/interfaces/beInterfaces';
 import { MESSAGE, SETTING } from '../../common/variables/commonVariables';
@@ -44,6 +46,9 @@ interface TagRelationQueryResult extends QueryResult {
 }
 interface RemoveAllTagsFromFolders {
   folderLocations?: string[];
+}
+interface GetManagedTagsQueryResult extends QueryResult {
+  tags: ManagedTag[];
 }
 
 // A 51% instead of 50% will ensure an author will only have a single main parody
@@ -448,6 +453,47 @@ export default class Tag {
       console.error('REMOVE ALL TAGS FROM FOLDERS ERROR:', error);
       logErrors(error.message, error.stack);
       return {
+        message: error.message,
+        status: StatusCode.DbError
+      };
+    }
+  };
+
+  getManagedTags = async (
+    params: Partial<ManageTagsFilterParams>
+  ): Promise<GetManagedTagsQueryResult> => {
+    const filterBy = params.filterBy as BreakDownTagType;
+    const sortBy = params.sortBy;
+    const query = getRepository(Tag)
+      .createQueryBuilder('tag')
+      .innerJoin('tag.Folders', 'folder')
+      .innerJoinAndSelect('tag.TagType', 'tagType')
+      .select('COUNT(tag.TagName)', 'usedTimes')
+      .addSelect('tag.TagName', 'tagName')
+      .addSelect('tagType.TagType', 'tagType')
+      .where(`tagType.TagType = :${filterBy}`, { [filterBy]: filterBy })
+      .groupBy('tag.TagName');
+    switch (sortBy) {
+      case 'Tag Name':
+        query.orderBy('tag.TagName');
+        break;
+      case 'Used Times':
+        query.orderBy('tag.usedTimes');
+        break;
+    }
+
+    try {
+      const tags = await query.getRawMany();
+      return {
+        tags,
+        message: MESSAGE.SUCCESS,
+        status: StatusCode.Success
+      };
+    } catch (error) {
+      console.error('GET MANAGED TAGS ERROR:', error);
+      logErrors(error.message, error.stack);
+      return {
+        tags: [],
         message: error.message,
         status: StatusCode.DbError
       };
