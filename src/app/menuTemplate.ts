@@ -31,6 +31,7 @@ const menuTemplate = [
     submenu: [
       {
         label: 'Open Setting',
+        accelerator: 'Ctrl + T',
         click: onOpenSetting
       },
       {

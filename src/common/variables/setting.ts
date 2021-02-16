@@ -15,7 +15,12 @@ const SETTING = {
       defaultLanguage: ''
     },
     shortcut: {
-      defaultExternalProgram: ''
+      defaultExternalProgram: '',
+      openFolderInExternalProgram: 'q',
+      openFolderInExplorer: 'w',
+      addTagsToFolder: 'e',
+      editTagsOfFolder: 's',
+      removeTagsFromFolder: 'd'
     }
   },
   RELATION_PATH

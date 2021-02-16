@@ -49,7 +49,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
   const selectedFoldersRef = useRef(selectedFolders);
   const foldersListRef = useRef(foldersList);
   const isDialogOpenRef = useRef(isDialogOpen);
-  const externalProgramPathRef = useRef(shortcut.defaultExternalProgram);
+  const shortcutRef = useRef(shortcut);
   const [params, setParams] = useState(PAGINATION.DEFAULT);
   const [folderDialogParams, setFolderDialogParams] = useState({
     ...defaultFolderDialogParams
@@ -61,19 +61,20 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     const keyDownListerner = async (event: KeyboardEvent) => {
       const isDialogOpen = isDialogOpenRef.current;
       const selectedFolders = selectedFoldersRef.current;
+      const shortcut = shortcutRef.current;
       const foldersList = foldersListRef.current.map(folder => folder.location);
       const isHoldingCtrl = event.ctrlKey;
 
       if (isHoldingCtrl) {
         if (isDialogOpen) return;
         switch (event.key) {
-          case 'e':
+          case shortcut.addTagsToFolder:
             onOpenFolderDialog(TagAction.Add);
             break;
-          case 's':
+          case shortcut.editTagsOfFolder:
             onOpenFolderDialog(TagAction.Edit);
             break;
-          case 'd':
+          case shortcut.removeTagsFromFolder:
             onOpenFolderDialog(TagAction.Remove);
             break;
           case 't':
@@ -82,10 +83,10 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
           case 'c':
             onOpenClipboardDialog();
             break;
-          case 'w':
+          case shortcut.openFolderInExplorer:
             onOpenFolderInExplorer();
             break;
-          case 'q':
+          case shortcut.openFolderInExternalProgram:
             onOpenFolderInExternalProgram();
             break;
         }
@@ -185,7 +186,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     selectedFoldersRef.current = selectedFolders;
     foldersListRef.current = foldersList;
     isDialogOpenRef.current = isDialogOpen;
-    externalProgramPathRef.current = shortcut.defaultExternalProgram;
+    shortcutRef.current = shortcut;
   }, [selectedFolders, foldersList, isDialogOpen, shortcut]);
 
   useEffect(() => {
@@ -266,7 +267,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
   };
   const onOpenFolderInExternalProgram = () => {
     const selectedFolders = selectedFoldersRef.current;
-    const externalProgramPath = externalProgramPathRef.current;
+    const externalProgramPath = shortcutRef.current.defaultExternalProgram;
     if (!externalProgramPath)
       showMessage.info(MESSAGE.EXTERNAL_PROGRAM_UNAVAILABLE);
     else if (selectedFolders.length === 1)

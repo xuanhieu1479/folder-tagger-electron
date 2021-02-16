@@ -36,10 +36,12 @@ const FolderCard = ({
   isBeingSelected
 }: FolderCard): ReactElement => {
   const { selectedFolders } = useSelector((state: RootState) => state.folder);
+  const { shortcut } = useSelector((state: RootState) => state.setting);
   const context = useContext(FunctionsContext);
   const { dialog, directory } = context;
   const isBeingSelectedRef = useRef(isBeingSelected);
   const selectedFoldersRef = useRef(selectedFolders);
+  const shortcutRef = useRef(shortcut);
 
   useEffect(() => {
     const folderCardElement = document.getElementById(id);
@@ -49,6 +51,7 @@ const FolderCard = ({
         ContextMenu.show(
           createElement(CustomContextMenu, {
             selectedFolders: selectedFoldersRef.current,
+            shortcut: shortcutRef.current,
             dialog,
             directory
           }),
@@ -63,10 +66,9 @@ const FolderCard = ({
 
   useEffect(() => {
     isBeingSelectedRef.current = isBeingSelected;
-  }, [isBeingSelected]);
-  useEffect(() => {
     selectedFoldersRef.current = selectedFolders;
-  }, [selectedFolders]);
+    shortcutRef.current = shortcut;
+  }, [isBeingSelected, selectedFolders, shortcut]);
 
   const onClickCardName = () => {
     navigator.clipboard.writeText(folderName);

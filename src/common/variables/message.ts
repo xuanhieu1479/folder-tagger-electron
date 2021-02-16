@@ -27,7 +27,13 @@ const MESSAGE = {
   },
   SPECIAL_CHARACTERS_FORBIDDEN: 'Special characters are not allowed!',
   CANNOT_CALCULATE_TAG_RELATIONS:
-    'Not enough information to calculate tag relations'
+    'Not enough information to calculate tag relations',
+  SHORTCUT_DUPLICATE: (
+    newShortcut: string,
+    duplicateShortcut: string
+  ): string =>
+    `Ctrl + ${newShortcut.toUpperCase()} is already being used by ${duplicateShortcut}`,
+  SHORTCUT_ALPHABET: 'Only alphabet characters are allowed for shortcut'
 };
 
 export default MESSAGE;

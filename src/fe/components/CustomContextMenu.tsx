@@ -1,20 +1,32 @@
 import React from 'react';
 import { Menu, MenuItem, Divider } from '@blueprintjs/core';
-import { FunctionsContext } from '../../common/interfaces/feInterfaces';
+import {
+  FunctionsContext,
+  SettingShortcut
+} from '../../common/interfaces/feInterfaces';
 import { TagAction } from '../../common/enums/commonEnums';
 import { removeAllTagsFromFolders } from '../redux/tag/tagAction';
 
 interface CustomContextMenu extends FunctionsContext {
   selectedFolders: string[];
+  shortcut: SettingShortcut;
 }
 
 const CustomContextMenu = ({
   selectedFolders,
+  shortcut,
   dialog,
   directory
 }: CustomContextMenu): React.ReactElement => {
   const { onOpenFolderDialog, onOpenClipboardDialog } = dialog;
   const { onOpenFolderInExplorer, onOpenFolderInExternalProgram } = directory;
+  const {
+    addTagsToFolder,
+    editTagsOfFolder,
+    removeTagsFromFolder,
+    openFolderInExplorer,
+    openFolderInExternalProgram
+  } = shortcut;
 
   const onClickAddTags = () => onOpenFolderDialog(TagAction.Add);
   const onClickEditTags = () => onOpenFolderDialog(TagAction.Edit);
@@ -22,27 +34,35 @@ const CustomContextMenu = ({
   const onClickCopyTags = () => onOpenClipboardDialog();
   const onClickRemoveAllTags = () => removeAllTagsFromFolders(selectedFolders);
   const onClickOpenFolder = () => onOpenFolderInExplorer();
-  const onClickExecuteEternalProgram = () => onOpenFolderInExternalProgram();
+  const onClickExecuteExternalProgram = () => onOpenFolderInExternalProgram();
 
   return (
     <Menu>
       <MenuItem
         text="Open In Mangareader"
-        onClick={onClickExecuteEternalProgram}
-        label="Ctrl + Q"
+        onClick={onClickExecuteExternalProgram}
+        label={`Ctrl + ${openFolderInExternalProgram.toUpperCase()}`}
       />
       <MenuItem
         text="Open In Explorer"
         onClick={onClickOpenFolder}
-        label="Ctrl + W"
+        label={`Ctrl + ${openFolderInExplorer.toUpperCase()}`}
       />
       <Divider />
-      <MenuItem text="Add Tags" onClick={onClickAddTags} label="Ctrl + E" />
-      <MenuItem text="Edit Tags" onClick={onClickEditTags} label="Ctrl + S" />
+      <MenuItem
+        text="Add Tags"
+        onClick={onClickAddTags}
+        label={`Ctrl + ${addTagsToFolder.toUpperCase()}`}
+      />
+      <MenuItem
+        text="Edit Tags"
+        onClick={onClickEditTags}
+        label={`Ctrl + ${editTagsOfFolder.toUpperCase()}`}
+      />
       <MenuItem
         text="Remove Tags"
         onClick={onClickRemoveTags}
-        label="Ctrl + D"
+        label={`Ctrl + ${removeTagsFromFolder.toUpperCase()}`}
       />
       <Divider />
       <MenuItem text="Copy Tags" onClick={onClickCopyTags} label="Ctrl + C" />

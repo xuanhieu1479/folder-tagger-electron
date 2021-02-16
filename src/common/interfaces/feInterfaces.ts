@@ -43,6 +43,11 @@ interface SettingDefaultValue {
 }
 interface SettingShortcut {
   defaultExternalProgram: string;
+  openFolderInExternalProgram: string;
+  openFolderInExplorer: string;
+  addTagsToFolder: string;
+  editTagsOfFolder: string;
+  removeTagsFromFolder: string;
 }
 
 interface DialogContext {

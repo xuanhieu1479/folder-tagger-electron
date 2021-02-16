@@ -1,5 +1,4 @@
 import React, { ReactElement, useState } from 'react';
-import _ from 'lodash';
 import { InputGroup, Button, Intent, Icon, Tooltip } from '@blueprintjs/core';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import { PAGINATION, SEARCH } from '../../../common/variables/commonVariables';

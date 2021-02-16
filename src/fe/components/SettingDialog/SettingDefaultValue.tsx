@@ -50,7 +50,7 @@ const SettingDefaultValues = ({
   };
 
   return (
-    <>
+    <section>
       <div className="setting-dialog_tab-panel_row">
         <div className="setting-dialog_tab-panel_row_title">Search</div>
         <div className="setting-dialog_tab-panel_row_content">
@@ -100,7 +100,7 @@ const SettingDefaultValues = ({
           </RadioGroup>
         </div>
       </div>
-    </>
+    </section>
   );
 };
 

@@ -98,15 +98,17 @@ const Body = ({ updateSelectedFolders }: Body): ReactElement => {
   const renderFolders = (): ReactElement[] => {
     return foldersList.map((folder, index) => {
       return (
-        <FolderCard
-          id={ELEMENT_ID.FOLDER_CARD(index)}
-          folderLocation={folder.location}
-          folderName={folder.name || ''}
-          thumbnailLocation={folder.thumbnail}
-          onClick={onSelectFolder}
-          addToSelectedList={selectOnlyOneFolder}
-          isBeingSelected={selectedFolders.includes(folder.location)}
-        />
+        <div key={folder.location}>
+          <FolderCard
+            id={ELEMENT_ID.FOLDER_CARD(index)}
+            folderLocation={folder.location}
+            folderName={folder.name || ''}
+            thumbnailLocation={folder.thumbnail}
+            onClick={onSelectFolder}
+            addToSelectedList={selectOnlyOneFolder}
+            isBeingSelected={selectedFolders.includes(folder.location)}
+          />
+        </div>
       );
     });
   };

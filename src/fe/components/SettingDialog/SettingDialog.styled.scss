@@ -20,7 +20,7 @@
       margin-bottom: 20px;
 
       .setting-dialog_tab-panel_row_title {
-        width: 75px;
+        width: 100px;
         font-size: 16px;
         text-align: right;
         margin-right: 30px;
@@ -28,10 +28,18 @@
       }
       .setting-dialog_tab-panel_row_content {
         flex: 1;
+        display: flex;
       }
       .setting-dialog_tab-panel_radio {
         text-transform: capitalize;
         margin-bottom: 0;
+      }
+      .setting-dialog_tab-panel_editable-text {
+        text-transform: capitalize;
+
+        &::before {
+          content: 'Ctrl + ';
+        }
       }
     }
   }
