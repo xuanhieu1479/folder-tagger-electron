@@ -23,6 +23,7 @@ const SettingDefaultValues = ({
 }: SettingDefaultValues): ReactElement => {
   const {
     defaultSearchParams,
+    isSearchRandomly,
     defaultCategory,
     defaultLanguage
   } = defaultValueSettings;
@@ -48,6 +49,12 @@ const SettingDefaultValues = ({
       defaultValue: { ...defaultValueSettings, defaultLanguage: value }
     });
   };
+  const onChangeIsRandomRadio = (event: React.FormEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    onUpdateSettings({
+      defaultValue: { ...defaultValueSettings, isSearchRandomly: value }
+    });
+  };
 
   return (
     <section>
@@ -58,6 +65,27 @@ const SettingDefaultValues = ({
             value={defaultSearchParams}
             onChange={onChangeSearchParamsInput}
           />
+        </div>
+      </div>
+      <div className="setting-dialog_tab-panel_row">
+        <div className="setting-dialog_tab-panel_row_title">Is Random</div>
+        <div className="setting-dialog_tab-panel_row_content">
+          <RadioGroup
+            inline={true}
+            onChange={onChangeIsRandomRadio}
+            selectedValue={isSearchRandomly}
+          >
+            <Radio
+              label="Yes"
+              value="yes"
+              className="setting-dialog_tab-panel_radio"
+            />
+            <Radio
+              label="No"
+              value="no"
+              className="setting-dialog_tab-panel_radio"
+            />
+          </RadioGroup>
         </div>
       </div>
       <div className="setting-dialog_tab-panel_row">

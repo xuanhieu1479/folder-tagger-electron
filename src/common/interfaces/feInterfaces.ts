@@ -39,6 +39,7 @@ interface SettingReducer {
 
 interface SettingDefaultValue {
   defaultSearchParams: string;
+  isSearchRandomly: string;
   defaultCategory: string;
   defaultLanguage: string;
 }

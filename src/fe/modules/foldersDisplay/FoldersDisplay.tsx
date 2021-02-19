@@ -171,13 +171,18 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
         ?.scrollTo({ top: 0 });
     };
 
-    const { defaultSearchParams } = defaultValue;
-    if (!defaultSearchParams || !isFirstRender) getNewFolders();
+    const { defaultSearchParams, isSearchRandomly } = defaultValue;
+    const isRandom = isSearchRandomly.toLowerCase() === 'yes';
+    if ((!defaultSearchParams && !isRandom) || !isFirstRender) getNewFolders();
     else {
       const initialSearchParams = generateTagsFromSearchKeywords(
         defaultSearchParams
       );
-      getFolders(dispatch, { ...params, tags: initialSearchParams });
+      getFolders(dispatch, {
+        ...params,
+        tags: initialSearchParams,
+        isRandom
+      });
       setFirstRender(false);
     }
   }, [params]);

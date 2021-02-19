@@ -11,6 +11,7 @@ const SETTING = {
   DEFAULT: {
     defaultValue: {
       defaultSearchParams: '',
+      isSearchRandomly: 'no',
       defaultCategory: '',
       defaultLanguage: ''
     },
