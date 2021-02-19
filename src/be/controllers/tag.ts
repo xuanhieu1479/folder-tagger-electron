@@ -35,8 +35,8 @@ router.get(CONTROLLER_PATH.REMOVE, async (req: Request, res: Response) => {
 
 router.get(CONTROLLER_PATH.MANAGE, async (req: Request, res: Response) => {
   const params = req.query;
-  const { tags, status, message } = await tag.getManagedTags(params);
-  res.status(status).json({ tags, message });
+  const { managedTags, status, message } = await tag.getManagedTags(params);
+  res.status(status).json({ managedTags, message });
 });
 
 export default router;

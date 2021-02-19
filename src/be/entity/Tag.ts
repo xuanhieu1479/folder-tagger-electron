@@ -48,7 +48,7 @@ interface RemoveAllTagsFromFolders {
   folderLocations?: string[];
 }
 interface GetManagedTagsQueryResult extends QueryResult {
-  tags: ManagedTag[];
+  managedTags: ManagedTag[];
 }
 
 // A 51% instead of 50% will ensure an author will only have a single main parody
@@ -478,14 +478,14 @@ export default class Tag {
         query.orderBy('tag.TagName');
         break;
       case 'Used Times':
-        query.orderBy('tag.usedTimes');
+        query.orderBy('usedTimes');
         break;
     }
 
     try {
       const tags = await query.getRawMany();
       return {
-        tags,
+        managedTags: tags,
         message: MESSAGE.SUCCESS,
         status: StatusCode.Success
       };
@@ -493,7 +493,7 @@ export default class Tag {
       console.error('GET MANAGED TAGS ERROR:', error);
       logErrors(error.message, error.stack);
       return {
-        tags: [],
+        managedTags: [],
         message: error.message,
         status: StatusCode.DbError
       };

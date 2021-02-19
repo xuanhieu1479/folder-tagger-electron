@@ -109,7 +109,7 @@ const ClipboardDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
       onClose={onClose}
       className="clipboard-dialog_container"
     >
-      <section className="clipboard-dialog_content-container">
+      <section className="clipboard-dialog_content_container">
         <Label className="clipboard-dialog_label">
           Choose what to copy to clipboard
         </Label>

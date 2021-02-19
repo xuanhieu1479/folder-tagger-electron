@@ -35,7 +35,7 @@ type SearchTagType =
   | 'wildcard';
 type ManageTagsSortType = 'Tag Name' | 'Used Times';
 interface Tag {
-  tagType: string;
+  tagType: BreakDownTagType;
   tagName: string;
 }
 interface TagRelations {
@@ -50,6 +50,11 @@ interface ManageTagsFilterParams {
   filterBy: BreakDownTagType;
   sortBy: ManageTagsSortType;
 }
+interface UpdatedTag {
+  tagType: BreakDownTagType;
+  oldValue: string;
+  newValue: string;
+}
 
 export {
   Folder,
@@ -61,5 +66,6 @@ export {
   TagRelations,
   ManagedTag,
   ManageTagsSortType,
-  ManageTagsFilterParams
+  ManageTagsFilterParams,
+  UpdatedTag
 };

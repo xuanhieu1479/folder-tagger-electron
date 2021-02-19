@@ -1,0 +1,83 @@
+@import '../../styles/mixin.scss';
+
+.manage-tags-dialog_container {
+  width: 450px !important;
+  padding-bottom: unset !important;
+}
+
+.manage-tags-dialog_content_container {
+  padding: 25px;
+
+  .manage-tags-dialog_content_filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    .manage-tags-dialog_content_filter_item {
+      display: flex;
+      align-items: center;
+
+      &.search {
+        flex: 1;
+      }
+    }
+    .manage-tags-dialog_content_filter_label {
+      margin-right: 5px;
+    }
+    .manage-tags-dialog_content_save-button {
+      width: 65px;
+    }
+  }
+  .manage-tags-dialog_content_data {
+    height: 400px;
+    overflow: auto;
+
+    .manage-tags-dialog_content_table {
+      display: grid;
+      grid-template-columns: repeat(3, 120px);
+      place-items: center;
+      justify-content: center;
+
+      .manage-tags-dialog_content_header {
+        @include large-important-text;
+        margin-bottom: 5px;
+      }
+      .manage-tags-dialog_content_cell {
+        width: 100%;
+        padding: 5px 0;
+        text-align: center;
+        font-size: 16px;
+        border-top: 1px solid #c2c2c2;
+
+        &.number {
+          @include success-color;
+        }
+        &.primary {
+          @include primary-color;
+        }
+        &.warning {
+          @include warning-color;
+        }
+        &.danger {
+          @include danger-color;
+        }
+        &.bp3-editable-text {
+          &:before {
+            top: 5px;
+            right: 5px;
+            bottom: 5px;
+            left: 5px;
+          }
+        }
+        .bp3-editable-text-input {
+          width: 100% !important;
+          text-align: center;
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+}

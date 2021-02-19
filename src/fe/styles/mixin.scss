@@ -27,6 +27,24 @@
   font-size: 16px;
   font-weight: 600;
 }
+@mixin large-important-text {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+// Color
+@mixin primary-color {
+  color: #137cbd;
+}
+@mixin success-color {
+  color: #0f9960;
+}
+@mixin warning-color {
+  color: #d9822b;
+}
+@mixin danger-color {
+  color: #db3737;
+}
 
 // General
 @mixin no-outline-focus {

@@ -299,10 +299,19 @@ const DialogContent = ({
     const result = _.reduce(
       selectedTags,
       (accumulator, value, key) => {
-        const tags = value.map(tag => {
-          return { tagType: key, tagName: tag };
-        });
-        accumulator.push(...tags);
+        switch (key) {
+          case 'author':
+          case 'parody':
+          case 'character':
+          case 'genre':
+            {
+              const tags = value.map(tag => {
+                return { tagType: key, tagName: tag };
+              });
+              accumulator.push(...tags);
+            }
+            break;
+        }
         return accumulator;
       },
       defaultResult
