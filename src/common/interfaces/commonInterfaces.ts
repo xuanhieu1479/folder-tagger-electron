@@ -33,7 +33,6 @@ type SearchTagType =
   | 'character'
   | 'genre'
   | 'wildcard';
-type ManageTagsSortType = 'Tag Name' | 'Used Times';
 interface Tag {
   tagType: BreakDownTagType;
   tagName: string;
@@ -48,7 +47,6 @@ interface ManagedTag extends Tag {
 }
 interface ManageTagsFilterParams {
   filterBy: BreakDownTagType;
-  sortBy: ManageTagsSortType;
 }
 interface UpdatedTag {
   tagType: BreakDownTagType;
@@ -65,7 +63,6 @@ export {
   Tag,
   TagRelations,
   ManagedTag,
-  ManageTagsSortType,
   ManageTagsFilterParams,
   UpdatedTag
 };

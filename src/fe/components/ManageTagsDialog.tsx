@@ -9,9 +9,9 @@ import {
   Tooltip,
   InputGroup
 } from '@blueprintjs/core';
+import _ from 'lodash';
 import {
   BreakDownTagType,
-  ManageTagsSortType,
   UpdatedTag
 } from '../../common/interfaces/commonInterfaces';
 import { RootState, CommonDialog } from '../../common/interfaces/feInterfaces';
@@ -24,6 +24,7 @@ const filterByOptions: BreakDownTagType[] = [
   'genre',
   'parody'
 ];
+type ManageTagsSortType = 'Tag Name' | 'Used Times';
 const sortByOptions: ManageTagsSortType[] = ['Tag Name', 'Used Times'];
 
 const ManageTagsDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
@@ -38,12 +39,16 @@ const ManageTagsDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
   const reset = () => {
     setUpdatedTags([]);
     setSearch('');
-    getManagedTags(dispatch, { filterBy, sortBy });
+    getManagedTags(dispatch, { filterBy });
   };
 
   useEffect(() => {
     if (isOpen) reset();
-  }, [isOpen, filterBy, sortBy]);
+    else {
+      setFilterBy(filterByOptions[0]);
+      setSortBy(sortByOptions[0]);
+    }
+  }, [isOpen, filterBy]);
 
   const onChangeFilter = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newFilter = event.currentTarget.value as BreakDownTagType;
@@ -81,8 +86,16 @@ const ManageTagsDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
     return 'primary';
   };
   const getRenderTagsList = () => {
-    if (!search) return managedTags;
-    else return managedTags.filter(tag => tag.tagName.includes(search));
+    const sortedTags = _.sortBy(managedTags, tag => {
+      switch (sortBy) {
+        case 'Tag Name':
+          return tag.tagName;
+        case 'Used Times':
+          return tag.usedTimes;
+      }
+    });
+    if (!search) return sortedTags;
+    else return sortedTags.filter(tag => tag.tagName.includes(search));
   };
 
   return (

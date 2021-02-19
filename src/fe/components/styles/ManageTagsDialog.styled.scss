@@ -1,7 +1,6 @@
 @import '../../styles/mixin.scss';
 
 .manage-tags-dialog_container {
-  width: 450px !important;
   padding-bottom: unset !important;
 }
 
@@ -26,7 +25,7 @@
       margin-right: 5px;
     }
     .manage-tags-dialog_content_save-button {
-      width: 65px;
+      width: 100px;
     }
   }
   .manage-tags-dialog_content_data {
@@ -35,7 +34,7 @@
 
     .manage-tags-dialog_content_table {
       display: grid;
-      grid-template-columns: repeat(3, 120px);
+      grid-template-columns: repeat(2, 150px) 100px;
       place-items: center;
       justify-content: center;
 
@@ -44,6 +43,7 @@
         margin-bottom: 5px;
       }
       .manage-tags-dialog_content_cell {
+        @include text-elipsis;
         width: 100%;
         padding: 5px 0;
         text-align: center;

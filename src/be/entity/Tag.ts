@@ -468,7 +468,6 @@ export default class Tag {
     params: Partial<ManageTagsFilterParams>
   ): Promise<GetManagedTagsQueryResult> => {
     const filterBy = params.filterBy as BreakDownTagType;
-    const sortBy = params.sortBy;
     const query = getRepository(Tag)
       .createQueryBuilder('tag')
       .leftJoinAndSelect('tag.Folders', 'folder')
@@ -479,14 +478,6 @@ export default class Tag {
       .addSelect('tagType.TagType', 'tagType')
       .where(`tagType.TagType = :${filterBy}`, { [filterBy]: filterBy })
       .groupBy('tag.TagName');
-    switch (sortBy) {
-      case 'Tag Name':
-        query.orderBy('tag.TagName');
-        break;
-      case 'Used Times':
-        query.orderBy('usedTimes');
-        break;
-    }
 
     try {
       const tags = await query.getRawMany();
