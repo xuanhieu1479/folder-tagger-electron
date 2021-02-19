@@ -10,6 +10,7 @@ import {
   Brackets
 } from 'typeorm';
 import _ from 'lodash';
+import moment from 'moment';
 import { Category, Language, Tag, TagType } from './entity';
 import {
   Folder as FolderInterface,
@@ -471,7 +472,7 @@ export default class Folder {
         if (!_.isEmpty(failedToImportFolders))
           writeToFile(
             BACKUP.DIRECTORY,
-            BACKUP.PATH_FAILED_IMPORT,
+            BACKUP.PATH_FAILED_IMPORT(moment()),
             JSON.stringify(failedToImportFolders, null, 2)
           );
       });
@@ -532,7 +533,7 @@ export default class Folder {
       });
       writeToFile(
         BACKUP.DIRECTORY,
-        BACKUP.PATH_EXPORT,
+        BACKUP.PATH_EXPORT(moment()),
         JSON.stringify(json, null, 2)
       );
 
@@ -581,7 +582,7 @@ export default class Folder {
       if (!_.isEmpty(deletedFolders))
         writeToFile(
           BACKUP.DIRECTORY,
-          BACKUP.PATH_DELETE,
+          BACKUP.PATH_DELETE(moment()),
           JSON.stringify(deletedFolders, null, 2)
         );
       return {

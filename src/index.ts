@@ -8,6 +8,7 @@ import _ from 'lodash';
 import initBE from './be/be';
 import { menuTemplate } from './app/app';
 import { logErrors } from './be/logging';
+import { IpcEvent } from './common/enums/commonEnums';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 const START_UP_TIMEOUT = 30 * 1000;
@@ -31,8 +32,8 @@ const initWindows = (): void => {
   splashWindow.loadFile(path.resolve(__dirname, './splash.html'));
 
   const mainWindow = new BrowserWindow({
-    height: 600,
-    width: 800,
+    height: 768,
+    width: 1024,
     show: false,
     webPreferences: {
       nodeIntegration: true,
@@ -45,8 +46,10 @@ const initWindows = (): void => {
   mainWindow.once('ready-to-show', async () => {
     await initApp();
     splashWindow.destroy();
+    mainWindow.maximize();
     mainWindow.show();
     clearTimeout(startUpTimeOut);
+    mainWindow.webContents.send(IpcEvent.ExportData);
   });
 };
 

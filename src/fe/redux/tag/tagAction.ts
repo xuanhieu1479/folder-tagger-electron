@@ -19,6 +19,7 @@ import {
   GET_MANAGED_TAGS
 } from './tagActionType';
 import { startLoading, finishLoading } from '../status/statusAction';
+import { exportFolders } from '../folder/folderAction';
 import { fileExists } from '../../../utilities/utilityFunctions';
 import { showMessage } from '../../../utilities/feUtilities';
 
@@ -174,6 +175,7 @@ const updateTags = async (
   onFinally: () => void
 ): Promise<void> => {
   try {
+    await exportFolders();
     await axios.post(TAG_API.UPDATE, { updatedTags });
     showMessage.success(MESSAGE.SUCCESS);
     onSuccess();

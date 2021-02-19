@@ -3,25 +3,14 @@ import { DateTime } from '../enums/commonEnums';
 
 const DIRECTORY = 'Backup';
 
-const NAME_FAILED_IMPORT = `${moment().format(
-  DateTime.DateTimeFileFormat
-)}-FAILED.json`;
-const PATH_FAILED_IMPORT = `${DIRECTORY}/${NAME_FAILED_IMPORT}`;
-const NAME_EXPORT = `${moment().format(
-  DateTime.DateTimeFileFormat
-)}-BACKUP.json`;
-const PATH_EXPORT = `${DIRECTORY}/${NAME_EXPORT}`;
-
-const NAME_DELETED = `${moment().format(
-  DateTime.DateTimeFileFormat
-)}-DELETED.json`;
-const PATH_DELETE = `${DIRECTORY}/${NAME_DELETED}`;
-
 const BACKUP = {
   DIRECTORY,
-  PATH_FAILED_IMPORT,
-  PATH_EXPORT,
-  PATH_DELETE
+  PATH_FAILED_IMPORT: (momentObj: moment.Moment): string =>
+    `${DIRECTORY}/${momentObj.format(DateTime.DateTimeFileFormat)}-FAILED.json`,
+  PATH_EXPORT: (momentObj: moment.Moment): string =>
+    `${DIRECTORY}/${momentObj.format(DateTime.DateTimeFileFormat)}-BACKUP.json`,
+  PATH_DELETE: (momentObj: moment.Moment): string =>
+    `${DIRECTORY}/${momentObj.format(DateTime.DateTimeFileFormat)}-DELETED.json`
 };
 
 export default BACKUP;

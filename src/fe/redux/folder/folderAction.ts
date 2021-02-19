@@ -69,15 +69,18 @@ const importFolders = async (
   }
 };
 
-const exportFolders = async (dispatch: Dispatch): Promise<void> => {
+/**
+ * Do not pass dispatch to hide loading/success effect.
+ */
+const exportFolders = async (dispatch?: Dispatch): Promise<void> => {
   try {
-    startLoading(dispatch);
+    if (dispatch) startLoading(dispatch);
     await axios.get(FOLDER_API.EXPORT);
-    showMessage.success(MESSAGE.SUCCESS);
+    if (dispatch) showMessage.success(MESSAGE.SUCCESS);
   } catch (error) {
     showMessage.error(error);
   } finally {
-    finishLoading(dispatch);
+    if (dispatch) finishLoading(dispatch);
   }
 };
 
@@ -106,7 +109,7 @@ const clearFoldersUpdateThumbnails = async (
 ): Promise<void> => {
   try {
     startLoading(dispatch);
-    await axios.get(FOLDER_API.EXPORT);
+    await exportFolders();
     await axios.get(FOLDER_API.CLEAR);
     showMessage.success(MESSAGE.SUCCESS);
   } catch (error) {
