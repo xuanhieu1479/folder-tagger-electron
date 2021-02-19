@@ -81,8 +81,12 @@ export default class Folder {
       .addSelect('folder.FolderName', 'name')
       .addSelect('folder.FolderThumbnail', 'thumbnail');
     if (isRandom) query.addOrderBy('RANDOM()');
-    if (category) query.andWhere('folder.Category = :category', { category });
-    if (language) query.andWhere('folder.Language = :language', { language });
+    if (category === 'none') query.andWhere('folder.Category IS NULL');
+    else if (category)
+      query.andWhere('folder.Category = :category', { category });
+    if (language === 'none') query.andWhere('folder.Language IS NULL');
+    else if (language)
+      query.andWhere('folder.Language = :language', { language });
 
     const querySpecialTags = (tag: string) => {
       query.andWhere(q => {

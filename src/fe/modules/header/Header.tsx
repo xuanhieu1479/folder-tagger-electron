@@ -13,6 +13,7 @@ interface Header {
   allLanguages: string[];
 }
 const allOption = 'all';
+const noneOption = 'none';
 
 const Header = ({
   params,
@@ -54,14 +55,14 @@ const Header = ({
         <div className="header_select_label">Category:</div>
         <CustomSuggest
           selectedItem={params.category || allOption}
-          items={[allOption, ...allCategories]}
+          items={[allOption, ...allCategories, noneOption]}
           className="header_select-category"
           updateSelectedItem={onChangeCategory}
         />
         <div className="header_select_label">Language:</div>
         <CustomSuggest
           selectedItem={params.language || allOption}
-          items={[allOption, ...allLanguages]}
+          items={[allOption, ...allLanguages, noneOption]}
           className="header_select-language"
           updateSelectedItem={onChangeLanguage}
         />
