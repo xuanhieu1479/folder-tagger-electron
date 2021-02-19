@@ -39,4 +39,10 @@ router.get(CONTROLLER_PATH.MANAGE, async (req: Request, res: Response) => {
   res.status(status).json({ managedTags, message });
 });
 
+router.post(CONTROLLER_PATH.UPDATE, async (req: Request, res: Response) => {
+  const updatedTags = req.body.updatedTags || [];
+  const { status, message } = await tag.updateTags(updatedTags);
+  res.status(status).json({ message });
+});
+
 export default router;

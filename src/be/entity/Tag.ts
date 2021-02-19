@@ -16,7 +16,8 @@ import {
   TagRelations,
   BreakDownTagType,
   ManagedTag,
-  ManageTagsFilterParams
+  ManageTagsFilterParams,
+  UpdatedTag
 } from '../../common/interfaces/commonInterfaces';
 import { QueryResult } from '../../common/interfaces/beInterfaces';
 import { MESSAGE, SETTING } from '../../common/variables/commonVariables';
@@ -49,6 +50,10 @@ interface RemoveAllTagsFromFolders {
 }
 interface GetManagedTagsQueryResult extends QueryResult {
   managedTags: ManagedTag[];
+}
+interface ChangedTags {
+  oldTag: Tag;
+  newTag: Tag;
 }
 
 // A 51% instead of 50% will ensure an author will only have a single main parody
@@ -466,9 +471,10 @@ export default class Tag {
     const sortBy = params.sortBy;
     const query = getRepository(Tag)
       .createQueryBuilder('tag')
-      .innerJoin('tag.Folders', 'folder')
+      .leftJoinAndSelect('tag.Folders', 'folder')
       .innerJoinAndSelect('tag.TagType', 'tagType')
-      .select('COUNT(tag.TagName)', 'usedTimes')
+      .select('folder.FolderLocation', 'folderLocation')
+      .addSelect('COUNT(folderLocation)', 'usedTimes')
       .addSelect('tag.TagName', 'tagName')
       .addSelect('tagType.TagType', 'tagType')
       .where(`tagType.TagType = :${filterBy}`, { [filterBy]: filterBy })
@@ -494,6 +500,96 @@ export default class Tag {
       logErrors(error.message, error.stack);
       return {
         managedTags: [],
+        message: error.message,
+        status: StatusCode.DbError
+      };
+    }
+  };
+
+  updateTags = async (updatedTags: UpdatedTag[]): Promise<QueryResult> => {
+    const manager = getManager();
+    const deletedTags: Tag[] = [];
+    const changedTags: ChangedTags[] = [];
+    const mergedTags: ChangedTags[] = [];
+
+    let count = 0;
+    for (const tag of updatedTags) {
+      const { tagType, oldValue, newValue } = tag;
+      const oldTagId = getTagId(tagType, oldValue);
+      const newTagId = getTagId(tagType, newValue);
+      const query = getRepository(Tag).createQueryBuilder('tag');
+      const currentTag = await query
+        .innerJoinAndSelect('tag.TagType', 'tagType')
+        .where(`tag.TagId = :oldTagId-${count}`, {
+          [`oldTagId-${count}`]: oldTagId
+        })
+        .getOne();
+      if (currentTag) {
+        if (tag.newValue === 'delete') deletedTags.push(currentTag);
+        else {
+          const newTag = await query
+            .where(`tag.TagId = :newTagId-${count}`, {
+              [`newTagId-${count}`]: newTagId
+            })
+            .getOne();
+          if (newTag) mergedTags.push({ oldTag: currentTag, newTag });
+          else
+            changedTags.push({
+              oldTag: currentTag,
+              newTag: manager.create(Tag, {
+                TagId: newTagId,
+                TagName: newValue,
+                TagType: currentTag.TagType
+              })
+            });
+        }
+      }
+      count += 1;
+    }
+
+    const mergeTags = async (
+      manager: EntityManager,
+      tagPairs: ChangedTags[],
+      isCreateNewTags: boolean
+    ) => {
+      if (isCreateNewTags) {
+        const allNewTags = tagPairs.map(pair => pair.newTag);
+        await manager.insert(Tag, allNewTags);
+      }
+      const tagIds = tagPairs.map(pair => pair.oldTag.TagId);
+      const affectedFolders = await getRepository(Folder)
+        .createQueryBuilder('folder')
+        .innerJoinAndSelect('folder.Tags', 'tag')
+        .where('tag.TagId IN (:...tagIds)', { tagIds })
+        .getMany();
+      for (const folder of affectedFolders) {
+        for (const pair of tagPairs) {
+          const { oldTag, newTag } = pair;
+          const index = folder.Tags.findIndex(t => t.TagId === oldTag.TagId);
+          if (index !== -1) folder.Tags[index] = newTag;
+        }
+      }
+      await manager.save(affectedFolders);
+      await manager.remove(tagPairs.map(tag => tag.oldTag));
+    };
+
+    try {
+      await manager.transaction(async transactionManager => {
+        if (!_.isEmpty(deletedTags))
+          await transactionManager.remove(deletedTags);
+        if (!_.isEmpty(changedTags))
+          await mergeTags(transactionManager, changedTags, true);
+        if (!_.isEmpty(mergedTags))
+          await mergeTags(transactionManager, mergedTags, false);
+      });
+      return {
+        message: MESSAGE.SUCCESS,
+        status: StatusCode.Success
+      };
+    } catch (error) {
+      console.error('UPDATE TAGS ERROR:', error);
+      logErrors(error.message, error.stack);
+      return {
         message: error.message,
         status: StatusCode.DbError
       };

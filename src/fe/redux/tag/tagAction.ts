@@ -4,7 +4,8 @@ import fs from 'fs';
 import {
   BreakDownTagType,
   Tag,
-  ManageTagsFilterParams
+  ManageTagsFilterParams,
+  UpdatedTag
 } from '../../../common/interfaces/commonInterfaces';
 import {
   TAG_API,
@@ -167,6 +168,22 @@ const getManagedTags = async (
   }
 };
 
+const updateTags = async (
+  updatedTags: UpdatedTag[],
+  onSuccess: () => void,
+  onFinally: () => void
+): Promise<void> => {
+  try {
+    await axios.post(TAG_API.UPDATE, { updatedTags });
+    showMessage.success(MESSAGE.SUCCESS);
+    onSuccess();
+  } catch (error) {
+    showMessage.error(error);
+  } finally {
+    onFinally();
+  }
+};
+
 export {
   getTags,
   copyTags,
@@ -175,5 +192,6 @@ export {
   loadTagRelations,
   clearUnusedTags,
   removeAllTagsFromFolders,
-  getManagedTags
+  getManagedTags,
+  updateTags
 };

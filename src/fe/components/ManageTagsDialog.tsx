@@ -15,7 +15,7 @@ import {
   UpdatedTag
 } from '../../common/interfaces/commonInterfaces';
 import { RootState, CommonDialog } from '../../common/interfaces/feInterfaces';
-import { getManagedTags } from '../redux/tag/tagAction';
+import { getManagedTags, updateTags } from '../redux/tag/tagAction';
 import './styles/ManageTagsDialog.styled.scss';
 
 const filterByOptions: BreakDownTagType[] = [
@@ -33,17 +33,16 @@ const ManageTagsDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
   const [search, setSearch] = useState('');
   const [filterBy, setFilterBy] = useState(filterByOptions[0]);
   const [sortBy, setSortBy] = useState(sortByOptions[0]);
+  const [isLoading, setLoading] = useState(false);
 
-  const resetInput = () => {
+  const reset = () => {
     setUpdatedTags([]);
     setSearch('');
+    getManagedTags(dispatch, { filterBy, sortBy });
   };
 
   useEffect(() => {
-    if (isOpen) {
-      getManagedTags(dispatch, { filterBy, sortBy });
-      resetInput();
-    }
+    if (isOpen) reset();
   }, [isOpen, filterBy, sortBy]);
 
   const onChangeFilter = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -65,7 +64,12 @@ const ManageTagsDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
       )
     );
   };
-  const onSave = () => {};
+  const onSave = () => {
+    setLoading(true);
+    const onSuccess = () => reset();
+    const onFinally = () => setLoading(false);
+    updateTags(updatedTags, onSuccess, onFinally);
+  };
 
   const getTagColor = (tagName: string) => {
     const changedTag = updatedTags.find(tag => tag.oldValue === tagName);
@@ -112,6 +116,7 @@ const ManageTagsDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
           </div>
           <Button
             onClick={onSave}
+            loading={isLoading}
             intent={Intent.PRIMARY}
             className="manage-tags-dialog_content_save-button"
           >
