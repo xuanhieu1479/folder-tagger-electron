@@ -5,11 +5,13 @@ import {
   getFolderName,
   getFolderThumbnail
 } from './directoryUtilities';
+import { showContinueConfirmation } from './appUtilities';
 
 export {
   initDirectory,
   fileExists,
   writeToFile,
   getFolderName,
-  getFolderThumbnail
+  getFolderThumbnail,
+  showContinueConfirmation
 };

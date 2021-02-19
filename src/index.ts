@@ -49,7 +49,7 @@ const initWindows = (): void => {
     mainWindow.maximize();
     mainWindow.show();
     clearTimeout(startUpTimeOut);
-    mainWindow.webContents.send(IpcEvent.ExportData);
+    mainWindow.webContents.send(IpcEvent.OnStartupExport);
   });
 };
 

@@ -371,7 +371,10 @@ export default class Folder {
    * There is an edge case that folderName will be duplicate
    * but since it's kinda complicated we need to handle it manually.
    */
-  import = async (json: TransferData[]): Promise<QueryResult> => {
+  import = async (
+    json: TransferData[],
+    isOverwrite = false
+  ): Promise<QueryResult> => {
     const manager = getManager();
     const folderRepository = getRepository(Folder);
     const tagRepository = getRepository(Tag);

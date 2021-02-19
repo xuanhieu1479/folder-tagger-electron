@@ -49,8 +49,8 @@ router.post(CONTROLLER_PATH.ADD, async (req: Request, res: Response) => {
 });
 
 router.post(CONTROLLER_PATH.IMPORT, async (req: Request, res: Response) => {
-  const { json } = req.body;
-  const { status, message } = await folder.import(json);
+  const { json, isOverwrite } = req.body;
+  const { status, message } = await folder.import(json, isOverwrite);
   res.status(status).json({ message });
 });
 

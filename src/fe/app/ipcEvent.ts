@@ -25,11 +25,14 @@ const initIpcEventListeners = (
     onOpenManageTagsDialog();
   });
   ipcRenderer.on(IpcEvent.ImportData, (_event, data) => {
-    const { json } = data;
-    importFolders(dispatch, json);
+    const { json, isOverwrite } = data;
+    importFolders(dispatch, json, isOverwrite);
   });
   ipcRenderer.on(IpcEvent.ExportData, () => {
     exportFolders(dispatch);
+  });
+  ipcRenderer.on(IpcEvent.OnStartupExport, () => {
+    exportFolders();
   });
   ipcRenderer.on(IpcEvent.ClearFoldersUpdateThumbnails, () => {
     clearFoldersUpdateThumbnails(dispatch);
@@ -48,6 +51,7 @@ const clearIpcEventListerners = (): void => {
   ipcRenderer.removeAllListeners(IpcEvent.OpenManageTags);
   ipcRenderer.removeAllListeners(IpcEvent.ImportData);
   ipcRenderer.removeAllListeners(IpcEvent.ExportData);
+  ipcRenderer.removeAllListeners(IpcEvent.OnStartupExport);
   ipcRenderer.removeAllListeners(IpcEvent.ClearFoldersUpdateThumbnails);
   ipcRenderer.removeAllListeners(IpcEvent.ClearUnusedTags);
   ipcRenderer.removeAllListeners(IpcEvent.CalculateTagRelations);

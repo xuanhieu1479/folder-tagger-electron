@@ -56,11 +56,12 @@ const addFolders = async (
 
 const importFolders = async (
   dispatch: Dispatch,
-  json: TransferData[]
+  json: TransferData[],
+  isOverwrite = false
 ): Promise<void> => {
   try {
     startLoading(dispatch);
-    await axios.post(FOLDER_API.IMPORT, { json });
+    await axios.post(FOLDER_API.IMPORT, { json, isOverwrite });
     showMessage.success(MESSAGE.SUCCESS);
   } catch (error) {
     showMessage.error(error);
