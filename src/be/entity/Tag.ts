@@ -551,7 +551,15 @@ export default class Tag {
       const affectedFolders = await getRepository(Folder)
         .createQueryBuilder('folder')
         .innerJoinAndSelect('folder.Tags', 'tag')
-        .where('tag.TagId IN (:...tagIds)', { tagIds })
+        .where(query => {
+          const subQuery = query
+            .subQuery()
+            .select('folder.FolderLocation')
+            .from(Folder, 'folder')
+            .leftJoin('folder.Tags', 'tag')
+            .where('tag.TagId IN (:...tagIds)', { tagIds });
+          return 'folder.FolderLocation IN ' + subQuery.getQuery();
+        })
         .getMany();
       for (const folder of affectedFolders) {
         for (const pair of tagPairs) {
