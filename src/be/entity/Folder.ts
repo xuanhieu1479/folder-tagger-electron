@@ -413,6 +413,7 @@ export default class Folder {
       const languageAlreadyInDB = allLanguages.find(
         language => language.Language === Language
       );
+
       const updateOrCreateFolders = async (folder: Folder) => {
         const folderTags: Tag[] = [];
         const transferTags: Record<string, string[]> = { ...Tags };
@@ -446,14 +447,16 @@ export default class Folder {
 
         if (categoryAlreadyInDB) folder.Category = categoryAlreadyInDB;
         if (languageAlreadyInDB) folder.Language = languageAlreadyInDB;
-        folder.Tags = [...folderTags];
+        folder.Tags = folderTags;
         upsertFolders.push(folder);
       };
 
       if (folderAlreadyInDB) {
-        const folderHasTags = await checkFolderHasTags(FolderName);
+        let folderHasTags;
+        if (!isOverwrite) folderHasTags = await checkFolderHasTags(FolderName);
+        if (isOverwrite || !folderHasTags)
+          await updateOrCreateFolders(folderAlreadyInDB);
         if (folderHasTags) failedToImportFolders.push(folder);
-        else await updateOrCreateFolders(folderAlreadyInDB);
       } else {
         if (!fileExists(FolderLocation)) failedToImportFolders.push(folder);
         else {
