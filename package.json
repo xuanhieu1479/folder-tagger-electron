@@ -47,6 +47,19 @@
           "config": {}
         }
       ],
+      "publisher": {
+        "name": "@electron-forge/publisher-github",
+        "platforms": [
+          "win32"
+        ],
+        "config": {
+          "repository": {
+            "owner": "xuanhieu1479",
+            "name": "folder-tagger-electron"
+          },
+          "authtoken": "ae8a53fb8d06ea3812fb6919d8fd8034704352e4"
+        }
+      },
       "plugins": [
         [
           "@electron-forge/plugin-webpack",
@@ -93,6 +106,7 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@electron-forge/plugin-webpack": "6.0.0-beta.54",
+    "@electron-forge/publisher-github": "^6.0.0-beta.54",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
     "@types/better-sqlite3": "^5.4.1",
     "@types/electron-devtools-installer": "^2.2.0",
