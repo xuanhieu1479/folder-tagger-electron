@@ -56,8 +56,7 @@
           "repository": {
             "owner": "xuanhieu1479",
             "name": "folder-tagger-electron"
-          },
-          "authtoken": "ae8a53fb8d06ea3812fb6919d8fd8034704352e4"
+          }
         }
       },
       "plugins": [
