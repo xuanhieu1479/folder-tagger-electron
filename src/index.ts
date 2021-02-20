@@ -12,12 +12,10 @@ import { IpcEvent } from './common/enums/commonEnums';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 const START_UP_TIMEOUT = 30 * 1000;
+app.setName('Folder Tagger');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-  // eslint-disable-line global-require
-  app.quit();
-}
+if (require('electron-squirrel-startup')) app.quit();
 
 const initWindows = (): void => {
   const startUpTimeOut = setTimeout(() => {
