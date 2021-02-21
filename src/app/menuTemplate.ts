@@ -7,6 +7,7 @@ import {
   onImportData,
   onOpenDevtool,
   onReload,
+  onOpenAppDirectory,
   onExportData,
   onClearFoldersUpdateThumbnails,
   onClearUnusedTags,
@@ -78,6 +79,10 @@ const menuTemplate = [
         label: 'Reload',
         accelerator: 'F5',
         click: onReload
+      },
+      {
+        label: 'Open App Directory',
+        click: onOpenAppDirectory
       }
     ]
   }

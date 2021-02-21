@@ -7,7 +7,7 @@ import {
   onClearFoldersUpdateThumbnails,
   onClearUnusedTags
 } from './data';
-import { onOpenDevtool, onReload } from './debug';
+import { onOpenDevtool, onReload, onOpenAppDirectory } from './debug';
 
 export {
   onAddFolder,
@@ -20,5 +20,6 @@ export {
   onClearFoldersUpdateThumbnails,
   onClearUnusedTags,
   onOpenDevtool,
-  onReload
+  onReload,
+  onOpenAppDirectory
 };
