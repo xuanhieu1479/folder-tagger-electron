@@ -92,17 +92,41 @@ const generateTagsFromSearchKeywords = (
     searchQuery: string,
     miniMumLetters = MINIMUM_LETTERS
   ) => {
-    return [
-      ...new Set(
-        searchQuery
-          .trim()
-          .replace(/\s+/, ' ')
-          .split(' ')
-          .filter(
-            tag => tag.length >= miniMumLetters && !COMMON_TERMS.includes(tag)
-          )
-      )
-    ];
+    const absoluteCharacterRegex = new RegExp(
+      SEARCH.ABSOLUTE_TAGS_CHARACTER,
+      'g'
+    );
+    // REFERENCE: https://stackoverflow.com/a/171499
+    const absoluteTagRegex = new RegExp(
+      `([${SEARCH.ABSOLUTE_TAGS_CHARACTER}])(?:(?=(\\\\?))\\2.)*?\\1`,
+      'g'
+    );
+
+    const trimmedSearchQuery = searchQuery.trim().replace(/\s+/, ' ');
+    const absoluteTags: string[] = [];
+    const nonAbsoluteQuery = trimmedSearchQuery
+      .replace(absoluteTagRegex, match => {
+        absoluteTags.push(match);
+        return '';
+      })
+      .replace(absoluteCharacterRegex, '')
+      .trim();
+    const nonAbsoluteTags = nonAbsoluteQuery.split(' ').filter(tag => {
+      const isExcluded = tag[0] === SEARCH.EXCLUDE_TAGS_CHARACTER;
+      const isAbsolute =
+        tag[0] === SEARCH.ABSOLUTE_TAGS_CHARACTER &&
+        _.last(tag) === SEARCH.ABSOLUTE_TAGS_CHARACTER;
+      const isCommon = COMMON_TERMS.includes(tag);
+
+      let isAboveMinimumLetters = tag.length >= miniMumLetters;
+      if (isExcluded) isAboveMinimumLetters = tag.length >= miniMumLetters + 1;
+      else if (isAbsolute)
+        isAboveMinimumLetters = tag.length >= miniMumLetters + 2;
+
+      return isAboveMinimumLetters && !isCommon;
+    });
+
+    return [...new Set([...absoluteTags, ...nonAbsoluteTags])];
   };
 
   const getTagsByTagKeyFromSearchKeywords = (tagKey: string) => {

@@ -138,23 +138,29 @@ export default class Folder {
           querySpecialTags(tagValue);
           return;
         }
+
+        const isTagAbsolute =
+          tagValue[0] === SEARCH.ABSOLUTE_TAGS_CHARACTER &&
+          _.last(tagValue) === SEARCH.ABSOLUTE_TAGS_CHARACTER;
         const isTagIncluded = tagValue[0] !== SEARCH.EXCLUDE_TAGS_CHARACTER;
-        const tagName = isTagIncluded ? tagValue : tagValue.substring(1);
+        let tagName = tagValue;
+        if (!isTagIncluded) tagName = tagValue.substring(1);
+        else if (isTagAbsolute)
+          tagName = tagValue.substring(1, tagValue.length - 1);
         const isTagAboveMinimumLetters =
           tagName.length >= SEARCH.MINIMUM_LETTERS;
+
         const parameterKey = (index: number) =>
           `${tagKey}_${tagPosition}_${index}`;
+        // Folder name lookup can be relative when absolute
+        // since it's hard to remember exact the name
         const folderQueryString = (index: number) =>
-          `folder.FolderName ${isTagIncluded ? '' : 'NOT '}LIKE :${parameterKey(
-            index
-          )}`;
-        const tagQueryString = (index: number) => {
-          if (isTagIncluded) return `tag.TagName LIKE :${parameterKey(index)}`;
-          else
-            return `(tag.TagName IS NULL OR tag.TagName NOT LIKE :${parameterKey(
-              index
-            )})`;
-        };
+          `folder.FolderName LIKE :${parameterKey(index)}`;
+        // But tag must be 100% match if absolute
+        const tagQueryString = (index: number) =>
+          !isTagAbsolute
+            ? `tag.TagName LIKE :${parameterKey(index)}`
+            : `tag.TagName = :${parameterKey(-1)}`;
         query.andWhere(q => {
           const subQuery = q
             .subQuery()
@@ -162,15 +168,10 @@ export default class Folder {
             .from(Folder, 'folder');
           if (isWildcard) {
             subQuery.leftJoin('folder.Tags', 'tag');
-            if (isTagAboveMinimumLetters && isTagIncluded) {
+            if (isTagAboveMinimumLetters) {
               subQuery.where(folderQueryString(0));
               subQuery.orWhere(tagQueryString(0));
-            }
-            if (isTagAboveMinimumLetters && !isTagIncluded) {
-              subQuery.where(folderQueryString(0));
-              subQuery.andWhere(tagQueryString(0));
-            }
-            if (!isTagAboveMinimumLetters && isTagIncluded) {
+            } else {
               subQuery.where(
                 new Brackets(sq => {
                   sq.orWhere(folderQueryString(1));
@@ -186,31 +187,13 @@ export default class Folder {
                 })
               );
             }
-            if (!isTagAboveMinimumLetters && !isTagIncluded) {
-              subQuery.where(
-                new Brackets(sq => {
-                  sq.andWhere(folderQueryString(1));
-                  sq.andWhere(folderQueryString(2));
-                  sq.andWhere(folderQueryString(3));
-                })
-              );
-              subQuery.andWhere(
-                new Brackets(sq => {
-                  sq.andWhere(tagQueryString(1));
-                  sq.andWhere(tagQueryString(2));
-                  sq.andWhere(tagQueryString(3));
-                })
-              );
-            }
           } else {
             subQuery.innerJoin('folder.Tags', 'tag');
             subQuery.where(`tag.TagType = :${tagKey}`, {
               [tagKey]: tagKey
             });
-            if (isTagAboveMinimumLetters) {
-              subQuery.andWhere(tagQueryString(0));
-            }
-            if (!isTagAboveMinimumLetters && isTagIncluded) {
+            if (isTagAboveMinimumLetters) subQuery.andWhere(tagQueryString(0));
+            else
               subQuery.orWhere(
                 new Brackets(sq => {
                   sq.orWhere(tagQueryString(1));
@@ -218,24 +201,18 @@ export default class Folder {
                   sq.orWhere(tagQueryString(3));
                 })
               );
-            }
-            if (!isTagAboveMinimumLetters && !isTagIncluded) {
-              subQuery.andWhere(
-                new Brackets(sq => {
-                  sq.andWhere(tagQueryString(1));
-                  sq.andWhere(tagQueryString(2));
-                  sq.andWhere(tagQueryString(3));
-                })
-              );
-            }
           }
           subQuery.setParameters({
+            [parameterKey(-1)]: tagName,
             [parameterKey(0)]: `%${tagName}%`,
             [parameterKey(1)]: `%${tagName} %`,
             [parameterKey(2)]: `% ${tagName}%`,
             [parameterKey(3)]: `% ${tagName} %`
           });
-          return 'folder.FolderLocation IN ' + subQuery.getQuery();
+          return (
+            `folder.FolderLocation ${isTagIncluded ? 'IN' : 'NOT IN'} ` +
+            subQuery.getQuery()
+          );
         });
       });
     };

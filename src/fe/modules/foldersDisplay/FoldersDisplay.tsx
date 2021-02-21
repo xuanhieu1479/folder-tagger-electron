@@ -94,7 +94,12 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
             break;
         }
       } else {
-        if (foldersList.length < 1) return;
+        const { activeElement } = document;
+        if (
+          foldersList.length < 1 ||
+          activeElement?.id === ELEMENT_ID.SEARCH_INPUT
+        )
+          return;
         const folderCardElements = document
           .getElementById(ELEMENT_ID.FOLDER_CARD_CONTAINER)
           ?.querySelectorAll(`[id^=${ELEMENT_ID.FOLDER_CARD('')}]`);
@@ -299,7 +304,10 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
 
   const onFocusSearchInput = () => {
     const inputElement = document.getElementById(ELEMENT_ID.SEARCH_INPUT);
-    inputElement?.focus();
+    if (inputElement) {
+      inputElement.focus();
+      updateSelectedFolders([]);
+    }
   };
 
   return (
