@@ -7,7 +7,7 @@ import {
   BreakDownTagType
 } from '../../../common/interfaces/commonInterfaces';
 import { RootState } from '../../../common/interfaces/feInterfaces';
-import { MESSAGE } from '../../../common/variables/commonVariables';
+import { MESSAGE, ELEMENT_ID } from '../../../common/variables/commonVariables';
 import { TagAction } from '../../../common/enums/commonEnums';
 import { CustomSuggest, CustomMultiSelect } from '../commonComponents';
 import { showMessage } from '../../../utilities/feUtilities';
@@ -86,17 +86,27 @@ const DialogContent = ({
     };
     const keyDownListerner = (event: KeyboardEvent) => {
       const isHoldingCtrl = event.ctrlKey;
-      const isHoldingAlt = event.altKey;
+      const isHoldingShift = event.shiftKey;
+      const { key } = event;
 
-      switch (event.key) {
+      switch (key) {
         case 'v':
           if (!isHoldingCtrl) return;
           pasteTags();
           break;
         case 'Enter':
-          if (!isHoldingAlt) return;
+          if (!isHoldingShift) return;
           onSave();
           break;
+      }
+      if (!isNaN(parseInt(key))) {
+        const { activeElement } = document;
+        const isOneOfInputBeingFocused = activeElement?.id.includes(
+          ELEMENT_ID.FOLDER_DIALOG_INPUT_PREFIX
+        );
+        if (isOneOfInputBeingFocused) return;
+        document.getElementById(ELEMENT_ID.FOLDER_DIALOG_INPUT(key))?.focus();
+        event.preventDefault();
       }
     };
 
@@ -386,6 +396,7 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_title">Category</div>
         <div className="folder-dialog_content_row_select">
           <CustomSuggest
+            inputId={ELEMENT_ID.FOLDER_DIALOG_INPUT('category')}
             selectedItem={selectedCategory}
             items={categories}
             isDisabled={dialogType === TagAction.Remove}
@@ -397,6 +408,7 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_title">Language</div>
         <div className="folder-dialog_content_row_select">
           <CustomSuggest
+            inputId={ELEMENT_ID.FOLDER_DIALOG_INPUT('language')}
             selectedItem={selectedLanguage}
             items={languages}
             isDisabled={dialogType === TagAction.Remove}
@@ -408,6 +420,7 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_title">Author</div>
         <div className="folder-dialog_content_row_tags">
           <CustomMultiSelect
+            inputId={ELEMENT_ID.FOLDER_DIALOG_INPUT(1)}
             itemKey="author"
             allItems={tagSuggestions.author}
             selectedItems={selectedTags.author}
@@ -420,6 +433,7 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_title">Parody</div>
         <div className="folder-dialog_content_row_tags">
           <CustomMultiSelect
+            inputId={ELEMENT_ID.FOLDER_DIALOG_INPUT(2)}
             itemKey="parody"
             allItems={tagSuggestions.parody}
             selectedItems={selectedTags.parody}
@@ -432,6 +446,7 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_title">Character</div>
         <div className="folder-dialog_content_row_tags">
           <CustomMultiSelect
+            inputId={ELEMENT_ID.FOLDER_DIALOG_INPUT(3)}
             itemKey="character"
             allItems={tagSuggestions.character}
             selectedItems={selectedTags.character}
@@ -444,6 +459,7 @@ const DialogContent = ({
         <div className="folder-dialog_content_row_title">Genre</div>
         <div className="folder-dialog_content_row_tags">
           <CustomMultiSelect
+            inputId={ELEMENT_ID.FOLDER_DIALOG_INPUT(4)}
             itemKey="genre"
             allItems={tagSuggestions.genre}
             selectedItems={selectedTags.genre}

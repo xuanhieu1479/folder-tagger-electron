@@ -8,6 +8,7 @@ import { showMessage } from '../../utilities/feUtilities';
 import './styles/CustomMultiSelect.styled.scss';
 
 interface CustomMultiSelect {
+  inputId: string;
   itemKey: BreakDownTagType;
   allItems: string[];
   selectedItems: string[];
@@ -22,6 +23,7 @@ interface PopoverProps {
 const noSpecialCharactersRegex = new RegExp(/[^A-Za-z0-9\s]/g);
 
 const CustomMultiSelect = ({
+  inputId,
   itemKey,
   allItems,
   selectedItems,
@@ -59,10 +61,9 @@ const CustomMultiSelect = ({
 
   const onKeyDownInput = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const isHoldingShift = event.shiftKey;
-    const isHoldingAlt = event.altKey;
 
-    if (isHoldingAlt || isHoldingShift) event.stopPropagation();
-    if (isHoldingAlt) {
+    if (isHoldingShift) {
+      event.stopPropagation();
       const { activeElement } = document;
       if (activeElement instanceof HTMLElement) {
         activeElement.blur();
@@ -115,6 +116,7 @@ const CustomMultiSelect = ({
       tagInputProps={{
         onRemove,
         inputProps: {
+          id: inputId,
           value: inputValue,
           onChange: onInputChange,
           onKeyDown: onKeyDownInput

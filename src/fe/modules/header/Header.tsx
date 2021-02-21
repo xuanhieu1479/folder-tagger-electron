@@ -58,6 +58,7 @@ const Header = ({
       <section className="header_select_container">
         <div className="header_select_label">Category:</div>
         <CustomSuggest
+          inputId="header-input-category"
           selectedItem={params.category || allOption}
           items={[allOption, ...allCategories, noneOption]}
           className="header_select-category"
@@ -65,6 +66,7 @@ const Header = ({
         />
         <div className="header_select_label">Language:</div>
         <CustomSuggest
+          inputId="header-input-language"
           selectedItem={params.language || allOption}
           items={[allOption, ...allLanguages, noneOption]}
           className="header_select-language"

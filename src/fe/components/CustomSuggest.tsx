@@ -3,6 +3,7 @@ import { MenuItem } from '@blueprintjs/core';
 import { Suggest, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
 
 interface CustomSuggest {
+  inputId: string;
   selectedItem: string;
   items: string[];
   isDisabled?: boolean;
@@ -11,6 +12,7 @@ interface CustomSuggest {
 }
 
 const CustomSuggest = ({
+  inputId,
   selectedItem,
   items,
   isDisabled = false,
@@ -54,6 +56,7 @@ const CustomSuggest = ({
         usePortal: false,
         popoverClassName: className
       }}
+      inputProps={{ id: inputId }}
       onItemSelect={onItemSelect}
       noResults={<MenuItem disabled={true} text="No results." />}
     />
