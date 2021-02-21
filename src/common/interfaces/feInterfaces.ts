@@ -50,6 +50,7 @@ interface SettingShortcut {
   addTagsToFolder: string;
   editTagsOfFolder: string;
   removeTagsFromFolder: string;
+  focusSearchInput: string;
 }
 
 interface DialogContext {

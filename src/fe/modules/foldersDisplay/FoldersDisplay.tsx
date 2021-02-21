@@ -89,7 +89,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
           case shortcut.openFolderInExternalProgram:
             onOpenFolderInExternalProgram();
             break;
-          case 'f':
+          case shortcut.focusSearchInput:
             onFocusSearchInput();
             break;
         }

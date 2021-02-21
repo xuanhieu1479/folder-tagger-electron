@@ -17,13 +17,15 @@ type ShortcutKey =
   | 'openFolderInExplorer'
   | 'addTagsToFolder'
   | 'editTagsOfFolder'
-  | 'removeTagsFromFolder';
+  | 'removeTagsFromFolder'
+  | 'focusSearchInput';
 const ShortcutLabel: Record<ShortcutKey, string> = {
   openFolderInExternalProgram: 'Exec Program',
   openFolderInExplorer: 'Open',
   addTagsToFolder: 'Add Tags',
   editTagsOfFolder: 'Edit Tags',
-  removeTagsFromFolder: 'Remove Tags'
+  removeTagsFromFolder: 'Remove Tags',
+  focusSearchInput: 'Search'
 };
 
 const SettingShortcuts = ({

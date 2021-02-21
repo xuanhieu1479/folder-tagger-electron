@@ -21,7 +21,8 @@ const SETTING = {
       openFolderInExplorer: 'w',
       addTagsToFolder: 'e',
       editTagsOfFolder: 's',
-      removeTagsFromFolder: 'd'
+      removeTagsFromFolder: 'd',
+      focusSearchInput: 'f'
     }
   },
   RELATION_PATH
