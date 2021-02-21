@@ -5,7 +5,8 @@ const ELEMENT_ID = {
     shortcut: 'setting-dialog-tab-shortcut'
   },
   FOLDER_CARD_CONTAINER: 'folder-card-container',
-  FOLDER_CARD: (index: number | string): string => `folder-card-${index}`
+  FOLDER_CARD: (index: number | string): string => `folder-card-${index}`,
+  SEARCH_INPUT: 'header-search-input'
 };
 
 export default ELEMENT_ID;

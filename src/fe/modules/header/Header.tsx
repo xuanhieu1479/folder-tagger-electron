@@ -1,7 +1,11 @@
 import React, { ReactElement, useState } from 'react';
 import { InputGroup, Button, Intent, Icon, Tooltip } from '@blueprintjs/core';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
-import { PAGINATION, SEARCH } from '../../../common/variables/commonVariables';
+import {
+  PAGINATION,
+  SEARCH,
+  ELEMENT_ID
+} from '../../../common/variables/commonVariables';
 import { CustomSuggest } from '../../components/commonComponents';
 import { generateTagsFromSearchKeywords } from '../../../utilities/feUtilities';
 import './Header.styled.scss';
@@ -69,6 +73,7 @@ const Header = ({
       </section>
       <section className="header_keyword-input_container">
         <InputGroup
+          id={ELEMENT_ID.SEARCH_INPUT}
           className="header_keyword-input"
           placeholder="Search Keywords"
           value={searchKeywords}

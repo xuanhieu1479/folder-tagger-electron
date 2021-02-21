@@ -89,6 +89,9 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
           case shortcut.openFolderInExternalProgram:
             onOpenFolderInExternalProgram();
             break;
+          case 'f':
+            onFocusSearchInput();
+            break;
         }
       } else {
         if (selectedFolders.length === 0 || foldersList.length <= 1) return;
@@ -277,6 +280,11 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
       showMessage.info(MESSAGE.EXTERNAL_PROGRAM_UNAVAILABLE);
     else if (selectedFolders.length === 1)
       runExternalProgram(externalProgramPath, [selectedFolders[0]]);
+  };
+
+  const onFocusSearchInput = () => {
+    const inputElement = document.getElementById(ELEMENT_ID.SEARCH_INPUT);
+    inputElement?.focus();
   };
 
   return (
