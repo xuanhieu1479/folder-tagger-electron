@@ -6,7 +6,7 @@ const onOpenSetting = (): void => {
   BrowserWindow.getFocusedWindow()?.webContents.send(IpcEvent.OpenSetting);
 };
 
-const calculateTagsRelation = (): void => {
+const calculateTagRelations = (): void => {
   const focusedWindow = BrowserWindow.getFocusedWindow();
   if (!focusedWindow) return;
   const userAgrees = showContinueConfirmation(focusedWindow);
@@ -14,4 +14,4 @@ const calculateTagsRelation = (): void => {
   focusedWindow.webContents.send(IpcEvent.CalculateTagRelations);
 };
 
-export { onOpenSetting, calculateTagsRelation };
+export { onOpenSetting, calculateTagRelations };

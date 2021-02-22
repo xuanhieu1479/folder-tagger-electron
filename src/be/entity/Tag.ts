@@ -399,7 +399,7 @@ export default class Tag {
         status: StatusCode.Success
       };
     } catch (error) {
-      console.error('CALCULATE TAGS RELATION ERROR:', error);
+      console.error('CALCULATE TAG RELATIONS ERROR:', error);
       logErrors(error.message, error.stack);
       return {
         message: error.message,

@@ -1,5 +1,5 @@
 import { onAddFolder, onAddParentFolder } from './folder';
-import { onOpenSetting, calculateTagsRelation } from './setting';
+import { onOpenSetting, calculateTagRelations } from './setting';
 import {
   onImportData,
   onExportData,
@@ -13,7 +13,7 @@ export {
   onAddFolder,
   onAddParentFolder,
   onOpenSetting,
-  calculateTagsRelation,
+  calculateTagRelations,
   onImportData,
   onExportData,
   onManageTags,

@@ -3,7 +3,7 @@ import {
   onAddFolder,
   onAddParentFolder,
   onOpenSetting,
-  calculateTagsRelation,
+  calculateTagRelations,
   onImportData,
   onOpenDevtool,
   onReload,
@@ -37,8 +37,8 @@ const menuTemplate = [
         click: onOpenSetting
       },
       {
-        label: 'Calculate Tags Relation',
-        click: calculateTagsRelation
+        label: 'Calculate Tag RelationS',
+        click: calculateTagRelations
       },
       {
         label: 'Clear Folders And Update Thumbnails',
