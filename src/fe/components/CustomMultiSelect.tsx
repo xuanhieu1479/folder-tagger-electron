@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useState } from 'react';
+import React, { ReactElement, ReactNode, useState, useEffect } from 'react';
 import _ from 'lodash';
 import { MenuItem } from '@blueprintjs/core';
 import { MultiSelect, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
@@ -36,6 +36,13 @@ const CustomMultiSelect = ({
     popoverClassName: 'custom-multi-select_popover'
   });
 
+  useEffect(() => {
+    // Do not check !popoverProps.isOpen since we need to set it
+    // undefined to make tagInput becomes uncontrolled again.
+    if (popoverProps.isOpen === false)
+      setPopoverProps(_.omit(popoverProps, 'isOpen'));
+  }, [popoverProps]);
+
   const filterItems: ItemPredicate<string> = (query, item) => {
     return item.toLocaleLowerCase().includes(query.toLocaleLowerCase());
   };
@@ -69,7 +76,7 @@ const CustomMultiSelect = ({
         activeElement.blur();
         setPopoverProps({ ...popoverProps, isOpen: false });
       }
-    } else setPopoverProps(_.omit(popoverProps, 'isOpen'));
+    }
   };
 
   const renderSelectItems: ItemRenderer<string> = (

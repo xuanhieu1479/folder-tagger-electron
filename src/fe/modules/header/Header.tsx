@@ -58,7 +58,7 @@ const Header = ({
       <section className="header_select_container">
         <div className="header_select_label">Category:</div>
         <CustomSuggest
-          inputId="header-input-category"
+          inputId={ELEMENT_ID.HEADER_INPUT('category')}
           selectedItem={params.category || allOption}
           items={[allOption, ...allCategories, noneOption]}
           className="header_select-category"
@@ -66,7 +66,7 @@ const Header = ({
         />
         <div className="header_select_label">Language:</div>
         <CustomSuggest
-          inputId="header-input-language"
+          inputId={ELEMENT_ID.HEADER_INPUT('language')}
           selectedItem={params.language || allOption}
           items={[allOption, ...allLanguages, noneOption]}
           className="header_select-language"
@@ -75,7 +75,7 @@ const Header = ({
       </section>
       <section className="header_keyword-input_container">
         <InputGroup
-          id={ELEMENT_ID.SEARCH_INPUT}
+          id={ELEMENT_ID.HEADER_INPUT('search')}
           className="header_keyword-input"
           placeholder="Search Keywords"
           value={searchKeywords}

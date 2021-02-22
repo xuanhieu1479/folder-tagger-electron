@@ -97,7 +97,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
         const { activeElement } = document;
         if (
           foldersList.length < 1 ||
-          activeElement?.id === ELEMENT_ID.SEARCH_INPUT
+          activeElement?.id.includes(ELEMENT_ID.HEADER_INPUT_PREFIX)
         )
           return;
         const folderCardElements = document
@@ -303,7 +303,9 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
   };
 
   const onFocusSearchInput = () => {
-    const inputElement = document.getElementById(ELEMENT_ID.SEARCH_INPUT);
+    const inputElement = document.getElementById(
+      ELEMENT_ID.HEADER_INPUT('search')
+    );
     if (inputElement) {
       inputElement.focus();
       updateSelectedFolders([]);
