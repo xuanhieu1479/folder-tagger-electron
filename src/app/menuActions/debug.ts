@@ -1,4 +1,4 @@
-import { BrowserWindow, shell, app } from 'electron';
+import { BrowserWindow, shell } from 'electron';
 
 const onOpenDevtool = (): void => {
   // Get webContents from focusedWindow instead of getFocusedWebContents
@@ -17,7 +17,7 @@ const onReload = (): void => {
 };
 
 const onOpenAppDirectory = (): void => {
-  shell.openPath(app.getAppPath());
+  shell.openPath(process.cwd());
 };
 
 export { onOpenDevtool, onReload, onOpenAppDirectory };
