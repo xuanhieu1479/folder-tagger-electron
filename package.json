@@ -8,8 +8,7 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts ."
+    "publish": "env-cmd electron-forge publish"
   },
   "keywords": [],
   "author": {
@@ -47,18 +46,20 @@
           "config": {}
         }
       ],
-      "publisher": {
-        "name": "@electron-forge/publisher-github",
-        "platforms": [
-          "win32"
-        ],
-        "config": {
-          "repository": {
-            "owner": "xuanhieu1479",
-            "name": "folder-tagger-electron"
+      "publishers": [
+        {
+          "name": "@electron-forge/publisher-github",
+          "platforms": [
+            "win32"
+          ],
+          "config": {
+            "repository": {
+              "owner": "xuanhieu1479",
+              "name": "folder-tagger-electron"
+            }
           }
         }
-      },
+      ],
       "plugins": [
         [
           "@electron-forge/plugin-webpack",
@@ -123,6 +124,7 @@
     "electron": "^11.1.1",
     "electron-devtools-installer": "^3.1.1",
     "electron-squirrel-startup": "^1.0.0",
+    "env-cmd": "^10.1.0",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-import": "^2.20.0",

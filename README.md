@@ -3,10 +3,11 @@
 * "yarn start" to start the app in development mode.
 * "yarn package" to package your app.
 * "yarn make" to package your app and creat installer.
+* "yarn run publish" to publish new version.
 
 - Delete "Database" folder if make some change to database schema to re-create database.
 
-* Usage:
+## Usage:
 
 - Select folders with arrow keys or with mouse.
 - Look up tags with their type, there are 4 (author, parody, character, genre).
