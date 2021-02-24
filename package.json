@@ -1,7 +1,7 @@
 {
   "name": "folder-tagger-electron",
   "productName": "folder-tagger-electron",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Manage folders with your own tags",
   "main": ".webpack/main",
   "scripts": {
@@ -24,26 +24,10 @@
       },
       "makers": [
         {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "FolderTagger",
-            "exe": "Folder Tagger.exe",
-            "setupExe": "Folder Tagger.Setup.exe"
-          }
-        },
-        {
           "name": "@electron-forge/maker-zip",
           "platforms": [
-            "darwin"
+            "win32"
           ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
         }
       ],
       "publishers": [
