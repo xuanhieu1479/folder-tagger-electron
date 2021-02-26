@@ -1,11 +1,15 @@
+## For Developers:
+
 - Install windows-build-tools https://www.npmjs.com/package/windows-build-tools (note: Using anything besides run as administrator Powershell is not recommended, since it might get stuck.)
 
-* "yarn start" to start the app in development mode.
-* "yarn package" to package your app.
-* "yarn make" to package your app and creat installer.
-* "yarn run publish" to publish new version.
+### Warning: For the first time please run yarn start to rebuild native modules, otherwise we will get NODE_MODULE_VERSION not compatible.
 
-- Delete "Database" folder if make some change to database schema to re-create database.
+- "yarn start" to start the app in development mode.
+- "yarn package" to package your app.
+- "yarn make" to package your app and creat installer.
+- "yarn run publish" to publish new version.
+
+* Delete "Database" folder if make some change to database schema to re-create database.
 
 ## Usage:
 
