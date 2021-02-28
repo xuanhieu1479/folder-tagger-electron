@@ -4,7 +4,7 @@ const SEARCH = {
   ABSOLUTE_TAGS_CHARACTER: '"',
   COMMON_TERMS: ['the'],
   MINIMUM_LETTERS: 3,
-  TAG_KEYS: ['name', 'language', 'author', 'parody', 'character', 'genre'],
+  TAG_KEYS: ['name', 'author', 'parody', 'character', 'genre'],
   SPECIAL_TAGS: {
     NO_AUTHOR: 'no_author',
     NO_PARODY: 'no_parody',

@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import _ from 'lodash';
-import { FileInput, EditableText } from '@blueprintjs/core';
+import { EditableText } from '@blueprintjs/core';
 import {
   SettingReducer,
   SettingShortcut
@@ -12,14 +12,8 @@ interface SettingShortcuts {
   shortcutSettings: SettingShortcut;
   onUpdateSettings: (newSettings: Partial<SettingReducer>) => void;
 }
-type ShortcutKey =
-  | 'openFolderInExternalProgram'
-  | 'openFolderInExplorer'
-  | 'addTagsToFolder'
-  | 'editTagsOfFolder'
-  | 'removeTagsFromFolder'
-  | 'focusSearchInput';
-const ShortcutLabel: Record<ShortcutKey, string> = {
+type ShortcutKey = keyof SettingShortcut;
+const ShortcutLabel: SettingShortcut = {
   openFolderInExternalProgram: 'Exec Program',
   openFolderInExplorer: 'Open',
   addTagsToFolder: 'Add Tags',
@@ -32,21 +26,7 @@ const SettingShortcuts = ({
   shortcutSettings,
   onUpdateSettings
 }: SettingShortcuts): ReactElement => {
-  const { defaultExternalProgram, ...restProps } = shortcutSettings;
-  const shortcutKeys: Record<ShortcutKey, string> = { ...restProps };
-
-  const onChangeExtenalProgram = (event: React.FormEvent<HTMLInputElement>) => {
-    const { files } = event.target as HTMLInputElement;
-    if (files && files[0]) {
-      const newSettings = {
-        shortcut: {
-          ...shortcutSettings,
-          defaultExternalProgram: files[0].path
-        }
-      };
-      onUpdateSettings(newSettings);
-    }
-  };
+  const shortcutKeys = { ...shortcutSettings };
 
   const validateShortcut = (newShortcut: string, shortcutKey: ShortcutKey) => {
     const showDuplicateError = (duplicateShortcut: string) => {
@@ -87,33 +67,14 @@ const SettingShortcuts = ({
     const isValidated = validateShortcut(newShortcut, shortcutKey);
 
     if (isValidated) {
-      const newSettings = {
-        shortcut: {
-          ...shortcutSettings,
-          [shortcutKey]: newShortcut
-        }
-      };
-      onUpdateSettings(newSettings);
+      onUpdateSettings({
+        shortcut: { ...shortcutSettings, [shortcutKey]: newShortcut }
+      });
     }
   };
 
   return (
     <section>
-      <div className="setting-dialog_tab-panel_row">
-        <div className="setting-dialog_tab-panel_row_title">Program</div>
-        <div className="setting-dialog_tab-panel_row_content">
-          <FileInput
-            fill={true}
-            buttonText="Select"
-            hasSelection={true}
-            text={defaultExternalProgram}
-            inputProps={{
-              accept: '.exe',
-              onChange: onChangeExtenalProgram
-            }}
-          />
-        </div>
-      </div>
       {_.map(shortcutKeys, (shortcutValue, shortcutKey: ShortcutKey) => (
         <div key={shortcutKey} className="setting-dialog_tab-panel_row">
           <div className="setting-dialog_tab-panel_row_title">

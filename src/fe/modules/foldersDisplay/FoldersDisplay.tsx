@@ -50,6 +50,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
   const foldersListRef = useRef(foldersList);
   const isDialogOpenRef = useRef(isDialogOpen);
   const shortcutRef = useRef(shortcut);
+  const defaultValueRef = useRef(defaultValue);
   const [params, setParams] = useState(PAGINATION.DEFAULT);
   const [folderDialogParams, setFolderDialogParams] = useState({
     ...defaultFolderDialogParams
@@ -215,7 +216,8 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     foldersListRef.current = foldersList;
     isDialogOpenRef.current = isDialogOpen;
     shortcutRef.current = shortcut;
-  }, [selectedFolders, foldersList, isDialogOpen, shortcut]);
+    defaultValueRef.current = defaultValue;
+  }, [selectedFolders, foldersList, isDialogOpen, shortcut, defaultValue]);
 
   useEffect(() => {
     if (!folderDialogParams.isOpen) getTags(dispatch);
@@ -295,7 +297,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
   };
   const onOpenFolderInExternalProgram = () => {
     const selectedFolders = selectedFoldersRef.current;
-    const externalProgramPath = shortcutRef.current.defaultExternalProgram;
+    const externalProgramPath = defaultValueRef.current.defaultExternalProgram;
     if (!externalProgramPath)
       showMessage.info(MESSAGE.EXTERNAL_PROGRAM_UNAVAILABLE);
     else if (selectedFolders.length === 1)

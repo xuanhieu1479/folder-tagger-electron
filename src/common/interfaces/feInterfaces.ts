@@ -39,12 +39,12 @@ interface SettingReducer {
 
 interface SettingDefaultValue {
   defaultSearchParams: string;
+  defaultExternalProgram: string;
   isSearchRandomly: string;
   defaultCategory: string;
   defaultLanguage: string;
 }
 interface SettingShortcut {
-  defaultExternalProgram: string;
   openFolderInExternalProgram: string;
   openFolderInExplorer: string;
   addTagsToFolder: string;

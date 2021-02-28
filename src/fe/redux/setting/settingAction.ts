@@ -1,6 +1,7 @@
 import fs from 'fs';
 import ini from 'ini';
 import { Dispatch } from 'redux';
+import _ from 'lodash';
 import { SettingReducer } from '../../../common/interfaces/feInterfaces';
 import { SETTING } from '../../../common/variables/commonVariables';
 import { UPDATE_SETTINGS } from './settingActionType';
@@ -12,10 +13,17 @@ const getSettings = (dispatch: Dispatch, onSuccess: () => void): void => {
     if (!fileExists(SETTING.PATH)) {
       updateSettings(dispatch);
     } else {
+      const { defaultValue, shortcut } = SETTING.DEFAULT;
       const data = ini.parse(fs.readFileSync(SETTING.PATH).toString());
       const settings: SettingReducer = {
-        defaultValue: { ...SETTING.DEFAULT.defaultValue, ...data.defaultValue },
-        shortcut: { ...SETTING.DEFAULT.shortcut, ...data.shortcut }
+        defaultValue: {
+          ...defaultValue,
+          ..._.pick(data.defaultValue, Object.keys(defaultValue))
+        },
+        shortcut: {
+          ...shortcut,
+          ..._.pick(data.shortcut, Object.keys(shortcut))
+        }
       };
       updateSettings(dispatch, settings);
       onSuccess();

@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { RadioGroup, Radio, InputGroup } from '@blueprintjs/core';
+import { RadioGroup, Radio, InputGroup, FileInput } from '@blueprintjs/core';
 import {
   SettingReducer,
   SettingDefaultValue
@@ -23,6 +23,7 @@ const SettingDefaultValues = ({
 }: SettingDefaultValues): ReactElement => {
   const {
     defaultSearchParams,
+    defaultExternalProgram,
     isSearchRandomly,
     defaultCategory,
     defaultLanguage
@@ -35,6 +36,17 @@ const SettingDefaultValues = ({
     onUpdateSettings({
       defaultValue: { ...defaultValueSettings, defaultSearchParams: value }
     });
+  };
+  const onChangeExtenalProgram = (event: React.FormEvent<HTMLInputElement>) => {
+    const { files } = event.target as HTMLInputElement;
+    if (files && files[0]) {
+      onUpdateSettings({
+        defaultValue: {
+          ...defaultValueSettings,
+          defaultExternalProgram: files[0].path
+        }
+      });
+    }
   };
 
   const onChangeCategoryRadio = (event: React.FormEvent<HTMLInputElement>) => {
@@ -62,8 +74,24 @@ const SettingDefaultValues = ({
         <div className="setting-dialog_tab-panel_row_title">Search</div>
         <div className="setting-dialog_tab-panel_row_content">
           <InputGroup
+            fill={true}
             value={defaultSearchParams}
             onChange={onChangeSearchParamsInput}
+          />
+        </div>
+      </div>
+      <div className="setting-dialog_tab-panel_row">
+        <div className="setting-dialog_tab-panel_row_title">Program</div>
+        <div className="setting-dialog_tab-panel_row_content">
+          <FileInput
+            fill={true}
+            buttonText="Select"
+            hasSelection={true}
+            text={defaultExternalProgram}
+            inputProps={{
+              accept: '.exe',
+              onChange: onChangeExtenalProgram
+            }}
           />
         </div>
       </div>

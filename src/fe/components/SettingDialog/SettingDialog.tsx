@@ -43,10 +43,10 @@ const SettingDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
   };
 
   const onSave = () => {
-    const { defaultExternalProgram } = settings.shortcut;
+    const { defaultExternalProgram } = settings.defaultValue;
     const externalProgramPathHasChange =
       defaultExternalProgram !==
-      previousSettings.shortcut.defaultExternalProgram;
+      previousSettings.defaultValue.defaultExternalProgram;
     if (externalProgramPathHasChange) {
       if (!fileExists(defaultExternalProgram)) {
         showMessage.error(MESSAGE.EXTERNAL_PROGRAM_PATH_INCORRECT);
