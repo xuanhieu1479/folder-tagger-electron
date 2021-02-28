@@ -7,6 +7,7 @@ import SEED_DATA from './seedData';
 import ELEMENT_ID from './elementID';
 import SEARCH from './search';
 import BACKUP from './backup';
+import SHORTCUT from './shortcut';
 
 export * from './api';
 export {
@@ -18,5 +19,6 @@ export {
   SEED_DATA,
   ELEMENT_ID,
   SEARCH,
-  BACKUP
+  BACKUP,
+  SHORTCUT
 };

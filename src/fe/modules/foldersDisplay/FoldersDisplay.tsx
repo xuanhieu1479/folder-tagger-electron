@@ -65,10 +65,22 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
       const shortcut = shortcutRef.current;
       const foldersList = foldersListRef.current.map(folder => folder.location);
       const isHoldingCtrl = event.ctrlKey;
+      const { activeElement } = document;
+      const isSelectingCategoryOrLanguage =
+        activeElement?.id === ELEMENT_ID.HEADER_CATEGORY_SELECT ||
+        activeElement?.id === ELEMENT_ID.HEADER_LANGUAGE_SELECT;
+      const isTypingSearchKeywords =
+        activeElement?.id === ELEMENT_ID.HEADER_SEARCH_INPUT;
 
       if (isHoldingCtrl) {
         if (isDialogOpen) return;
         switch (event.key) {
+          case shortcut.openFolderInExternalProgram:
+            onOpenFolderInExternalProgram();
+            break;
+          case shortcut.openFolderInExplorer:
+            onOpenFolderInExplorer();
+            break;
           case shortcut.addTagsToFolder:
             onOpenFolderDialog(TagAction.Add);
             break;
@@ -84,21 +96,21 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
           case 'c':
             onOpenClipboardDialog();
             break;
-          case shortcut.openFolderInExplorer:
-            onOpenFolderInExplorer();
-            break;
-          case shortcut.openFolderInExternalProgram:
-            onOpenFolderInExternalProgram();
-            break;
           case shortcut.focusSearchInput:
             onFocusSearchInput();
             break;
+          case 'a':
+            if (isSelectingCategoryOrLanguage || isTypingSearchKeywords) return;
+            event.preventDefault();
+            onSelectAllFolders(foldersList);
+            break;
         }
       } else {
-        const { activeElement } = document;
         if (
           foldersList.length < 1 ||
-          activeElement?.id.includes(ELEMENT_ID.HEADER_INPUT_PREFIX)
+          isSelectingCategoryOrLanguage ||
+          (isTypingSearchKeywords &&
+            (event.key === 'ArrowLeft' || event.key === 'ArrowRight'))
         )
           return;
         const folderCardElements = document
@@ -126,10 +138,13 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
         const upPosition = newlySelectedPosition - foldersPerRow;
         const downPosition = newlySelectedPosition + foldersPerRow;
         const selectedFolderIsAtTheStart =
-          newlySelectedPosition === firstPosition;
-        const selectedFolderIsAtTheEnd = newlySelectedPosition === lastPosition;
-        const selectedFolderIsAtTheTopRow = upPosition < firstPosition;
-        const selectedFolderIsAtTheBottomRow = downPosition > lastPosition;
+          !hasNoSelectedFolder && newlySelectedPosition === firstPosition;
+        const selectedFolderIsAtTheEnd =
+          !hasNoSelectedFolder && newlySelectedPosition === lastPosition;
+        const selectedFolderIsAtTheTopRow =
+          !hasNoSelectedFolder && upPosition < firstPosition;
+        const selectedFolderIsAtTheBottomRow =
+          !hasNoSelectedFolder && downPosition > lastPosition;
 
         const firstFolder = foldersList[firstPosition];
         const lastFolder = foldersList[lastPosition];
@@ -170,13 +185,19 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
           case 'ArrowUp':
             event.preventDefault();
             if (isDialogOpen || selectedFolderIsAtTheTopRow) return;
-            if (hasNoSelectedFolder) updateSelectedFolders([lastFolder]);
+            if (isTypingSearchKeywords && activeElement instanceof HTMLElement)
+              activeElement.blur();
+            if (hasNoSelectedFolder || isTypingSearchKeywords)
+              updateSelectedFolders([lastFolder]);
             else updateSelectedFolders([foldersList[upPosition]]);
             break;
           case 'ArrowDown':
             event.preventDefault();
             if (isDialogOpen || selectedFolderIsAtTheBottomRow) return;
-            if (hasNoSelectedFolder) updateSelectedFolders([firstFolder]);
+            if (isTypingSearchKeywords && activeElement instanceof HTMLElement)
+              activeElement.blur();
+            if (hasNoSelectedFolder || isTypingSearchKeywords)
+              updateSelectedFolders([firstFolder]);
             else updateSelectedFolders([foldersList[downPosition]]);
             break;
         }
@@ -226,7 +247,10 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
   const updateParams = (newParams: Partial<FolderFilterParams>): void => {
     setParams({ ...params, ...newParams });
   };
-  const updateSelectedFolders = (newSelectedFolders: string[]): void => {
+  const updateSelectedFolders = (
+    newSelectedFolders: string[],
+    scrollToFolder = true
+  ): void => {
     const foldersList = foldersListRef.current.map(folder => folder.location);
     const scrollToNewlySelectedFolder = () => {
       const selectedFolderJustNow = _.last(newSelectedFolders);
@@ -247,7 +271,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
       type: SELECT_FOLDERS,
       payload: { selectedFolders: newSelectedFolders }
     });
-    scrollToNewlySelectedFolder();
+    if (scrollToFolder) scrollToNewlySelectedFolder();
   };
 
   const onOpenFolderDialog = (dialogType: TagAction) => {
@@ -291,10 +315,6 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     onCloseDialog(dispatch);
   };
 
-  const onOpenFolderInExplorer = () => {
-    const selectedFolders = selectedFoldersRef.current;
-    if (selectedFolders.length === 1) openDirectory(selectedFolders[0]);
-  };
   const onOpenFolderInExternalProgram = () => {
     const selectedFolders = selectedFoldersRef.current;
     const externalProgramPath = defaultValueRef.current.defaultExternalProgram;
@@ -303,16 +323,23 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     else if (selectedFolders.length === 1)
       runExternalProgram(externalProgramPath, [selectedFolders[0]]);
   };
+  const onOpenFolderInExplorer = () => {
+    const selectedFolders = selectedFoldersRef.current;
+    if (selectedFolders.length === 1) openDirectory(selectedFolders[0]);
+  };
 
   const onFocusSearchInput = () => {
     const inputElement = document.getElementById(
-      ELEMENT_ID.HEADER_INPUT('search')
+      ELEMENT_ID.HEADER_SEARCH_INPUT
     );
     if (inputElement) {
       inputElement.focus();
       updateSelectedFolders([]);
     }
   };
+
+  const onSelectAllFolders = (foldersList: string[]) =>
+    updateSelectedFolders(foldersList, false);
 
   return (
     <FunctionsContext.Provider

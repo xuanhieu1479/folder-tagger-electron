@@ -5,7 +5,7 @@ import {
   SettingReducer,
   SettingShortcut
 } from '../../../common/interfaces/feInterfaces';
-import { MESSAGE } from '../../../common/variables/commonVariables';
+import { MESSAGE, SHORTCUT } from '../../../common/variables/commonVariables';
 import { showMessage } from '../../../utilities/feUtilities';
 
 interface SettingShortcuts {
@@ -50,13 +50,10 @@ const SettingShortcuts = ({
     }
     switch (newShortcut) {
       case 't':
-        showDuplicateError('Open Settings');
-        return false;
       case 'c':
-        showDuplicateError('Copy Tags');
-        return false;
       case 'v':
-        showDuplicateError('Paste Tags');
+      case 'a':
+        showDuplicateError(SHORTCUT.UNCHANGEABLE[newShortcut]);
         return false;
     }
     return true;
