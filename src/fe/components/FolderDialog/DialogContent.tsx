@@ -44,6 +44,8 @@ const DialogContent = ({
   const [selectedLanguage, setSelectedLanguage] = useState(defaultSuggestion);
   const [selectedTags, setSelectedTags] = useState({ ...defaultSelectedTags });
   const previousSelectedTags = useRef(selectedTags);
+  const selectedCategoryRef = useRef(selectedCategory);
+  const selectedLanguageRef = useRef(selectedLanguage);
 
   useEffect(() => {
     const getSelectedFolderTags = async () => {
@@ -212,6 +214,13 @@ const DialogContent = ({
     previousSelectedTags.current.genre = selectedTags.genre;
   }, [selectedTags.genre]);
 
+  useEffect(() => {
+    selectedCategoryRef.current = selectedCategory;
+  }, [selectedCategory]);
+  useEffect(() => {
+    selectedLanguageRef.current = selectedLanguage;
+  }, [selectedLanguage]);
+
   /**
    * Ensure newly selected tag is for adding
    * and not a newly created tag.
@@ -305,7 +314,6 @@ const DialogContent = ({
     );
   };
   const transformSelectedTags = () => {
-    const defaultResult: Tag[] = [];
     const result = _.reduce(
       selectedTags,
       (accumulator, value, key) => {
@@ -324,7 +332,7 @@ const DialogContent = ({
         }
         return accumulator;
       },
-      defaultResult
+      [] as Tag[]
     );
     return result;
   };
@@ -361,6 +369,8 @@ const DialogContent = ({
   };
 
   const upsertTagsToFolders = () => {
+    const selectedCategory = selectedCategoryRef.current;
+    const selectedLanguage = selectedLanguageRef.current;
     const transformedSelectedTags = transformSelectedTags();
     const { existingTags, newTags } = getNewlyCreatedTags(
       transformedSelectedTags
