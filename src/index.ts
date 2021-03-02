@@ -25,7 +25,10 @@ const initWindows = (): void => {
   const splashWindow = new BrowserWindow({
     height: 300,
     width: 600,
-    frame: false
+    frame: false,
+    webPreferences: {
+      contextIsolation: false
+    }
   });
   splashWindow.loadFile(path.resolve(__dirname, './splash.html'));
 
@@ -36,7 +39,8 @@ const initWindows = (): void => {
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
-      webSecurity: false
+      webSecurity: false,
+      contextIsolation: false
     }
   });
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
