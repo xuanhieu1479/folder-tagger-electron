@@ -54,11 +54,11 @@ export default class Folder {
   @Column({ nullable: true })
   FolderThumbnail!: string;
 
-  @ManyToOne(() => Category, category => category.Folders)
-  Category!: Category;
+  @ManyToOne(() => Category, category => category.Folders, { nullable: true })
+  Category!: Category | null;
 
-  @ManyToOne(() => Language, language => language.Folders)
-  Language!: Language;
+  @ManyToOne(() => Language, language => language.Folders, { nullable: true })
+  Language!: Language | null;
 
   @ManyToMany(() => Tag, tag => tag.Folders)
   @JoinTable()
@@ -438,8 +438,12 @@ Folder.prototype.import = async (
       };
       await getFolderTags();
 
-      if (categoryAlreadyInDB) folder.Category = categoryAlreadyInDB;
-      if (languageAlreadyInDB) folder.Language = languageAlreadyInDB;
+      if (!Category) {
+        if (isOverwrite) folder.Category = null;
+      } else if (categoryAlreadyInDB) folder.Category = categoryAlreadyInDB;
+      if (!Language) {
+        if (isOverwrite) folder.Language = null;
+      } else if (languageAlreadyInDB) folder.Language = languageAlreadyInDB;
       folder.Tags = folderTags;
       upsertFolders.push(folder);
     };
