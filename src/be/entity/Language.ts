@@ -17,25 +17,27 @@ export default class Language {
   @OneToMany(() => Folder, folder => folder.Language)
   Folders!: Folder[];
 
-  get = async (): Promise<LanguageQueryResult> => {
-    try {
-      const result = await getRepository(Language)
-        .createQueryBuilder('language')
-        .select('language.Language', 'language')
-        .getRawMany();
-      return {
-        languages: result.map(item => item.language),
-        message: MESSAGE.SUCCESS,
-        status: StatusCode.Success
-      };
-    } catch (error) {
-      console.error('GET LANGUAGES ERROR: ', error);
-      logErrors(error.message, error.stack);
-      return {
-        languages: [],
-        message: error.message,
-        status: StatusCode.DbError
-      };
-    }
-  };
+  get!: () => Promise<LanguageQueryResult>;
 }
+
+Language.prototype.get = async (): Promise<LanguageQueryResult> => {
+  try {
+    const result = await getRepository(Language)
+      .createQueryBuilder('language')
+      .select('language.Language', 'language')
+      .getRawMany();
+    return {
+      languages: result.map(item => item.language),
+      message: MESSAGE.SUCCESS,
+      status: StatusCode.Success
+    };
+  } catch (error) {
+    console.error('GET LANGUAGES ERROR: ', error);
+    logErrors(error.message, error.stack);
+    return {
+      languages: [],
+      message: error.message,
+      status: StatusCode.DbError
+    };
+  }
+};

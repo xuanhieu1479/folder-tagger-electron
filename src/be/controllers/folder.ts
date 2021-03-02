@@ -11,7 +11,6 @@ import {
 } from '../../utilities/utilityFunctions';
 
 const router = express.Router();
-const folder = new Folder();
 
 router.get(CONTROLLER_PATH.GET, async (req: Request, res: Response) => {
   const params = req.query;
@@ -24,7 +23,7 @@ router.get(CONTROLLER_PATH.GET, async (req: Request, res: Response) => {
       ? parseInt(params.itemsPerPage)
       : PAGINATION.DEFAULT.itemsPerPage;
   const isRandom = params.isRandom === 'true';
-  const { folders, status, message } = await folder.get({
+  const { folders, status, message } = await new Folder().get({
     ...params,
     currentPage,
     itemsPerPage,
@@ -44,23 +43,23 @@ router.post(CONTROLLER_PATH.ADD, async (req: Request, res: Response) => {
     });
   }
 
-  const { status, message } = await folder.add(params);
+  const { status, message } = await new Folder().add(params);
   res.status(status).json({ message });
 });
 
 router.post(CONTROLLER_PATH.IMPORT, async (req: Request, res: Response) => {
   const { json, isOverwrite } = req.body;
-  const { status, message } = await folder.import(json, isOverwrite);
+  const { status, message } = await new Folder().import(json, isOverwrite);
   res.status(status).json({ message });
 });
 
 router.get(CONTROLLER_PATH.EXPORT, async (_req: Request, res: Response) => {
-  const { status, message } = await folder.export();
+  const { status, message } = await new Folder().export();
   res.status(status).json({ message });
 });
 
 router.get(CONTROLLER_PATH.CLEAR, async (_req: Request, res: Response) => {
-  const { status, message } = await folder.clear();
+  const { status, message } = await new Folder().clear();
   res.status(status).json({ message });
 });
 
