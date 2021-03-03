@@ -16,6 +16,7 @@ type ShortcutKey = keyof SettingShortcut;
 const ShortcutLabel: SettingShortcut = {
   openFolderInExternalProgram: 'Exec Program',
   openFolderInExplorer: 'Open',
+  renameFolder: 'Rename Folder',
   addTagsToFolder: 'Add Tags',
   editTagsOfFolder: 'Edit Tags',
   removeTagsFromFolder: 'Remove Tags',

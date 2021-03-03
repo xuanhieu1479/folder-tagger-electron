@@ -19,6 +19,7 @@ const DEFAULT_VALUE: SettingDefaultValue = {
 const SHORTCUT: SettingShortcut = {
   openFolderInExternalProgram: 'q',
   openFolderInExplorer: 'w',
+  renameFolder: 'r',
   addTagsToFolder: 'e',
   editTagsOfFolder: 's',
   removeTagsFromFolder: 'd',

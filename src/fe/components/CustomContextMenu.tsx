@@ -29,7 +29,8 @@ const CustomContextMenu = ({
     editTagsOfFolder,
     removeTagsFromFolder,
     openFolderInExplorer,
-    openFolderInExternalProgram
+    openFolderInExternalProgram,
+    renameFolder
   } = shortcut;
 
   const onClickAddTags = () => onOpenFolderDialog(TagAction.Add);
@@ -56,7 +57,7 @@ const CustomContextMenu = ({
       <MenuItem
         text="Rename Folder"
         onClick={onRenameFolder}
-        label={`Ctrl + R`}
+        label={`Ctrl + ${renameFolder.toUpperCase()}`}
       />
       <Divider />
       <MenuItem

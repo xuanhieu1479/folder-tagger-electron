@@ -47,6 +47,7 @@ interface SettingDefaultValue {
 interface SettingShortcut {
   openFolderInExternalProgram: string;
   openFolderInExplorer: string;
+  renameFolder: string;
   addTagsToFolder: string;
   editTagsOfFolder: string;
   removeTagsFromFolder: string;

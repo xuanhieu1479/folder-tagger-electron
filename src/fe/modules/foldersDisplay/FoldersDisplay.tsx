@@ -95,7 +95,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
           case shortcut.removeTagsFromFolder:
             onOpenFolderDialog(TagAction.Remove);
             break;
-          case 'r':
+          case shortcut.renameFolder:
             onOpenRenameOmnibar();
             break;
           case 't':
