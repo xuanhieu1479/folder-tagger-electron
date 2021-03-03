@@ -63,4 +63,18 @@ router.get(CONTROLLER_PATH.CLEAR, async (_req: Request, res: Response) => {
   res.status(status).json({ message });
 });
 
+router.post(CONTROLLER_PATH.RENAME, async (req: Request, res: Response) => {
+  const {
+    newLocation,
+    newName,
+    newThumbnail,
+    status,
+    message
+  } = await new Folder().rename({
+    oldLocation: req.body.oldLocation,
+    newLocation: req.body.newLocation
+  });
+  res.status(status).json({ newLocation, newName, newThumbnail, message });
+});
+
 export default router;

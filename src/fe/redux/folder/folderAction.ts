@@ -8,9 +8,15 @@ import {
 } from '../../../common/variables/commonVariables';
 import {
   FolderFilterParams,
-  TransferData
+  TransferData,
+  RenameFolderParams
 } from '../../../common/interfaces/commonInterfaces';
-import { GET_FOLDERS, GET_CATEGORIES, GET_LANGUAGES } from './folderActionType';
+import {
+  GET_FOLDERS,
+  GET_CATEGORIES,
+  GET_LANGUAGES,
+  RENAME_FOLDER
+} from './folderActionType';
 import { SET_RANDOM, UNSET_RANDOM } from '../status/statusActionType';
 import { showMessage } from '../../../utilities/feUtilities';
 import { startLoading, finishLoading } from '../status/statusAction';
@@ -120,6 +126,29 @@ const clearFoldersUpdateThumbnails = async (
   }
 };
 
+const renameFolder = async (
+  dispatch: Dispatch,
+  params: RenameFolderParams
+): Promise<void> => {
+  try {
+    const { data } = await axios.post(FOLDER_API.RENAME, { ...params });
+    const { newLocation, newName, newThumbnail } = data;
+    if (newLocation)
+      dispatch({
+        type: RENAME_FOLDER,
+        payload: {
+          oldLocation: params.oldLocation,
+          newLocation,
+          newName,
+          newThumbnail
+        }
+      });
+    showMessage.success(MESSAGE.SUCCESS);
+  } catch (error) {
+    showMessage.error(error);
+  }
+};
+
 export {
   getFolders,
   addFolders,
@@ -127,5 +156,6 @@ export {
   exportFolders,
   getCategories,
   getLanguages,
-  clearFoldersUpdateThumbnails
+  clearFoldersUpdateThumbnails,
+  renameFolder
 };

@@ -8,6 +8,7 @@ const MESSAGE = {
   DIRECTORY_DOES_NOT_EXIST: (directoryPath: string): string =>
     `${directoryPath}\ndoes not exist!`,
   DUPLICATE_NEW_NAME: 'New name is duplicate.',
+  EMPTY_FOLDER_NAME: 'Folder name cannot be empty.',
   EXTERNAL_PROGRAM_UNAVAILABLE:
     'You have not set up an external program. Please do so in settings menu.',
   EXTERNAL_PROGRAM_PATH_INCORRECT: 'External program path is incorrect!',

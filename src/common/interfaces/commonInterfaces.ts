@@ -21,6 +21,10 @@ interface TransferData {
   Language: string;
   Tags: Record<BreakDownTagType, string[]>;
 }
+interface RenameFolderParams {
+  oldLocation: string;
+  newLocation: string;
+}
 
 /**
  * Tag interfaces
@@ -57,6 +61,7 @@ interface UpdatedTag {
 export {
   Folder,
   FolderFilterParams,
+  RenameFolderParams,
   TransferData,
   BreakDownTagType,
   SearchTagType,

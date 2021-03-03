@@ -51,6 +51,10 @@ const getFolderThumbnail = (folderLocation: string): string | undefined => {
   return thumbnailName ? `${folderLocation}\\${thumbnailName}` : undefined;
 };
 
+const renameFolder = (oldPath: string, newPath: string): void => {
+  fs.renameSync(oldPath, newPath);
+};
+
 export {
   initDirectory,
   fileExists,
@@ -58,5 +62,6 @@ export {
   getFolderDirectory,
   getFolderName,
   getFolderExtension,
-  getFolderThumbnail
+  getFolderThumbnail,
+  renameFolder
 };

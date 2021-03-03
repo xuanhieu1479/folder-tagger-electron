@@ -1,12 +1,14 @@
 import React, { ReactElement, useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Omnibar, ItemRenderer } from '@blueprintjs/select';
 import { MESSAGE } from '../../common/variables/commonVariables';
 import {
   getFolderDirectory,
   getFolderName,
   fileExists
-} from '../../utilities/directoryUtilities';
+} from '../../utilities/utilityFunctions';
 import { showMessage } from '../../utilities/feUtilities';
+import { renameFolder } from '../redux/folder/folderAction';
 
 interface RenameOmnibar {
   isOpen: boolean;
@@ -19,6 +21,7 @@ const RenameOmnibar = ({
   folderName,
   onClose
 }: RenameOmnibar): ReactElement => {
+  const dispatch = useDispatch();
   const name = getFolderName(folderName);
   const directory = getFolderDirectory(folderName);
   const [input, setInput] = useState('');
@@ -33,12 +36,18 @@ const RenameOmnibar = ({
   };
   const onPressEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const { key } = event;
-    const newName = input.trim();
     const oldName = name.trim();
+    const newName = input.trim();
+    const newLocation = `${directory}\\${newName}`;
     if (key === 'Enter') {
       if (newName === oldName) onClose();
-      else if (fileExists(`${directory}\\${newName}`))
+      else if (!newName) showMessage.error(MESSAGE.EMPTY_FOLDER_NAME);
+      else if (fileExists(newLocation))
         showMessage.error(MESSAGE.DUPLICATE_NEW_NAME);
+      else {
+        renameFolder(dispatch, { oldLocation: folderName, newLocation });
+        onClose();
+      }
     }
   };
 

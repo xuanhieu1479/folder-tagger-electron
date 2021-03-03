@@ -2,7 +2,8 @@ import {
   GET_FOLDERS,
   SELECT_FOLDERS,
   GET_CATEGORIES,
-  GET_LANGUAGES
+  GET_LANGUAGES,
+  RENAME_FOLDER
 } from './folderActionType';
 import {
   ReducerAction,
@@ -38,6 +39,24 @@ const statusReducer = (
       return { ...state, categories };
     case GET_LANGUAGES:
       return { ...state, languages };
+    case RENAME_FOLDER: {
+      const {
+        oldLocation,
+        newLocation,
+        newName,
+        newThumbnail
+      } = action.payload;
+      const newFoldersList = state.foldersList.map(folder => {
+        if (folder.location === oldLocation)
+          return {
+            location: newLocation,
+            name: newName,
+            thumbnail: newThumbnail
+          };
+        return folder;
+      });
+      return { ...state, foldersList: newFoldersList };
+    }
     default:
       return state;
   }

@@ -16,7 +16,8 @@ import {
   Folder as FolderInterface,
   FolderFilterParams,
   TransferData,
-  BreakDownTagType
+  BreakDownTagType,
+  RenameFolderParams
 } from '../../common/interfaces/commonInterfaces';
 import { QueryResult } from '../../common/interfaces/beInterfaces';
 import {
@@ -31,7 +32,8 @@ import {
   fileExists,
   getFolderName,
   getFolderThumbnail,
-  writeToFile
+  writeToFile,
+  renameFolder
 } from '../../utilities/utilityFunctions';
 
 interface FolderQueryResult extends QueryResult {
@@ -39,6 +41,11 @@ interface FolderQueryResult extends QueryResult {
     foldersList: Folder[];
     totalFolders: number;
   };
+}
+interface RenameQueryResult extends QueryResult {
+  newLocation?: string;
+  newName?: string;
+  newThumbnail?: string;
 }
 
 const getTagId = (tagType: string, tagName: string) => `${tagType}-${tagName}`;
@@ -77,6 +84,7 @@ export default class Folder {
   ) => Promise<QueryResult>;
   add!: (folders: FolderInterface[]) => Promise<FolderQueryResult>;
   get!: (params: FolderFilterParams) => Promise<FolderQueryResult>;
+  rename!: (params: RenameFolderParams) => Promise<RenameQueryResult>;
 }
 
 Folder.prototype.get = async (
@@ -564,12 +572,11 @@ Folder.prototype.clear = async (): Promise<QueryResult> => {
   allFolders.forEach(folder => {
     const { FolderLocation, FolderThumbnail } = folder;
     if (!fileExists(FolderLocation)) nonExistentFolders.push(folder);
-    else if (!fileExists(FolderThumbnail) || !FolderThumbnail) {
+    else if (!FolderThumbnail || !fileExists(FolderThumbnail)) {
       const newThumbnail = getFolderThumbnail(FolderLocation);
-      if (newThumbnail) {
-        folder.FolderThumbnail = newThumbnail;
-        updatedThumbnailFolders.push(folder);
-      }
+      if (newThumbnail) folder.FolderThumbnail = newThumbnail;
+      else folder.FolderThumbnail = '';
+      updatedThumbnailFolders.push(folder);
     }
   });
 
@@ -594,6 +601,58 @@ Folder.prototype.clear = async (): Promise<QueryResult> => {
     };
   } catch (error) {
     console.error('CLEAR FOLDERS ERROR: ', error);
+    logErrors(error.message, error.stack);
+    return {
+      message: error.message,
+      status: StatusCode.DbError
+    };
+  }
+};
+
+Folder.prototype.rename = async (
+  params: RenameFolderParams
+): Promise<RenameQueryResult> => {
+  const { oldLocation, newLocation } = params;
+  const folderExists = await new Folder().isExisting(newLocation);
+  if (folderExists)
+    return {
+      message: MESSAGE.SPECIFIC_FOLDER_ALREADY_EXISTS(newLocation),
+      status: StatusCode.DbError
+    };
+  const manager = getManager();
+  const oldFolder = await getRepository(Folder)
+    .createQueryBuilder('folder')
+    .leftJoinAndSelect('folder.Category', 'category')
+    .leftJoinAndSelect('folder.Language', 'language')
+    .leftJoinAndSelect('folder.Tags', 'tags')
+    .where('folder.FolderLocation = :oldLocation', { oldLocation })
+    .getOne();
+  const newName = getFolderName(newLocation);
+  const newThumbnail = oldFolder?.FolderThumbnail
+    ? oldFolder.FolderThumbnail.replace(oldLocation, newLocation)
+    : '';
+  const newFolder = manager.create(Folder, {
+    ...oldFolder,
+    FolderLocation: newLocation,
+    FolderName: newName,
+    FolderThumbnail: newThumbnail
+  });
+
+  try {
+    await manager.transaction(async transactionManager => {
+      await transactionManager.save(newFolder);
+      await transactionManager.remove(oldFolder);
+      renameFolder(oldLocation, newLocation);
+    });
+    return {
+      newLocation,
+      newName,
+      newThumbnail,
+      message: MESSAGE.SUCCESS,
+      status: StatusCode.Success
+    };
+  } catch (error) {
+    console.error('RENAME FOLDERS ERROR: ', error);
     logErrors(error.message, error.stack);
     return {
       message: error.message,
