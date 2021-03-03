@@ -6,6 +6,7 @@ import SettingDialog from './SettingDialog/SettingDialog';
 import ManageTagsDialog from './ManageTagsDialog';
 import CustomSuggest from './CustomSuggest';
 import CustomMultiSelect from './CustomMultiSelect';
+import RenameOmnibar from './RenameOmnibar';
 
 export {
   FolderCard,
@@ -15,5 +16,6 @@ export {
   SettingDialog,
   ManageTagsDialog,
   CustomSuggest,
-  CustomMultiSelect
+  CustomMultiSelect,
+  RenameOmnibar
 };

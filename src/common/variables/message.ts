@@ -7,12 +7,14 @@ const MESSAGE = {
     `${folderlocation}\nalready exists in database`,
   DIRECTORY_DOES_NOT_EXIST: (directoryPath: string): string =>
     `${directoryPath}\ndoes not exist!`,
+  DUPLICATE_NEW_NAME: 'New name is duplicate.',
   EXTERNAL_PROGRAM_UNAVAILABLE:
     'You have not set up an external program. Please do so in settings menu.',
   EXTERNAL_PROGRAM_PATH_INCORRECT: 'External program path is incorrect!',
   EXTERNAL_PROGRAM_INVALID: 'Provided path is not a program!',
   INVALID_PARAMS: 'The parameters are invalid',
   CANNOT_EDIT_MANY_FOLDERS: 'Only one folder can be edited at a time!',
+  CANNOT_RENAME_MANY_FOLDERS: 'Only one folder can be renamed at a time!',
   CANNOT_COPY_TAG_MANY_FOLDERS: 'Cannot copy tags from multiple folders!',
   COPY_FOLDER_NAME_TO_CLIPBOARD: "Copied folder's name to clipboard!",
   COPY_FOLDER_TAGS_TO_CLIPBOARD: (tagTypes: BreakDownTagType[]): string => {

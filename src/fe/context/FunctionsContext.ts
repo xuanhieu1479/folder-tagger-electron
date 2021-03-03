@@ -4,7 +4,8 @@ import { FunctionsContext } from '../../common/interfaces/feInterfaces';
 const defaultContextValue: FunctionsContext = {
   dialog: {
     onOpenFolderDialog: () => undefined,
-    onOpenClipboardDialog: () => undefined
+    onOpenClipboardDialog: () => undefined,
+    onOpenRenameOmnibar: () => undefined
   },
   directory: {
     onOpenFolderInExplorer: () => undefined,

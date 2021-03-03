@@ -30,6 +30,11 @@ const writeToFile = (
   fs.appendFileSync(filePath, fileContent);
 };
 
+const getFolderDirectory = (folderLocation: string): string => {
+  const fragments = folderLocation.split('\\');
+  fragments.pop();
+  return fragments.join('\\');
+};
 const getFolderName = (folderLocation: string): string => {
   return folderLocation.split('\\').pop() || 'Error Name';
 };
@@ -50,6 +55,7 @@ export {
   initDirectory,
   fileExists,
   writeToFile,
+  getFolderDirectory,
   getFolderName,
   getFolderExtension,
   getFolderThumbnail

@@ -12,7 +12,8 @@ import { TagAction } from '../../../common/enums/commonEnums';
 import FunctionsContext from '../../context/FunctionsContext';
 import {
   FolderDialog,
-  ClipboardDialog
+  ClipboardDialog,
+  RenameOmnibar
 } from '../../components/commonComponents';
 import Header from '../header/Header';
 import Body from '../body/Body';
@@ -56,6 +57,10 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     ...defaultFolderDialogParams
   });
   const [isClipboardDialogOpen, setClipboardDialogOpen] = useState(false);
+  const [renameOmnibarParams, setRenameOmnibarParams] = useState({
+    isOpen: false,
+    folderName: ''
+  });
   const [isFirstRender, setFirstRender] = useState(true);
 
   useEffect(() => {
@@ -89,6 +94,9 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
             break;
           case shortcut.removeTagsFromFolder:
             onOpenFolderDialog(TagAction.Remove);
+            break;
+          case 'r':
+            onOpenRenameOmnibar();
             break;
           case 't':
             openSettingDialog();
@@ -157,8 +165,8 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
 
         switch (event.key) {
           case 'ArrowLeft':
-            event.preventDefault();
             if (isDialogOpen) return;
+            event.preventDefault();
             if (hasNoSelectedFolder) updateSelectedFolders([lastFolder]);
             else if (isHoldingShift) {
               if (selectedFolderIsAtTheStart) return;
@@ -170,8 +178,8 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
             } else updateSelectedFolders([previousFolder]);
             break;
           case 'ArrowRight':
-            event.preventDefault();
             if (isDialogOpen) return;
+            event.preventDefault();
             if (hasNoSelectedFolder) updateSelectedFolders([firstFolder]);
             else if (isHoldingShift) {
               if (selectedFolderIsAtTheEnd) return;
@@ -301,6 +309,23 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     setFolderDialogParams({ ...defaultFolderDialogParams });
   };
 
+  const onOpenRenameOmnibar = () => {
+    const selectedFolders = selectedFoldersRef.current;
+    if (selectedFolders.length === 1) {
+      const selectedFolder = selectedFolders[0];
+      onOpenDialog(dispatch);
+      setRenameOmnibarParams({
+        isOpen: true,
+        folderName: selectedFolder
+      });
+    } else if (selectedFolders.length > 1)
+      showMessage.error(MESSAGE.CANNOT_RENAME_MANY_FOLDERS);
+  };
+  const onCloseRenameOmnibar = () => {
+    setRenameOmnibarParams({ isOpen: false, folderName: '' });
+    onCloseDialog(dispatch);
+  };
+
   const onOpenClipboardDialog = () => {
     const selectedFolders = selectedFoldersRef.current;
     if (selectedFolders.length > 1)
@@ -346,7 +371,8 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
       value={{
         dialog: {
           onOpenFolderDialog,
-          onOpenClipboardDialog
+          onOpenClipboardDialog,
+          onOpenRenameOmnibar
         },
         directory: {
           onOpenFolderInExplorer,
@@ -373,6 +399,7 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
         isOpen={isClipboardDialogOpen}
         onClose={onCloseClipboardDialog}
       />
+      <RenameOmnibar {...renameOmnibarParams} onClose={onCloseRenameOmnibar} />
     </FunctionsContext.Provider>
   );
 };

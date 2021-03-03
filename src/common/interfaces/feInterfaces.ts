@@ -56,6 +56,7 @@ interface SettingShortcut {
 interface DialogContext {
   onOpenFolderDialog: (dialogType: TagAction) => void;
   onOpenClipboardDialog: () => void;
+  onOpenRenameOmnibar: () => void;
 }
 interface DirectoryContext {
   onOpenFolderInExplorer: () => void;

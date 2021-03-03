@@ -1,6 +1,7 @@
 @import '~normalize.css';
 @import '~@blueprintjs/core/lib/css/blueprint.css';
 @import '~@blueprintjs/icons/lib/css/blueprint-icons.css';
+@import '~@blueprintjs/select/lib/css/blueprint-select.css';
 
 body {
   font-family: 'Roboto';
@@ -8,4 +9,9 @@ body {
 
 .bp3-toast {
   margin: 40px 0 0;
+}
+
+.bp3-omnibar {
+  width: 800px;
+  left: calc(50% - 400px);
 }

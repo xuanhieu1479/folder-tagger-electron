@@ -18,7 +18,11 @@ const CustomContextMenu = ({
   dialog,
   directory
 }: CustomContextMenu): React.ReactElement => {
-  const { onOpenFolderDialog, onOpenClipboardDialog } = dialog;
+  const {
+    onOpenFolderDialog,
+    onOpenClipboardDialog,
+    onOpenRenameOmnibar
+  } = dialog;
   const { onOpenFolderInExplorer, onOpenFolderInExternalProgram } = directory;
   const {
     addTagsToFolder,
@@ -35,6 +39,7 @@ const CustomContextMenu = ({
   const onClickRemoveAllTags = () => removeAllTagsFromFolders(selectedFolders);
   const onClickOpenFolder = () => onOpenFolderInExplorer();
   const onClickExecuteExternalProgram = () => onOpenFolderInExternalProgram();
+  const onRenameFolder = () => onOpenRenameOmnibar();
 
   return (
     <Menu>
@@ -47,6 +52,11 @@ const CustomContextMenu = ({
         text="Open In Explorer"
         onClick={onClickOpenFolder}
         label={`Ctrl + ${openFolderInExplorer.toUpperCase()}`}
+      />
+      <MenuItem
+        text="Rename Folder"
+        onClick={onRenameFolder}
+        label={`Ctrl + R`}
       />
       <Divider />
       <MenuItem
