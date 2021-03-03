@@ -28,7 +28,11 @@ const statusReducer = (
     totalFolders,
     selectedFolders,
     categories,
-    languages
+    languages,
+    oldLocation,
+    newLocation,
+    newName,
+    newThumbnail
   } = data;
   switch (action.type) {
     case GET_FOLDERS:
@@ -40,12 +44,6 @@ const statusReducer = (
     case GET_LANGUAGES:
       return { ...state, languages };
     case RENAME_FOLDER: {
-      const {
-        oldLocation,
-        newLocation,
-        newName,
-        newThumbnail
-      } = action.payload;
       const newFoldersList = state.foldersList.map(folder => {
         if (folder.location === oldLocation)
           return {
@@ -55,7 +53,11 @@ const statusReducer = (
           };
         return folder;
       });
-      return { ...state, foldersList: newFoldersList };
+      return {
+        ...state,
+        foldersList: newFoldersList,
+        selectedFolders: [newLocation]
+      };
     }
     default:
       return state;
