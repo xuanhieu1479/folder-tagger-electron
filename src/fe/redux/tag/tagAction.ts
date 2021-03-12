@@ -4,6 +4,7 @@ import fs from 'fs';
 import {
   BreakDownTagType,
   Tag,
+  ModifyTagsOfFolders,
   ManageTagsFilterParams,
   UpdatedTag
 } from '../../../common/interfaces/commonInterfaces';
@@ -28,13 +29,7 @@ interface GetTagsOfOneFolder {
   category?: string;
   language?: string;
 }
-interface ModifyTags {
-  selectedFolders: string[];
-  existingTags: Tag[];
-  newTags: Tag[];
-  category?: string;
-  language?: string;
-  action: string;
+interface ModifyTags extends ModifyTagsOfFolders {
   onSuccess: () => void;
 }
 
@@ -81,7 +76,7 @@ const copyTags = async (
 };
 
 const modifyTagsOfFolders = async ({
-  selectedFolders,
+  folderLocations,
   existingTags,
   newTags,
   category,
@@ -91,7 +86,7 @@ const modifyTagsOfFolders = async ({
 }: ModifyTags): Promise<void> => {
   try {
     await axios.post(TAG_API.MODIFY, {
-      folderLocations: selectedFolders,
+      folderLocations,
       existingTags,
       newTags,
       category,

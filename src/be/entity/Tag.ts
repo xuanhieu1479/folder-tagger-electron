@@ -15,6 +15,7 @@ import {
   Tag as TagInterface,
   TagRelations,
   BreakDownTagType,
+  ModifyTagsOfFolders,
   ManagedTag,
   ManageTagsFilterParams,
   UpdatedTag
@@ -33,14 +34,6 @@ interface TagQueryResult extends QueryResult {
 interface GetTagFilterParams {
   folderLocation?: string;
   includedTagTypes?: BreakDownTagType[];
-}
-interface ModifyTagsOfFolders extends TagInterface {
-  folderLocations: string[];
-  existingTags: TagInterface[];
-  newTags: TagInterface[];
-  category?: string;
-  language?: string;
-  action: TagAction;
 }
 interface TagRelationQueryResult extends QueryResult {
   relations?: TagRelations;
@@ -210,27 +203,26 @@ Tag.prototype.modifyTagsOfFolders = async (
   // Since they all will be overwritten anyway.
   if (action !== TagAction.Edit)
     insertFoldersQuery.leftJoinAndSelect('folder.Tags', 'Tag');
-  // Need this to avoid overwriting current category or language
-  if (action === TagAction.Add) {
-    if (category)
-      insertFoldersQuery.leftJoinAndSelect('folder.Category', 'category');
-    if (language)
-      insertFoldersQuery.leftJoinAndSelect('folder.Language', 'language');
-  }
 
   const insertFolders = await insertFoldersQuery.getMany();
-  const newCategory = category
-    ? await getRepository(Category)
-        .createQueryBuilder()
-        .whereInIds(category)
-        .getOne()
-    : undefined;
-  const newLanguage = language
-    ? await getRepository(Language)
-        .createQueryBuilder()
-        .whereInIds(language)
-        .getOne()
-    : undefined;
+
+  let newCategory: Category | undefined | null;
+  if (category === null) newCategory = null;
+  else if (typeof category === 'string' && !_.isEmpty(category))
+    newCategory = await getRepository(Category)
+      .createQueryBuilder()
+      .whereInIds(category)
+      .getOne();
+  else newCategory = undefined;
+
+  let newLanguage: Language | undefined | null;
+  if (language === null) newLanguage = null;
+  else if (typeof language === 'string' && !_.isEmpty(language))
+    newLanguage = await getRepository(Language)
+      .createQueryBuilder()
+      .whereInIds(language)
+      .getOne();
+  else newLanguage = undefined;
 
   const updateFoldersTag = async (newlyCreatedTags: Tag[]) => {
     const tagIds = existingTags.map(tag => getTagId(tag.tagType, tag.tagName));
@@ -239,16 +231,19 @@ Tag.prototype.modifyTagsOfFolders = async (
       .whereInIds(tagIds)
       .getMany();
     for (const folder of insertFolders) {
+      const updateCategoryAndLanguage = () => {
+        if (newCategory !== undefined) folder.Category = newCategory;
+        if (newLanguage !== undefined) folder.Language = newLanguage;
+      };
+
       switch (action) {
         case TagAction.Add:
           folder.Tags = [...folder.Tags, ...foundTags, ...newlyCreatedTags];
-          if (newCategory && !folder.Category) folder.Category = newCategory;
-          if (newLanguage && !folder.Language) folder.Language = newLanguage;
+          updateCategoryAndLanguage();
           break;
         case TagAction.Edit:
           folder.Tags = [...foundTags, ...newlyCreatedTags];
-          if (newCategory) folder.Category = newCategory;
-          if (newLanguage) folder.Language = newLanguage;
+          updateCategoryAndLanguage();
           break;
         case TagAction.Remove:
           _.pullAllBy(folder.Tags, foundTags, 'TagId');

@@ -24,6 +24,7 @@ const defaultSelectedTags: Record<BreakDownTagType, string[]> = {
   genre: []
 };
 const defaultSuggestion = '';
+const noneSuggestion = 'none';
 
 const DialogContent = ({
   dialogType,
@@ -375,12 +376,15 @@ const DialogContent = ({
     const { existingTags, newTags } = getNewlyCreatedTags(
       transformedSelectedTags
     );
-    const category =
-      selectedCategory === defaultSuggestion ? undefined : selectedCategory;
-    const language =
-      selectedLanguage === defaultSuggestion ? undefined : selectedLanguage;
+    let category: string | undefined | null = selectedCategory;
+    if (category === defaultSuggestion) category = undefined;
+    else if (category === noneSuggestion) category = null;
+    let language: string | undefined | null = selectedLanguage;
+    if (language === defaultSuggestion) language = undefined;
+    else if (language === noneSuggestion) language = null;
+
     modifyTagsOfFolders({
-      selectedFolders,
+      folderLocations: selectedFolders,
       existingTags,
       newTags,
       category,
@@ -392,7 +396,7 @@ const DialogContent = ({
   const removeTagsFromFolders = () => {
     const transformedSelectedTags = transformSelectedTags();
     modifyTagsOfFolders({
-      selectedFolders,
+      folderLocations: selectedFolders,
       existingTags: transformedSelectedTags,
       newTags: [],
       action: dialogType,
@@ -408,7 +412,7 @@ const DialogContent = ({
           <CustomSuggest
             inputId={ELEMENT_ID.FOLDER_DIALOG_INPUT('category')}
             selectedItem={selectedCategory}
-            items={categories}
+            items={[noneSuggestion, ...categories]}
             isDisabled={dialogType === TagAction.Remove}
             updateSelectedItem={setSelectedCategory}
           />
@@ -420,7 +424,7 @@ const DialogContent = ({
           <CustomSuggest
             inputId={ELEMENT_ID.FOLDER_DIALOG_INPUT('language')}
             selectedItem={selectedLanguage}
-            items={languages}
+            items={[noneSuggestion, ...languages]}
             isDisabled={dialogType === TagAction.Remove}
             updateSelectedItem={setSelectedLanguage}
           />

@@ -1,3 +1,5 @@
+import TagAction from '../enums/tagAction';
+
 /**
  * Folder interfaces
  */
@@ -46,6 +48,14 @@ interface TagRelations {
   author_parody: Record<string, string[]>;
   author_genre: Record<string, string[]>;
 }
+interface ModifyTagsOfFolders {
+  folderLocations: string[];
+  existingTags: Tag[];
+  newTags: Tag[];
+  category?: string | null;
+  language?: string | null;
+  action: TagAction;
+}
 interface ManagedTag extends Tag {
   usedTimes: number;
 }
@@ -67,6 +77,7 @@ export {
   SearchTagType,
   Tag,
   TagRelations,
+  ModifyTagsOfFolders,
   ManagedTag,
   ManageTagsFilterParams,
   UpdatedTag
