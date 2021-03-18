@@ -37,7 +37,7 @@ const menuTemplate = [
         click: onOpenSetting
       },
       {
-        label: 'Calculate Tag RelationS',
+        label: 'Calculate Tag Relations',
         click: calculateTagRelations
       },
       {
