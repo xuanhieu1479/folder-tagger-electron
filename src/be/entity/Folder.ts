@@ -71,6 +71,12 @@ export default class Folder {
   @JoinTable()
   Tags!: Tag[];
 
+  @Column({ nullable: true })
+  CreatedAt!: number;
+
+  @Column({ nullable: true })
+  UpdatedAt!: number;
+
   isExisting = async (folderLocation: string): Promise<boolean> => {
     const folder = await getRepository(Folder).findOne(folderLocation);
     return folder !== undefined;
@@ -346,7 +352,8 @@ Folder.prototype.add = async (
         manager.create(Folder, {
           FolderLocation: location,
           FolderName: name,
-          FolderThumbnail: thumbnail
+          FolderThumbnail: thumbnail,
+          CreatedAt: new Date().getTime()
         })
       );
   }
@@ -576,6 +583,11 @@ Folder.prototype.clear = async (): Promise<QueryResult> => {
       const newThumbnail = getFolderThumbnail(FolderLocation);
       if (newThumbnail) folder.FolderThumbnail = newThumbnail;
       else folder.FolderThumbnail = '';
+      // If folder does not have thumbnail from the get go
+      // and no new thumbnail has been found (basically nothing happened),
+      // don't update UpdatedAt.
+      if (!(!FolderThumbnail && !newThumbnail))
+        folder.UpdatedAt = new Date().getTime();
       updatedThumbnailFolders.push(folder);
     }
   });
@@ -635,7 +647,8 @@ Folder.prototype.rename = async (
     ...oldFolder,
     FolderLocation: newLocation,
     FolderName: newName,
-    FolderThumbnail: newThumbnail
+    FolderThumbnail: newThumbnail,
+    UpdatedAt: new Date().getTime()
   });
 
   try {

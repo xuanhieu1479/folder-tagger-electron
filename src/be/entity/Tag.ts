@@ -82,7 +82,7 @@ export default class Tag {
     folderLocations
   }: RemoveAllTagsFromFolders) => Promise<QueryResult>;
   clear!: () => Promise<QueryResult>;
-  calculateRelation!: () => Promise<TagRelationQueryResult>;
+  calculateRelations!: () => Promise<TagRelationQueryResult>;
   modifyTagsOfFolders!: (params: ModifyTagsOfFolders) => Promise<QueryResult>;
   create!: (
     newTags: TagInterface[],
@@ -249,6 +249,8 @@ Tag.prototype.modifyTagsOfFolders = async (
           _.pullAllBy(folder.Tags, foundTags, 'TagId');
           break;
       }
+
+      folder.UpdatedAt = new Date().getTime();
     }
   };
 
@@ -275,7 +277,7 @@ Tag.prototype.modifyTagsOfFolders = async (
   }
 };
 
-Tag.prototype.calculateRelation = async (): Promise<TagRelationQueryResult> => {
+Tag.prototype.calculateRelations = async (): Promise<TagRelationQueryResult> => {
   const rawData = await getRepository(Folder)
     .createQueryBuilder('folder')
     .innerJoinAndSelect('folder.Tags', 'tag')
@@ -456,7 +458,10 @@ Tag.prototype.removeAllTagsFromFolders = async ({
     .createQueryBuilder()
     .whereInIds(folderLocations)
     .getMany();
-  selectedFolders.forEach(folder => (folder.Tags = []));
+  selectedFolders.forEach(folder => {
+    folder.Tags = [];
+    folder.UpdatedAt = new Date().getTime();
+  });
 
   try {
     const manager = getManager();
