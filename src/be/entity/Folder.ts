@@ -414,7 +414,15 @@ Folder.prototype.import = async (
   };
 
   for (const folder of json) {
-    const { FolderLocation, FolderName, Category, Language, Tags } = folder;
+    const {
+      FolderLocation,
+      FolderName,
+      Category,
+      Language,
+      CreatedAt,
+      UpdatedAt,
+      Tags
+    } = folder;
     const folderAlreadyInDB = await getFolderInDB(FolderName);
     const categoryAlreadyInDB = allCategories.find(
       category => category.Category === Category
@@ -475,7 +483,9 @@ Folder.prototype.import = async (
         const newFolder = manager.create(Folder, {
           FolderLocation,
           FolderName: getFolderName(FolderLocation),
-          FolderThumbnail: getFolderThumbnail(FolderLocation)
+          FolderThumbnail: getFolderThumbnail(FolderLocation),
+          CreatedAt,
+          UpdatedAt
         });
         await updateOrCreateFolders(newFolder);
       }
@@ -521,17 +531,29 @@ Folder.prototype.export = async (): Promise<QueryResult> => {
         'folder.FolderName',
         'category.Category',
         'language.Language',
+        'folder.CreatedAt',
+        'folder.UpdatedAt',
         'tag.TagName',
         'tagType.TagType'
       ])
       .getMany();
     const json = allFolders.map(folder => {
-      const { FolderLocation, FolderName, Category, Language, Tags } = folder;
+      const {
+        FolderLocation,
+        FolderName,
+        Category,
+        Language,
+        CreatedAt,
+        UpdatedAt,
+        Tags
+      } = folder;
       return {
         FolderLocation,
         FolderName,
         Category: Category?.Category || null,
         Language: Language?.Language || null,
+        CreatedAt,
+        UpdatedAt,
         Tags: Tags.reduce(
           (accumulator: Record<BreakDownTagType, string[]>, currentValue) => {
             const tagKey = currentValue.TagType.TagType;

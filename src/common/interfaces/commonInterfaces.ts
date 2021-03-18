@@ -21,6 +21,8 @@ interface TransferData {
   FolderName: string;
   Category: string;
   Language: string;
+  CreatedAt: number;
+  UpdatedAt: number;
   Tags: Record<BreakDownTagType, string[]>;
 }
 interface RenameFolderParams {
