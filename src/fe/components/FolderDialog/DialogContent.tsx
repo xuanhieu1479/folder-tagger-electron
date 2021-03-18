@@ -44,6 +44,8 @@ const DialogContent = ({
   const [selectedCategory, setSelectedCategory] = useState(defaultSuggestion);
   const [selectedLanguage, setSelectedLanguage] = useState(defaultSuggestion);
   const [selectedTags, setSelectedTags] = useState({ ...defaultSelectedTags });
+  const [isFirstRender, setFirstRender] = useState(true);
+  const [hasChange, setHasChange] = useState(false);
   const previousSelectedTags = useRef(selectedTags);
   const selectedCategoryRef = useRef(selectedCategory);
   const selectedLanguageRef = useRef(selectedLanguage);
@@ -122,6 +124,8 @@ const DialogContent = ({
         setSelectedLanguage(defaultValue.defaultLanguage);
         break;
     }
+
+    setFirstRender(false);
     window.addEventListener('keydown', keyDownListerner);
     return () => window.removeEventListener('keydown', keyDownListerner);
   }, []);
@@ -132,7 +136,12 @@ const DialogContent = ({
 
   // On change character
   useEffect(() => {
-    if (_.isEmpty(parody_character) || !_.isEmpty(selectedTags.parody)) {
+    if (
+      isFirstRender ||
+      !hasChange ||
+      _.isEmpty(parody_character) ||
+      !_.isEmpty(selectedTags.parody)
+    ) {
       previousSelectedTags.current.character = selectedTags.character;
       return;
     }
@@ -153,6 +162,10 @@ const DialogContent = ({
   }, [selectedTags.character]);
   // On change parody
   useEffect(() => {
+    if (isFirstRender || !hasChange) {
+      previousSelectedTags.current.parody = selectedTags.parody;
+      return;
+    }
     const isOK = checkNewlySelectedTag(selectedTags.parody, 'parody');
     if (isOK) {
       const newParody = _.last(selectedTags.parody) as string;
@@ -176,6 +189,10 @@ const DialogContent = ({
   }, [selectedTags.parody]);
   // On change author
   useEffect(() => {
+    if (isFirstRender || !hasChange || !_.isEmpty(selectedTags.parody)) {
+      previousSelectedTags.current.author = selectedTags.author;
+      return;
+    }
     const isOK = checkNewlySelectedTag(selectedTags.author, 'author');
     if (isOK) {
       const newAuthor = _.last(selectedTags.author) as string;
@@ -195,7 +212,12 @@ const DialogContent = ({
   }, [selectedTags.author]);
   // On change genre
   useEffect(() => {
-    if (_.isEmpty(author_genre) || !_.isEmpty(selectedTags.author)) {
+    if (
+      isFirstRender ||
+      !hasChange ||
+      _.isEmpty(author_genre) ||
+      !_.isEmpty(selectedTags.author)
+    ) {
       previousSelectedTags.current.genre = selectedTags.genre;
       return;
     }
@@ -263,6 +285,7 @@ const DialogContent = ({
   };
 
   const onAddTag = (tagKey: BreakDownTagType, addedTag: string) => {
+    setHasChange(true);
     const isNewTag = !allTags.find(
       tag => tag.tagType === tagKey && tag.tagName === addedTag
     );
@@ -278,6 +301,7 @@ const DialogContent = ({
       });
   };
   const onRemoveTag = (tagKey: BreakDownTagType, removedTag: string) => {
+    setHasChange(true);
     const isNewTag = !allTags.find(
       tag => tag.tagType === tagKey && tag.tagName === removedTag
     );
