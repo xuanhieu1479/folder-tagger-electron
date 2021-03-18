@@ -115,6 +115,18 @@ Folder.prototype.get = async (
     query.andWhere('folder.Language = :language', { language });
 
   const querySpecialTags = (tag: string) => {
+    // Normally this should be inside a separate sort function,
+    // but I don't really need a sort that much.
+    // Just use this to check whether new update info is correct or not.
+    switch (tag) {
+      case SEARCH.SPECIAL_TAGS.NEWLY_ADDED:
+        query.addOrderBy('folder.CreatedAt', 'DESC');
+        return;
+      case SEARCH.SPECIAL_TAGS.NEWLY_UPDATED:
+        query.addOrderBy('folder.UpdatedAt', 'DESC');
+        return;
+    }
+
     query.andWhere(q => {
       let preQuery = 'folder.FolderLocation NOT IN ';
       const subQuery = q

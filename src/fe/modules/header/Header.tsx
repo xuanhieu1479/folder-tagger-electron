@@ -91,6 +91,8 @@ const Header = ({
               <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_GENRE}" to get folders that have no genre.`}</div>
               <div>{`Use "${SEARCH.SPECIAL_TAGS.HAVE_CHARACTER}" to get folders that have at least one character.`}</div>
               <div>{`Use "${SEARCH.SPECIAL_TAGS.MANY_PARODIES}" to get folders that have multiple parodies.`}</div>
+              <div>{`Use "${SEARCH.SPECIAL_TAGS.NEWLY_ADDED}" to get folders that just have been added.`}</div>
+              <div>{`Use "${SEARCH.SPECIAL_TAGS.NEWLY_UPDATED}" to get folders that just have been updated.`}</div>
             </div>
           }
         >

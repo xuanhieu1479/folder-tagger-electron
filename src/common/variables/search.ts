@@ -10,7 +10,9 @@ const SEARCH = {
     NO_PARODY: 'no_parody',
     NO_GENRE: 'no_genre',
     HAVE_CHARACTER: 'have_character',
-    MANY_PARODIES: 'many_parody'
+    MANY_PARODIES: 'many_parody',
+    NEWLY_UPDATED: 'newly_updated',
+    NEWLY_ADDED: 'newly_added'
   }
 };
 
