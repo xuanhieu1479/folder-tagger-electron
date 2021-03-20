@@ -3,8 +3,6 @@ import _ from 'lodash';
 import { MenuItem } from '@blueprintjs/core';
 import { MultiSelect, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
 import { BreakDownTagType } from '../../common/interfaces/commonInterfaces';
-import { MESSAGE } from '../../common/variables/commonVariables';
-import { showMessage } from '../../utilities/feUtilities';
 import './styles/CustomMultiSelect.styled.scss';
 
 interface CustomMultiSelect {
@@ -51,8 +49,7 @@ const CustomMultiSelect = ({
   };
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
-    if (!noSpecialCharactersRegex.test(value)) setInputvalue(value);
-    else showMessage.error(MESSAGE.SPECIAL_CHARACTERS_FORBIDDEN);
+    setInputvalue(value);
   };
   const onItemSelect = (item: string): void => {
     onSelectItem(itemKey, item);
