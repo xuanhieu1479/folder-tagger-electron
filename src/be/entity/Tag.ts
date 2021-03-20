@@ -288,15 +288,16 @@ Tag.prototype.calculateRelations = async (): Promise<TagRelationQueryResult> => 
   const findFrequentTags = async (source: Record<string, string[]>) => {
     const getSourceWithFrequentTags = async () => {
       const newSource = { ...source };
-      for (const parentTag of Object.keys(newSource)) {
+      for (const [parentTag, index] of Object.entries(newSource)) {
         const childrenTags = [...newSource[parentTag]];
+        const tagNameKey = `tag_name_${index}`;
         const numberOfFoldersWithParentTag = await getRepository(Folder)
           .createQueryBuilder('folder')
           .innerJoin('folder.Tags', 'tag')
           .innerJoin('tag.TagType', 'tagType')
           .where(`tagType.TagType = :author`, { author: 'author' })
-          .andWhere(`tag.Tagname = :${parentTag}`, {
-            [parentTag]: parentTag
+          .andWhere(`tag.TagName = :${tagNameKey}`, {
+            [tagNameKey]: parentTag
           })
           .getCount();
         // Calculating tags frequency is meaningless if the sample is too small
