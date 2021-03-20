@@ -114,7 +114,7 @@ Folder.prototype.get = async (
   else if (language)
     query.andWhere('folder.Language = :language', { language });
 
-  const querySpecialTags = (tag: string) => {
+  const querySpecialTags = (tag: string, id: number) => {
     // Normally this should be inside a separate sort function,
     // but I don't really need a sort that much.
     // Just use this to check whether new update info is correct or not.
@@ -128,35 +128,26 @@ Folder.prototype.get = async (
     }
 
     query.andWhere(q => {
-      let preQuery = 'folder.FolderLocation NOT IN ';
+      const tagKey = `special_tag_${id}`;
+      let preQuery = 'folder.FolderLocation IN ';
       const subQuery = q
         .subQuery()
         .select('folder.FolderLocation')
         .from(Folder, 'folder')
         .leftJoin('folder.Tags', 'tag');
-      switch (tag) {
-        case SEARCH.SPECIAL_TAGS.NO_AUTHOR:
-          subQuery.where('tag.TagType = :author', { author: 'author' });
-          break;
-        case SEARCH.SPECIAL_TAGS.NO_PARODY:
-          subQuery.where('tag.TagType = :parody', { parody: 'parody' });
-          break;
-        case SEARCH.SPECIAL_TAGS.NO_GENRE:
-          subQuery.where('tag.TagType = :genre', { genre: 'genre' });
-          break;
-        case SEARCH.SPECIAL_TAGS.HAVE_CHARACTER:
-          preQuery = 'folder.FolderLocation IN ';
-          subQuery.where('tag.TagType = :character', {
-            character: 'character'
-          });
-          break;
-        case SEARCH.SPECIAL_TAGS.MANY_PARODIES:
-          preQuery = 'folder.FolderLocation IN ';
-          subQuery
-            .where('tag.TagType = :parody', { parody: 'parody' })
-            .groupBy('folder.FolderLocation')
-            .having('COUNT(folder.FolderLocation) > 1');
-          break;
+      if (tag.includes(SEARCH.SPECIAL_TAGS.NO)) {
+        preQuery = 'folder.FolderLocation NOT IN ';
+        const tagType = tag.replace(SEARCH.SPECIAL_TAGS.NO, '');
+        subQuery.where(`tag.TagType = :${tagKey}`, { [tagKey]: tagType });
+      } else if (tag.includes(SEARCH.SPECIAL_TAGS.HAVE)) {
+        const tagType = tag.replace(SEARCH.SPECIAL_TAGS.HAVE, '');
+        subQuery.where(`tag.TagType = :${tagKey}`, { [tagKey]: tagType });
+      } else if (tag.includes(SEARCH.SPECIAL_TAGS.MANY)) {
+        const tagType = tag.replace(SEARCH.SPECIAL_TAGS.MANY, '');
+        subQuery
+          .where(`tag.TagType = :${tagKey}`, { [tagKey]: tagType })
+          .groupBy('folder.FolderLocation')
+          .having('COUNT(folder.FolderLocation) > 1');
       }
       return preQuery + subQuery.getQuery();
     });
@@ -170,10 +161,12 @@ Folder.prototype.get = async (
     isWildcard: boolean
   ) => {
     const isSpecialTag = (tag: string) =>
-      Object.values(SEARCH.SPECIAL_TAGS).includes(tag);
+      Object.values(SEARCH.SPECIAL_TAGS).some(specialTag =>
+        tag.includes(specialTag)
+      );
     tagsArray.forEach((tagValue: string, tagPosition: number) => {
       if (isSpecialTag(tagValue)) {
-        querySpecialTags(tagValue);
+        querySpecialTags(tagValue, tagPosition);
         return;
       }
 

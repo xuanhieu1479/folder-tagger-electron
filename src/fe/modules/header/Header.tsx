@@ -86,11 +86,9 @@ const Header = ({
           intent={Intent.PRIMARY}
           content={
             <div className="header_keyword-icon_tooltip">
-              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_AUTHOR}" to get folders that have no author.`}</div>
-              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_PARODY}" to get folders that have no parody.`}</div>
-              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO_GENRE}" to get folders that have no genre.`}</div>
-              <div>{`Use "${SEARCH.SPECIAL_TAGS.HAVE_CHARACTER}" to get folders that have at least one character.`}</div>
-              <div>{`Use "${SEARCH.SPECIAL_TAGS.MANY_PARODIES}" to get folders that have multiple parodies.`}</div>
+              <div>{`Use "${SEARCH.SPECIAL_TAGS.NO}[tag type]" to get folders that don't have tags with specific tag type.`}</div>
+              <div>{`Use "${SEARCH.SPECIAL_TAGS.HAVE}[tag type]" to get folders that have tags with specific tag type.`}</div>
+              <div>{`Use "${SEARCH.SPECIAL_TAGS.MANY}[tag type]" to get folders that have many tags with specific tag type.`}</div>
               <div>{`Use "${SEARCH.SPECIAL_TAGS.NEWLY_ADDED}" to get folders that just have been added.`}</div>
               <div>{`Use "${SEARCH.SPECIAL_TAGS.NEWLY_UPDATED}" to get folders that just have been updated.`}</div>
             </div>
