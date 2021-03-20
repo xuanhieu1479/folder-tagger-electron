@@ -41,11 +41,14 @@ $folder-card-width: $folder-card-thumbnail-width;
   object-fit: cover;
 }
 
-.folder-card_name {
-  @include no-outline-focus;
+.folder-card_footer {
   height: $folder-card-thumbnail-height;
   padding: $folder-card-name-padding;
   text-align: center;
   overflow: hidden;
+}
+
+.folder-card_name {
+  @include no-outline-focus;
   cursor: pointer;
 }

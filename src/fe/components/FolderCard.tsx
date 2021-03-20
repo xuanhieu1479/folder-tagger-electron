@@ -70,9 +70,12 @@ const FolderCard = ({
     shortcutRef.current = shortcut;
   }, [isBeingSelected, selectedFolders, shortcut]);
 
-  const onClickCardName = () => {
+  const onClickCardName = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
     navigator.clipboard.writeText(folderName);
     showMessage.info(MESSAGE.COPY_FOLDER_NAME_TO_CLIPBOARD);
+    if (!selectedFolders.includes(folderLocation))
+      addToSelectedList(folderLocation);
   };
 
   return (
@@ -87,12 +90,14 @@ const FolderCard = ({
           src={thumbnailLocation || defaultThumbnail}
           className="folder-card_thumbnail"
         />
-        <figcaption
-          className="folder-card_name bp3-text-large"
-          onClick={onClickCardName}
-        >
+        <figcaption className="folder-card_footer">
           <Tooltip content="Click to copy" minimal={true}>
-            {folderName}
+            <div
+              className="folder-card_name bp3-text-large"
+              onClick={onClickCardName}
+            >
+              {folderName}
+            </div>
           </Tooltip>
         </figcaption>
       </figure>
