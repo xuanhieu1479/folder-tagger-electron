@@ -8,6 +8,7 @@ import {
   ManageTagsFilterParams,
   UpdatedTag
 } from '../../../common/interfaces/commonInterfaces';
+import { ReducerAction } from '../../../common/interfaces/feInterfaces';
 import {
   TAG_API,
   MESSAGE,
@@ -17,7 +18,8 @@ import {
   COPY_TAGS,
   GET_TAGS,
   LOAD_TAG_RELATIONS,
-  GET_MANAGED_TAGS
+  GET_MANAGED_TAGS,
+  CLEAR_CLIPBOARD
 } from './tagActionType';
 import { startLoading, finishLoading } from '../status/statusAction';
 import { exportFolders } from '../folder/folderAction';
@@ -73,6 +75,10 @@ const copyTags = async (
   } catch (error) {
     showMessage.error(error);
   }
+};
+
+const clearClipboard = (): ReducerAction => {
+  return { type: CLEAR_CLIPBOARD };
 };
 
 const modifyTagsOfFolders = async ({
@@ -184,6 +190,7 @@ const updateTags = async (
 export {
   getTags,
   copyTags,
+  clearClipboard,
   modifyTagsOfFolders,
   calculateTagRelations,
   loadTagRelations,

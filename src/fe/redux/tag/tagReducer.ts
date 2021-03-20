@@ -2,6 +2,7 @@ import {
   GET_TAGS,
   LOAD_TAG_RELATIONS,
   COPY_TAGS,
+  CLEAR_CLIPBOARD,
   GET_MANAGED_TAGS
 } from './tagActionType';
 import {
@@ -29,6 +30,8 @@ const statusReducer = (
       return { ...state, relations };
     case COPY_TAGS:
       return { ...state, clipboard };
+    case CLEAR_CLIPBOARD:
+      return { ...state, clipboard: [] };
     case GET_MANAGED_TAGS:
       return { ...state, managedTags };
     default:
