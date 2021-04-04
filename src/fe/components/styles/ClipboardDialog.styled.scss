@@ -1,3 +1,5 @@
+@import '../../styles/mixin.scss';
+
 .clipboard-dialog_container {
   width: 300px !important;
   padding-bottom: unset !important;
@@ -5,6 +7,10 @@
 
 .clipboard-dialog_content_container {
   padding: 10px 20px;
+}
+
+.clipboard-dialog_row {
+  @include flex-space-between;
 }
 
 .clipboard-dialog_label {

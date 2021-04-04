@@ -13,7 +13,7 @@ const getSettings = (dispatch: Dispatch, onSuccess: () => void): void => {
     if (!fileExists(SETTING.PATH)) {
       updateSettings(dispatch);
     } else {
-      const { defaultValue, shortcut } = SETTING.DEFAULT;
+      const { defaultValue, shortcut, clipboard } = SETTING.DEFAULT;
       const data = ini.parse(fs.readFileSync(SETTING.PATH).toString());
       const settings: SettingReducer = {
         defaultValue: {
@@ -23,6 +23,10 @@ const getSettings = (dispatch: Dispatch, onSuccess: () => void): void => {
         shortcut: {
           ...shortcut,
           ..._.pick(data.shortcut, Object.keys(shortcut))
+        },
+        clipboard: {
+          ...clipboard,
+          ..._.pick(data.clipboard, Object.keys(clipboard))
         }
       };
       updateSettings(dispatch, settings);

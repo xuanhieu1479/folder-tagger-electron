@@ -5,6 +5,7 @@ import { Dialog, Checkbox, Label, Button, Intent } from '@blueprintjs/core';
 import { BreakDownTagType } from '../../common/interfaces/commonInterfaces';
 import { RootState, CommonDialog } from '../../common/interfaces/feInterfaces';
 import { copyTags } from '../redux/tag/tagAction';
+import { updateSettings } from '../redux/setting/settingAction';
 import './styles/ClipboardDialog.styled.scss';
 
 const defaultCheckedValues = {
@@ -17,9 +18,9 @@ const defaultCheckedValues = {
 const ClipboardDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
   const dispatch = useDispatch();
   const { selectedFolders } = useSelector((state: RootState) => state.folder);
-  const [tagTypes, setTagTypes] = useState({
-    ...defaultCheckedValues
-  });
+  const { setting } = useSelector((state: RootState) => state);
+  const { clipboard } = setting;
+  const [tagTypes, setTagTypes] = useState({ ...defaultCheckedValues });
   const [isAllCheckboxChecked, setAllCheckboxChecked] = useState(false);
   const [isAllCheckboxIndetermidate, setAllCheckboxIndeterminate] = useState(
     false
@@ -33,10 +34,7 @@ const ClipboardDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
       }
     };
 
-    if (isOpen) {
-      setTagTypes({ ...defaultCheckedValues });
-      window.addEventListener('keydown', onKeyDownListerner);
-    }
+    if (isOpen) window.addEventListener('keydown', onKeyDownListerner);
     return () => window.removeEventListener('keydown', onKeyDownListerner);
   }, [isOpen]);
 
@@ -61,6 +59,27 @@ const ClipboardDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
     if (someTagTypesAreChecked) setAllCheckboxIndeterminate(true);
   }, [tagTypes]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const defaultValues = _.reduce(
+      clipboard,
+      (acc, value, key) => {
+        switch (key) {
+          case 'author':
+          case 'parody':
+          case 'character':
+          case 'genre':
+            acc[key] = value === 'yes';
+            break;
+        }
+        return acc;
+      },
+      defaultCheckedValues
+    );
+    setTagTypes(prevState => ({ ...prevState, ...defaultValues }));
+    tagTypesRef.current = defaultValues;
+  }, [clipboard, isOpen]);
+
   const onChangeCheckBox = (
     tagKey: BreakDownTagType,
     event: React.FormEvent<HTMLInputElement>
@@ -78,6 +97,18 @@ const ClipboardDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
       parody: checked,
       character: checked,
       genre: checked
+    });
+  };
+  const onChangeDefaultCheckBox = (
+    tagKey: BreakDownTagType,
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    updateSettings(dispatch, {
+      ...setting,
+      clipboard: {
+        ...clipboard,
+        [tagKey]: event.currentTarget.checked ? 'yes' : 'no'
+      }
     });
   };
 
@@ -113,32 +144,63 @@ const ClipboardDialog = ({ isOpen, onClose }: CommonDialog): ReactElement => {
         <Label className="clipboard-dialog_label">
           Choose what to copy to clipboard
         </Label>
-        <Checkbox
-          checked={isAllCheckboxChecked}
-          label="All"
-          indeterminate={isAllCheckboxIndetermidate}
-          onChange={onChangeAllCheckBox}
-        />
-        <Checkbox
-          checked={tagTypes.author}
-          label="Author"
-          onChange={event => onChangeCheckBox('author', event)}
-        />
-        <Checkbox
-          checked={tagTypes.parody}
-          label="Parody"
-          onChange={event => onChangeCheckBox('parody', event)}
-        />
-        <Checkbox
-          checked={tagTypes.character}
-          label="Character"
-          onChange={event => onChangeCheckBox('character', event)}
-        />
-        <Checkbox
-          checked={tagTypes.genre}
-          label="Genre"
-          onChange={event => onChangeCheckBox('genre', event)}
-        />
+        <div className="clipboard-dialog_row">
+          <Checkbox
+            checked={isAllCheckboxChecked}
+            label="All"
+            indeterminate={isAllCheckboxIndetermidate}
+            onChange={onChangeAllCheckBox}
+          />
+          Is Default
+        </div>
+        <div className="clipboard-dialog_row">
+          <Checkbox
+            checked={tagTypes.author}
+            label="Author"
+            onChange={event => onChangeCheckBox('author', event)}
+          />
+          <Checkbox
+            tabIndex={-1}
+            checked={clipboard.author === 'yes'}
+            onChange={event => onChangeDefaultCheckBox('author', event)}
+          />
+        </div>
+        <div className="clipboard-dialog_row">
+          <Checkbox
+            checked={tagTypes.parody}
+            label="Parody"
+            onChange={event => onChangeCheckBox('parody', event)}
+          />
+          <Checkbox
+            tabIndex={-1}
+            checked={clipboard.parody === 'yes'}
+            onChange={event => onChangeDefaultCheckBox('parody', event)}
+          />
+        </div>
+        <div className="clipboard-dialog_row">
+          <Checkbox
+            checked={tagTypes.character}
+            label="Character"
+            onChange={event => onChangeCheckBox('character', event)}
+          />
+          <Checkbox
+            tabIndex={-1}
+            checked={clipboard.character === 'yes'}
+            onChange={event => onChangeDefaultCheckBox('character', event)}
+          />
+        </div>
+        <div className="clipboard-dialog_row">
+          <Checkbox
+            checked={tagTypes.genre}
+            label="Genre"
+            onChange={event => onChangeCheckBox('genre', event)}
+          />
+          <Checkbox
+            tabIndex={-1}
+            checked={clipboard.genre === 'yes'}
+            onChange={event => onChangeDefaultCheckBox('genre', event)}
+          />
+        </div>
         <Button
           intent={Intent.PRIMARY}
           className="clipboard-dialog_save-button"

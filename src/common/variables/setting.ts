@@ -1,6 +1,8 @@
+import { BreakDownTagType } from '../interfaces/commonInterfaces';
 import {
   SettingDefaultValue,
-  SettingShortcut
+  SettingShortcut,
+  SettingReducer
 } from '../interfaces/feInterfaces';
 
 const DIRECTORY = 'Setting';
@@ -25,15 +27,23 @@ const SHORTCUT: SettingShortcut = {
   removeTagsFromFolder: 'd',
   focusSearchInput: 'f'
 };
+const CLIPBOARD: Record<BreakDownTagType, string> = {
+  author: 'yes',
+  parody: 'no',
+  character: 'no',
+  genre: 'no'
+};
+const SETTING_DEFAULT: SettingReducer = {
+  defaultValue: DEFAULT_VALUE,
+  shortcut: SHORTCUT,
+  clipboard: CLIPBOARD
+};
 
 const SETTING = {
   DIRECTORY,
   NAME,
   PATH,
-  DEFAULT: {
-    defaultValue: DEFAULT_VALUE,
-    shortcut: SHORTCUT
-  },
+  DEFAULT: SETTING_DEFAULT,
   RELATION_PATH
 };
 

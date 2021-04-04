@@ -1,4 +1,10 @@
-import { Folder, Tag, ManagedTag, TagRelations } from './commonInterfaces';
+import {
+  Folder,
+  Tag,
+  ManagedTag,
+  TagRelations,
+  BreakDownTagType
+} from './commonInterfaces';
 import { TagAction } from '../enums/commonEnums';
 
 interface RootState {
@@ -35,6 +41,7 @@ interface TagReducer {
 interface SettingReducer {
   defaultValue: SettingDefaultValue;
   shortcut: SettingShortcut;
+  clipboard: Record<BreakDownTagType, string>;
 }
 
 interface SettingDefaultValue {
