@@ -94,7 +94,6 @@ yarn.lock
 
 # VS Code Config
 .vscode/
-.prettierrc
 
 # TypeORM
 .idea/
