@@ -25,6 +25,7 @@
 - Select a folder and press Ctrl + C to copy its tags.
 - Open folder dialog for editing (default Ctrl E/S/D) then press Ctrl + V to paste copied tags.
 - When open folder dialog, press 1,2,3,4 to quickly focus on a tag input.
+- Same as above, use "j" or "e" to quickly change folder's language to japanese or english.
 - When done tagging press Shift + Enter for quick save.
 - Remember to run "Calculate Tag Relations" every once in a while for better tag suggestions.
 - When update tags, if their new value is duplicate with another tag, all folders of that tag will be merged into the existing tag.

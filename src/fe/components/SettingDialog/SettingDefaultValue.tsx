@@ -125,11 +125,11 @@ const SettingDefaultValues = ({
             selectedValue={defaultCategory}
           >
             {DefaultValueRadio()}
-            {SEED_DATA.CATEGORY.map(c => (
+            {Object.values(SEED_DATA.CATEGORY).map(category => (
               <Radio
-                key={c.Category}
-                label={c.Category}
-                value={c.Category}
+                key={category}
+                label={category}
+                value={category}
                 className="setting-dialog_tab-panel_radio"
               />
             ))}
@@ -145,11 +145,11 @@ const SettingDefaultValues = ({
             selectedValue={defaultLanguage}
           >
             {DefaultValueRadio()}
-            {SEED_DATA.LANGUAGE.map(l => (
+            {Object.values(SEED_DATA.LANGUAGE).map(language => (
               <Radio
-                key={l.Language}
-                label={l.Language}
-                value={l.Language}
+                key={language}
+                label={language}
+                value={language}
                 className="setting-dialog_tab-panel_radio"
               />
             ))}

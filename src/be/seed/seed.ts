@@ -20,17 +20,17 @@ const initDatabase = async (): Promise<void> => {
     await queryBuilder
       .insert()
       .into(Category)
-      .values(SEED_DATA.CATEGORY)
+      .values(Object.values(SEED_DATA.CATEGORY).map(c => ({ Category: c })))
       .execute();
     await queryBuilder
       .insert()
       .into(Language)
-      .values(SEED_DATA.LANGUAGE)
+      .values(Object.values(SEED_DATA.LANGUAGE).map(l => ({ Language: l })))
       .execute();
     await queryBuilder
       .insert()
       .into(TagType)
-      .values(SEED_DATA.TAG_TYPE)
+      .values(Object.values(SEED_DATA.TAG_TYPE).map(tt => ({ TagType: tt })))
       .execute();
   } else {
     // createConnection will create new database by DATABASE.PATH

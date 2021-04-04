@@ -7,7 +7,11 @@ import {
   BreakDownTagType
 } from '../../../common/interfaces/commonInterfaces';
 import { RootState } from '../../../common/interfaces/feInterfaces';
-import { MESSAGE, ELEMENT_ID } from '../../../common/variables/commonVariables';
+import {
+  MESSAGE,
+  ELEMENT_ID,
+  SEED_DATA
+} from '../../../common/variables/commonVariables';
 import { TagAction } from '../../../common/enums/commonEnums';
 import { CustomSuggest, CustomMultiSelect } from '../commonComponents';
 import { showMessage } from '../../../utilities/feUtilities';
@@ -95,9 +99,13 @@ const DialogContent = ({
       dispatch(clearClipboard());
     };
     const keyDownListerner = (event: KeyboardEvent) => {
+      const { key } = event;
+      const { activeElement } = document;
       const isHoldingCtrl = event.ctrlKey;
       const isHoldingShift = event.shiftKey;
-      const { key } = event;
+      const noInputIsBeingFocused = !activeElement?.id.includes(
+        ELEMENT_ID.FOLDER_DIALOG_INPUT_PREFIX
+      );
 
       switch (key) {
         case 'v':
@@ -108,13 +116,16 @@ const DialogContent = ({
           if (!isHoldingShift) return;
           onSave();
           break;
+        case 'j':
+          if (!noInputIsBeingFocused) return;
+          setSelectedLanguage(SEED_DATA.LANGUAGE.japanese);
+          break;
+        case 'e':
+          if (!noInputIsBeingFocused) return;
+          setSelectedLanguage(SEED_DATA.LANGUAGE.english);
+          break;
       }
-      if (!isNaN(parseInt(key))) {
-        const { activeElement } = document;
-        const isOneOfInputBeingFocused = activeElement?.id.includes(
-          ELEMENT_ID.FOLDER_DIALOG_INPUT_PREFIX
-        );
-        if (isOneOfInputBeingFocused) return;
+      if (!isNaN(parseInt(key)) && noInputIsBeingFocused) {
         document.getElementById(ELEMENT_ID.FOLDER_DIALOG_INPUT(key))?.focus();
         event.preventDefault();
       }
