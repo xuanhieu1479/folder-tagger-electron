@@ -73,7 +73,7 @@ const FolderCard = ({
   const onClickCardName = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     navigator.clipboard.writeText(folderName);
-    showMessage.info(MESSAGE.COPY_FOLDER_NAME_TO_CLIPBOARD);
+    showMessage.info(MESSAGE.COPY_TO_CLIPBOARD);
     if (!selectedFolders.includes(folderLocation))
       addToSelectedList(folderLocation);
   };

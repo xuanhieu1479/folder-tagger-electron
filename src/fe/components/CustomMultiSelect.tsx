@@ -3,6 +3,8 @@ import _ from 'lodash';
 import { MenuItem } from '@blueprintjs/core';
 import { MultiSelect, ItemRenderer, ItemPredicate } from '@blueprintjs/select';
 import { BreakDownTagType } from '../../common/interfaces/commonInterfaces';
+import { MESSAGE } from '../../common/variables/commonVariables';
+import { showMessage } from '../../utilities/feUtilities';
 import './styles/CustomMultiSelect.styled.scss';
 
 interface CustomMultiSelect {
@@ -76,6 +78,16 @@ const CustomMultiSelect = ({
     }
   };
 
+  const onClickTag = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const target = event.target as HTMLElement;
+    // Not clicking on remove icon and clicking on inner div, not the whole tag
+    if (target.localName !== 'path' && target.childElementCount === 0) {
+      event.stopPropagation();
+      navigator.clipboard.writeText(target.innerText);
+      showMessage.info(MESSAGE.COPY_TO_CLIPBOARD);
+    }
+  };
+
   const renderSelectItems: ItemRenderer<string> = (
     item,
     { modifiers, handleClick }
@@ -124,6 +136,10 @@ const CustomMultiSelect = ({
           value: inputValue,
           onChange: onInputChange,
           onKeyDown: onKeyDownInput
+        },
+        tagProps: {
+          interactive: true,
+          onClick: onClickTag
         }
       }}
       itemPredicate={filterItems}
