@@ -76,6 +76,8 @@ const runExternalProgram = (
 const generateTagsFromSearchKeywords = (
   searchKeywords: string
 ): Partial<Record<SearchTagType, string[]>> => {
+  if (!searchKeywords) return {};
+
   const {
     COMMON_TERMS,
     END_OF_TAGS_CHARACTER,

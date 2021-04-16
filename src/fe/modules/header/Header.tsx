@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement } from 'react';
 import { InputGroup, Button, Intent, Icon, Tooltip } from '@blueprintjs/core';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
 import {
@@ -7,12 +7,13 @@ import {
   ELEMENT_ID
 } from '../../../common/variables/commonVariables';
 import { CustomSuggest } from '../../components/commonComponents';
-import { generateTagsFromSearchKeywords } from '../../../utilities/feUtilities';
 import './Header.styled.scss';
 
 interface Header {
   params: FolderFilterParams;
   updateParams: (newParams: Partial<FolderFilterParams>) => void;
+  searchKeywords: string;
+  onChangeSearchKeywords: (event: React.FormEvent<HTMLInputElement>) => void;
   allCategories: string[];
   allLanguages: string[];
 }
@@ -22,11 +23,11 @@ const noneOption = 'none';
 const Header = ({
   params,
   updateParams,
+  searchKeywords,
+  onChangeSearchKeywords,
   allCategories,
   allLanguages
 }: Header): ReactElement => {
-  const [searchKeywords, setSearchKeywords] = useState('');
-
   const onChangeCategory = (newCategory: string) => {
     updateParams({
       category: newCategory === allOption ? undefined : newCategory
@@ -37,20 +38,15 @@ const Header = ({
       language: newLanguage === allOption ? undefined : newLanguage
     });
   };
-  const onChangeSearchKeywords = (event: React.FormEvent<HTMLInputElement>) => {
-    setSearchKeywords(event.currentTarget.value);
-  };
   const onPressEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') onSearch();
   };
 
   const onSearch = () => {
-    const tags = generateTagsFromSearchKeywords(searchKeywords);
-    updateParams({ tags, isRandom: false, ...PAGINATION.DEFAULT });
+    updateParams({ isRandom: false, ...PAGINATION.DEFAULT });
   };
   const onRandomize = () => {
-    const tags = generateTagsFromSearchKeywords(searchKeywords);
-    updateParams({ tags, isRandom: true, ...PAGINATION.DEFAULT });
+    updateParams({ isRandom: true, ...PAGINATION.DEFAULT });
   };
 
   return (

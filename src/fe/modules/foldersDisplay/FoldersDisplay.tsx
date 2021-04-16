@@ -1,13 +1,9 @@
 import React, { ReactElement, useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
-import { RootState } from '../../../common/interfaces/feInterfaces';
 import { FolderFilterParams } from '../../../common/interfaces/commonInterfaces';
-import {
-  PAGINATION,
-  ELEMENT_ID,
-  MESSAGE
-} from '../../../common/variables/commonVariables';
+import { RootState } from '../../../common/interfaces/feInterfaces';
+import { ELEMENT_ID, MESSAGE } from '../../../common/variables/commonVariables';
 import { TagAction } from '../../../common/enums/commonEnums';
 import FunctionsContext from '../../context/FunctionsContext';
 import {
@@ -20,17 +16,20 @@ import Body from '../body/Body';
 import Footer from '../footer/Footer';
 import { onOpenDialog, onCloseDialog } from '../../redux/status/statusAction';
 import { SELECT_FOLDERS } from '../../redux/folder/folderActionType';
-import { getFolders, removeFolders } from '../../redux/folder/folderAction';
+import { removeFolders } from '../../redux/folder/folderAction';
 import { getTags } from '../../redux/tag/tagAction';
 import {
   showMessage,
   openDirectory,
-  runExternalProgram,
-  generateTagsFromSearchKeywords
+  runExternalProgram
 } from '../../../utilities/feUtilities';
 import './FoldersDisplay.styled.scss';
 
 interface FolderDisplay {
+  params: FolderFilterParams;
+  updateParams: (newParams: Partial<FolderFilterParams>) => void;
+  searchKeywords: string;
+  onChangeSearchKeywords: (event: React.FormEvent<HTMLInputElement>) => void;
   openSettingDialog: () => void;
 }
 const defaultFolderDialogParams = {
@@ -38,7 +37,13 @@ const defaultFolderDialogParams = {
   dialogType: TagAction.Add
 };
 
-const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
+const FoldersDisplay = ({
+  params,
+  updateParams,
+  searchKeywords,
+  onChangeSearchKeywords,
+  openSettingDialog
+}: FolderDisplay): ReactElement => {
   const dispatch = useDispatch();
   const { selectedFolders, foldersList, categories, languages } = useSelector(
     (state: RootState) => state.folder
@@ -52,7 +57,6 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
   const isDialogOpenRef = useRef(isDialogOpen);
   const shortcutRef = useRef(shortcut);
   const defaultValueRef = useRef(defaultValue);
-  const [params, setParams] = useState(PAGINATION.DEFAULT);
   const [folderDialogParams, setFolderDialogParams] = useState({
     ...defaultFolderDialogParams
   });
@@ -61,7 +65,6 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     isOpen: false,
     folderName: ''
   });
-  const [isFirstRender, setFirstRender] = useState(true);
 
   useEffect(() => {
     const keyDownListerner = async (event: KeyboardEvent) => {
@@ -216,30 +219,6 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     return () => window.removeEventListener('keydown', keyDownListerner);
   }, []);
 
-  useEffect((): void => {
-    const getNewFolders = async () => {
-      await getFolders(dispatch, params);
-      document
-        .getElementById(ELEMENT_ID.FOLDER_CARD_CONTAINER)
-        ?.scrollTo({ top: 0 });
-    };
-
-    const { defaultSearchParams, isSearchRandomly } = defaultValue;
-    const isRandom = isSearchRandomly.toLowerCase() === 'yes';
-    if ((!defaultSearchParams && !isRandom) || !isFirstRender) getNewFolders();
-    else {
-      const initialSearchParams = generateTagsFromSearchKeywords(
-        defaultSearchParams
-      );
-      getFolders(dispatch, {
-        ...params,
-        tags: initialSearchParams,
-        isRandom
-      });
-      setFirstRender(false);
-    }
-  }, [params]);
-
   useEffect(() => {
     selectedFoldersRef.current = selectedFolders;
     foldersListRef.current = foldersList;
@@ -252,9 +231,6 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     if (!folderDialogParams.isOpen) getTags(dispatch);
   }, [folderDialogParams.isOpen]);
 
-  const updateParams = (newParams: Partial<FolderFilterParams>): void => {
-    setParams({ ...params, ...newParams });
-  };
   const updateSelectedFolders = (
     newSelectedFolders: string[],
     scrollToFolder = true
@@ -389,6 +365,8 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
         <Header
           params={params}
           updateParams={updateParams}
+          searchKeywords={searchKeywords}
+          onChangeSearchKeywords={onChangeSearchKeywords}
           allCategories={categories}
           allLanguages={languages}
         />
