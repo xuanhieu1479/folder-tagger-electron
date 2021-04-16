@@ -176,7 +176,6 @@ const updateTags = async (
   onFinally: () => void
 ): Promise<void> => {
   try {
-    await exportFolders();
     await axios.put(TAG_API.UPDATE, { updatedTags });
     showMessage.success(MESSAGE.SUCCESS);
     onSuccess();

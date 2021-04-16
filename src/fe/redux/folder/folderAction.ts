@@ -122,7 +122,6 @@ const clearFoldersUpdateThumbnails = async (
 ): Promise<void> => {
   try {
     startLoading(dispatch);
-    await exportFolders();
     await axios.delete(FOLDER_API.CLEAR);
     showMessage.success(MESSAGE.SUCCESS);
     refreshFolders();
