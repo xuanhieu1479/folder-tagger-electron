@@ -12,11 +12,12 @@ import { calculateTagRelations, clearUnusedTags } from '../redux/tag/tagAction';
 const initIpcEventListeners = (
   dispatch: Dispatch,
   onOpenSettingDialog: () => void,
-  onOpenManageTagsDialog: () => void
+  onOpenManageTagsDialog: () => void,
+  refreshFolders: () => void
 ): void => {
   ipcRenderer.on(IpcEvent.AddFolders, (_event, data) => {
     const { folderLocations } = data;
-    addFolders(dispatch, folderLocations);
+    addFolders(dispatch, folderLocations, refreshFolders);
   });
   ipcRenderer.on(IpcEvent.OpenSetting, () => {
     onOpenSettingDialog();
@@ -24,9 +25,9 @@ const initIpcEventListeners = (
   ipcRenderer.on(IpcEvent.OpenManageTags, () => {
     onOpenManageTagsDialog();
   });
-  ipcRenderer.on(IpcEvent.ImportData, (_event, data) => {
+  ipcRenderer.on(IpcEvent.ImportData, async (_event, data) => {
     const { json, isOverwrite } = data;
-    importFolders(dispatch, json, isOverwrite);
+    importFolders(dispatch, json, isOverwrite, refreshFolders);
   });
   ipcRenderer.on(IpcEvent.ExportData, () => {
     exportFolders(dispatch);
@@ -35,7 +36,7 @@ const initIpcEventListeners = (
     exportFolders();
   });
   ipcRenderer.on(IpcEvent.ClearFoldersUpdateThumbnails, () => {
-    clearFoldersUpdateThumbnails(dispatch);
+    clearFoldersUpdateThumbnails(dispatch, refreshFolders);
   });
   ipcRenderer.on(IpcEvent.ClearUnusedTags, () => {
     clearUnusedTags(dispatch);

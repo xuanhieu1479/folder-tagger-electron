@@ -49,11 +49,13 @@ const getFolders = async (
 
 const addFolders = async (
   dispatch: Dispatch,
-  folderLocations: string[]
+  folderLocations: string[],
+  refreshFolders: () => void
 ): Promise<void> => {
   try {
     startLoading(dispatch);
     await axios.post(FOLDER_API.ADD, { folderLocations });
+    refreshFolders();
   } catch (error) {
     showMessage.error(error);
   } finally {
@@ -64,12 +66,14 @@ const addFolders = async (
 const importFolders = async (
   dispatch: Dispatch,
   json: TransferData[],
-  isOverwrite = false
+  isOverwrite: boolean | undefined,
+  refreshFolders: () => void
 ): Promise<void> => {
   try {
     startLoading(dispatch);
     await axios.post(FOLDER_API.IMPORT, { json, isOverwrite });
     showMessage.success(MESSAGE.SUCCESS);
+    refreshFolders();
   } catch (error) {
     showMessage.error(error);
   } finally {
@@ -113,13 +117,15 @@ const getLanguages = async (dispatch: Dispatch): Promise<void> => {
 };
 
 const clearFoldersUpdateThumbnails = async (
-  dispatch: Dispatch
+  dispatch: Dispatch,
+  refreshFolders: () => void
 ): Promise<void> => {
   try {
     startLoading(dispatch);
     await exportFolders();
     await axios.delete(FOLDER_API.CLEAR);
     showMessage.success(MESSAGE.SUCCESS);
+    refreshFolders();
   } catch (error) {
     showMessage.error(error);
   } finally {

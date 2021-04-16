@@ -30,12 +30,14 @@ const Header = ({
 }: Header): ReactElement => {
   const onChangeCategory = (newCategory: string) => {
     updateParams({
-      category: newCategory === allOption ? undefined : newCategory
+      category: newCategory === allOption ? undefined : newCategory,
+      ...PAGINATION.DEFAULT
     });
   };
   const onChangeLanguage = (newLanguage: string) => {
     updateParams({
-      language: newLanguage === allOption ? undefined : newLanguage
+      language: newLanguage === allOption ? undefined : newLanguage,
+      ...PAGINATION.DEFAULT
     });
   };
   const onPressEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {

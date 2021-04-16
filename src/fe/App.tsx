@@ -18,6 +18,7 @@ import { loadTagRelations } from './redux/tag/tagAction';
 import { getSettings } from './redux/setting/settingAction';
 
 axiosConfig();
+let count = 0;
 
 const App = (): ReactElement => {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const App = (): ReactElement => {
   const [isManageTagsDialogOpen, setManageTagsDialogOpen] = useState(false);
   const [isSettingsLoaded, setSettingsLoaded] = useState(false);
   const [isFirstRender, setFirstRender] = useState(true);
+  const [refreshCount, setRefreshCount] = useState(count);
 
   useEffect(() => {
     const onSuccessGetSettings = () => setSettingsLoaded(true);
@@ -35,7 +37,8 @@ const App = (): ReactElement => {
     initIpcEventListeners(
       dispatch,
       onOpenSettingDialog,
-      onOpenManageTagsDialog
+      onOpenManageTagsDialog,
+      refreshFolders
     );
     getCategories(dispatch);
     getLanguages(dispatch);
@@ -67,13 +70,18 @@ const App = (): ReactElement => {
       getFolders(dispatch, { ...params, tags: initialSearchParams, isRandom });
       setFirstRender(false);
     } else getNewFolders();
-  }, [params, isSettingsLoaded]);
+  }, [params, isSettingsLoaded, refreshCount]);
 
   const updateParams = (newParams: Partial<FolderFilterParams>): void => {
     setParams({ ...params, ...newParams });
   };
   const onChangeSearchKeywords = (event: React.FormEvent<HTMLInputElement>) => {
     setSearchKeywords(event.currentTarget.value);
+  };
+  const refreshFolders = () => {
+    setSearchKeywords('');
+    setParams(PAGINATION.DEFAULT);
+    setRefreshCount((count += 1));
   };
 
   const onOpenSettingDialog = () => {
