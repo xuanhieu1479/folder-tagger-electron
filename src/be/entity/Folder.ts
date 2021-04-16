@@ -390,6 +390,14 @@ Folder.prototype.import = async (
   json: TransferData[],
   isOverwrite = false
 ): Promise<QueryResult> => {
+  if (!Array.isArray(json)) {
+    console.error('IMPORT FOLDERS ERROR: ', 'Backup file has incorrect format');
+    return {
+      message: 'Backup file has incorrect format',
+      status: StatusCode.InvalidData
+    };
+  }
+
   const manager = getManager();
   const folderRepository = getRepository(Folder);
   const tagRepository = getRepository(Tag);
