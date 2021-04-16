@@ -22,7 +22,6 @@ import {
   CLEAR_CLIPBOARD
 } from './tagActionType';
 import { startLoading, finishLoading } from '../status/statusAction';
-import { exportFolders } from '../folder/folderAction';
 import { fileExists } from '../../../utilities/utilityFunctions';
 import { showMessage } from '../../../utilities/feUtilities';
 

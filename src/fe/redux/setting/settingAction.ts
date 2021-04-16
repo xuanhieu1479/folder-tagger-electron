@@ -30,8 +30,8 @@ const getSettings = (dispatch: Dispatch, onSuccess: () => void): void => {
         }
       };
       updateSettings(dispatch, settings);
-      onSuccess();
     }
+    onSuccess();
   } catch (error) {
     showMessage.error(error);
   }
