@@ -91,7 +91,7 @@ const modifyTagsOfFolders = async ({
   onSuccess
 }: ModifyTags): Promise<void> => {
   try {
-    await axios.post(TAG_API.MODIFY, {
+    await axios.put(TAG_API.MODIFY, {
       folderLocations,
       existingTags,
       newTags,
@@ -137,7 +137,7 @@ const loadTagRelations = (dispatch: Dispatch): void => {
 const clearUnusedTags = async (dispatch: Dispatch): Promise<void> => {
   try {
     startLoading(dispatch);
-    await axios.get(TAG_API.CLEAR);
+    await axios.delete(TAG_API.CLEAR);
     showMessage.success(MESSAGE.SUCCESS);
   } catch (error) {
     showMessage.error(error);
@@ -150,7 +150,7 @@ const removeAllTagsFromFolders = async (
   folderLocations: string[]
 ): Promise<void> => {
   try {
-    await axios.get(TAG_API.REMOVE, { params: { folderLocations } });
+    await axios.delete(TAG_API.REMOVE, { params: { folderLocations } });
     showMessage.success(MESSAGE.SUCCESS);
   } catch (error) {
     showMessage.error(error);
@@ -177,7 +177,7 @@ const updateTags = async (
 ): Promise<void> => {
   try {
     await exportFolders();
-    await axios.post(TAG_API.UPDATE, { updatedTags });
+    await axios.put(TAG_API.UPDATE, { updatedTags });
     showMessage.success(MESSAGE.SUCCESS);
     onSuccess();
   } catch (error) {

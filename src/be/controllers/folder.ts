@@ -58,12 +58,12 @@ router.get(CONTROLLER_PATH.EXPORT, async (_req: Request, res: Response) => {
   res.status(status).json({ message });
 });
 
-router.get(CONTROLLER_PATH.CLEAR, async (_req: Request, res: Response) => {
+router.delete(CONTROLLER_PATH.CLEAR, async (_req: Request, res: Response) => {
   const { status, message } = await new Folder().clear();
   res.status(status).json({ message });
 });
 
-router.post(CONTROLLER_PATH.RENAME, async (req: Request, res: Response) => {
+router.put(CONTROLLER_PATH.RENAME, async (req: Request, res: Response) => {
   const {
     newLocation,
     newName,

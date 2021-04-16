@@ -118,7 +118,7 @@ const clearFoldersUpdateThumbnails = async (
   try {
     startLoading(dispatch);
     await exportFolders();
-    await axios.get(FOLDER_API.CLEAR);
+    await axios.delete(FOLDER_API.CLEAR);
     showMessage.success(MESSAGE.SUCCESS);
   } catch (error) {
     showMessage.error(error);
@@ -132,7 +132,7 @@ const renameFolder = async (
   params: RenameFolderParams
 ): Promise<void> => {
   try {
-    const { data } = await axios.post(FOLDER_API.RENAME, { ...params });
+    const { data } = await axios.put(FOLDER_API.RENAME, { ...params });
     const { newLocation, newName, newThumbnail } = data;
     if (newLocation)
       dispatch({
