@@ -3,7 +3,8 @@ import {
   SELECT_FOLDERS,
   GET_CATEGORIES,
   GET_LANGUAGES,
-  RENAME_FOLDER
+  RENAME_FOLDER,
+  REMOVE_FOLDER
 } from './folderActionType';
 import {
   ReducerAction,
@@ -32,7 +33,8 @@ const statusReducer = (
     oldLocation,
     newLocation,
     newName,
-    newThumbnail
+    newThumbnail,
+    removedFolders
   } = data;
   switch (action.type) {
     case GET_FOLDERS:
@@ -57,6 +59,16 @@ const statusReducer = (
         ...state,
         foldersList: newFoldersList,
         selectedFolders: [newLocation]
+      };
+    }
+    case REMOVE_FOLDER: {
+      const newFoldersList = state.foldersList.filter(
+        f => !removedFolders.includes(f.location)
+      );
+      return {
+        ...state,
+        foldersList: newFoldersList,
+        selectedFolders: []
       };
     }
     default:

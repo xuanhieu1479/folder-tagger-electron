@@ -69,6 +69,7 @@ interface DialogContext {
 interface DirectoryContext {
   onOpenFolderInExplorer: () => void;
   onOpenFolderInExternalProgram: () => void;
+  onRemoveFolders: () => void;
 }
 interface FunctionsContext {
   dialog: DialogContext;

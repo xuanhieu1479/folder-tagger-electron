@@ -91,6 +91,7 @@ export default class Folder {
   add!: (folders: FolderInterface[]) => Promise<FolderQueryResult>;
   get!: (params: FolderFilterParams) => Promise<FolderQueryResult>;
   rename!: (params: RenameFolderParams) => Promise<RenameQueryResult>;
+  remove!: (removedFolders: string[]) => Promise<QueryResult>;
 }
 
 Folder.prototype.get = async (
@@ -693,6 +694,25 @@ Folder.prototype.rename = async (
     };
   } catch (error) {
     console.error('RENAME FOLDERS ERROR: ', error);
+    logErrors(error.message, error.stack);
+    return {
+      message: error.message,
+      status: StatusCode.DbError
+    };
+  }
+};
+
+Folder.prototype.remove = async (
+  removedFolders: string[]
+): Promise<QueryResult> => {
+  try {
+    await getRepository(Folder).delete(removedFolders);
+    return {
+      message: MESSAGE.SUCCESS,
+      status: StatusCode.Success
+    };
+  } catch (error) {
+    console.error('REMOVE FOLDERS ERROR: ', error);
     logErrors(error.message, error.stack);
     return {
       message: error.message,

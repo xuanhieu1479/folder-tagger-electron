@@ -20,7 +20,7 @@ import Body from '../body/Body';
 import Footer from '../footer/Footer';
 import { onOpenDialog, onCloseDialog } from '../../redux/status/statusAction';
 import { SELECT_FOLDERS } from '../../redux/folder/folderActionType';
-import { getFolders } from '../../redux/folder/folderAction';
+import { getFolders, removeFolders } from '../../redux/folder/folderAction';
 import { getTags } from '../../redux/tag/tagAction';
 import {
   showMessage,
@@ -352,6 +352,10 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
     const selectedFolders = selectedFoldersRef.current;
     if (selectedFolders.length === 1) openDirectory(selectedFolders[0]);
   };
+  const onRemoveFolders = () => {
+    const selectedFolders = selectedFoldersRef.current;
+    removeFolders(dispatch, selectedFolders);
+  };
 
   const onFocusSearchInput = () => {
     const inputElement = document.getElementById(
@@ -376,7 +380,8 @@ const FoldersDisplay = ({ openSettingDialog }: FolderDisplay): ReactElement => {
         },
         directory: {
           onOpenFolderInExplorer,
-          onOpenFolderInExternalProgram
+          onOpenFolderInExternalProgram,
+          onRemoveFolders
         }
       }}
     >

@@ -23,7 +23,11 @@ const CustomContextMenu = ({
     onOpenClipboardDialog,
     onOpenRenameOmnibar
   } = dialog;
-  const { onOpenFolderInExplorer, onOpenFolderInExternalProgram } = directory;
+  const {
+    onOpenFolderInExplorer,
+    onOpenFolderInExternalProgram,
+    onRemoveFolders
+  } = directory;
   const {
     addTagsToFolder,
     editTagsOfFolder,
@@ -40,7 +44,8 @@ const CustomContextMenu = ({
   const onClickRemoveAllTags = () => removeAllTagsFromFolders(selectedFolders);
   const onClickOpenFolder = () => onOpenFolderInExplorer();
   const onClickExecuteExternalProgram = () => onOpenFolderInExternalProgram();
-  const onRenameFolder = () => onOpenRenameOmnibar();
+  const onClickRenameFolder = () => onOpenRenameOmnibar();
+  const onClickRemoveFolder = () => onRemoveFolders();
 
   return (
     <Menu>
@@ -56,7 +61,7 @@ const CustomContextMenu = ({
       />
       <MenuItem
         text="Rename Folder"
-        onClick={onRenameFolder}
+        onClick={onClickRenameFolder}
         label={`Ctrl + ${renameFolder.toUpperCase()}`}
       />
       <Divider />
@@ -78,6 +83,7 @@ const CustomContextMenu = ({
       <Divider />
       <MenuItem text="Copy Tags" onClick={onClickCopyTags} label="Ctrl + C" />
       <MenuItem text="Remove All Tags" onClick={onClickRemoveAllTags} />
+      <MenuItem text="Remove Folder" onClick={onClickRemoveFolder} />
     </Menu>
   );
 };

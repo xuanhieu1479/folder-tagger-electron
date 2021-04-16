@@ -77,4 +77,10 @@ router.post(CONTROLLER_PATH.RENAME, async (req: Request, res: Response) => {
   res.status(status).json({ newLocation, newName, newThumbnail, message });
 });
 
+router.delete(CONTROLLER_PATH.REMOVE, async (req: Request, res: Response) => {
+  const removedFolders = req.body;
+  const { message, status } = await new Folder().remove(removedFolders);
+  res.status(status).json({ message });
+});
+
 export default router;

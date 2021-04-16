@@ -9,7 +9,8 @@ const defaultContextValue: FunctionsContext = {
   },
   directory: {
     onOpenFolderInExplorer: () => undefined,
-    onOpenFolderInExternalProgram: () => undefined
+    onOpenFolderInExternalProgram: () => undefined,
+    onRemoveFolders: () => undefined
   }
 };
 const FunctionsContext = createContext(defaultContextValue);

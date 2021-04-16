@@ -15,7 +15,8 @@ import {
   GET_FOLDERS,
   GET_CATEGORIES,
   GET_LANGUAGES,
-  RENAME_FOLDER
+  RENAME_FOLDER,
+  REMOVE_FOLDER
 } from './folderActionType';
 import { SET_RANDOM, UNSET_RANDOM } from '../status/statusActionType';
 import { showMessage } from '../../../utilities/feUtilities';
@@ -149,6 +150,19 @@ const renameFolder = async (
   }
 };
 
+const removeFolders = async (
+  dispatch: Dispatch,
+  removedFolders: string[]
+): Promise<void> => {
+  try {
+    await axios.delete(FOLDER_API.REMOVE, { data: removedFolders });
+    dispatch({ type: REMOVE_FOLDER, payload: { removedFolders } });
+    showMessage.success(MESSAGE.SUCCESS);
+  } catch (error) {
+    showMessage.error(error);
+  }
+};
+
 export {
   getFolders,
   addFolders,
@@ -157,5 +171,6 @@ export {
   getCategories,
   getLanguages,
   clearFoldersUpdateThumbnails,
-  renameFolder
+  renameFolder,
+  removeFolders
 };
