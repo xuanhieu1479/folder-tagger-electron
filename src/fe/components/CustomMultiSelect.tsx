@@ -20,7 +20,7 @@ interface PopoverProps {
   isOpen?: boolean;
   popoverClassName: string;
 }
-const noSpecialCharactersRegex = new RegExp(/[^A-Za-z0-9\s]/g);
+const noSpecialCharactersRegex = new RegExp(/[^A-Za-z0-9\s-]/g);
 
 const CustomMultiSelect = ({
   inputId,
@@ -62,7 +62,7 @@ const CustomMultiSelect = ({
     clearInput();
   };
   const onCreatItem = (query: string) => {
-    return query.replace(noSpecialCharactersRegex, '');
+    return query.replace(noSpecialCharactersRegex, '').toLowerCase();
   };
 
   const onKeyDownInput = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -107,7 +107,9 @@ const CustomMultiSelect = ({
     active: boolean,
     handleClick: React.MouseEventHandler<HTMLElement>
   ) => {
-    const sanitizedQuery = query.replace(noSpecialCharactersRegex, '');
+    const sanitizedQuery = query
+      .replace(noSpecialCharactersRegex, '')
+      .toLowerCase();
     return (
       <MenuItem
         icon="add"
@@ -128,7 +130,7 @@ const CustomMultiSelect = ({
       onItemSelect={onItemSelect}
       createNewItemRenderer={renderCreateItems}
       createNewItemFromQuery={onCreatItem}
-      tagRenderer={item => item}
+      tagRenderer={item => item.toLocaleLowerCase()}
       tagInputProps={{
         onRemove,
         inputProps: {
