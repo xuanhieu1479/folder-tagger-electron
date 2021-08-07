@@ -70,10 +70,30 @@ const DialogContent = ({
         } = selectedFolderInfo;
         const selectedFolderCategory = category || defaultSuggestion;
         const selectedFolderLanguage = language || defaultSuggestion;
-        const brokenDownTags = breakDownTags(selectedFolderTags);
-        setSelectedTags(brokenDownTags);
-        setSelectedCategory(selectedFolderCategory);
-        setSelectedLanguage(selectedFolderLanguage);
+
+        switch (dialogType) {
+          case TagAction.Add:
+            if (
+              selectedFolderCategory === defaultSuggestion &&
+              selectedFolderLanguage === defaultSuggestion
+            ) {
+              setSelectedCategory(defaultValue.defaultCategory);
+              setSelectedLanguage(defaultValue.defaultLanguage);
+            } else {
+              setSelectedCategory(selectedFolderCategory);
+              setSelectedLanguage(selectedFolderLanguage);
+            }
+            break;
+          case TagAction.Edit: {
+            const brokenDownTags = breakDownTags(selectedFolderTags);
+            setSelectedTags(brokenDownTags);
+            setSelectedCategory(selectedFolderCategory);
+            setSelectedLanguage(selectedFolderLanguage);
+            break;
+          }
+          default:
+            break;
+        }
       }
     };
     const pasteTags = () => {
@@ -131,14 +151,8 @@ const DialogContent = ({
       }
     };
 
-    switch (dialogType) {
-      case TagAction.Edit:
-        getSelectedFolderTags();
-        break;
-      case TagAction.Add:
-        setSelectedCategory(defaultValue.defaultCategory);
-        setSelectedLanguage(defaultValue.defaultLanguage);
-        break;
+    if (dialogType !== TagAction.Remove) {
+      getSelectedFolderTags();
     }
 
     setFirstRender(false);
