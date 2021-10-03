@@ -15,6 +15,8 @@ const DEFAULT_VALUE: SettingDefaultValue = {
   defaultSearchParams: '',
   defaultExternalProgram: '',
   isSearchRandomly: 'no',
+  placeholderCategory: '',
+  placeholderLanguage: '',
   defaultCategory: '',
   defaultLanguage: ''
 };

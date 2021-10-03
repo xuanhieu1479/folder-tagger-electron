@@ -25,6 +25,8 @@ const SettingDefaultValues = ({
     defaultSearchParams,
     defaultExternalProgram,
     isSearchRandomly,
+    placeholderCategory,
+    placeholderLanguage,
     defaultCategory,
     defaultLanguage
   } = defaultValueSettings;
@@ -49,29 +51,51 @@ const SettingDefaultValues = ({
     }
   };
 
-  const onChangeCategoryRadio = (event: React.FormEvent<HTMLInputElement>) => {
+  const onChangeIsRandom = (event: React.FormEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    onUpdateSettings({
+      defaultValue: { ...defaultValueSettings, isSearchRandomly: value }
+    });
+  };
+  const onChangePlaceholderCategory = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.currentTarget;
+    onUpdateSettings({
+      defaultValue: { ...defaultValueSettings, placeholderCategory: value }
+    });
+  };
+  const onChangePlaceholderLanguage = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.currentTarget;
+    onUpdateSettings({
+      defaultValue: { ...defaultValueSettings, placeholderLanguage: value }
+    });
+  };
+  const onChangeDefaultCategory = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
     const { value } = event.currentTarget;
     onUpdateSettings({
       defaultValue: { ...defaultValueSettings, defaultCategory: value }
     });
   };
-  const onChangeLanguageRadio = (event: React.FormEvent<HTMLInputElement>) => {
+  const onChangeDefaultLanguage = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
     const { value } = event.currentTarget;
     onUpdateSettings({
       defaultValue: { ...defaultValueSettings, defaultLanguage: value }
-    });
-  };
-  const onChangeIsRandomRadio = (event: React.FormEvent<HTMLInputElement>) => {
-    const { value } = event.currentTarget;
-    onUpdateSettings({
-      defaultValue: { ...defaultValueSettings, isSearchRandomly: value }
     });
   };
 
   return (
     <section>
       <div className="setting-dialog_tab-panel_row">
-        <div className="setting-dialog_tab-panel_row_title">Search</div>
+        <div className="setting-dialog_tab-panel_row_title">
+          Search on startup
+        </div>
         <div className="setting-dialog_tab-panel_row_content">
           <InputGroup
             fill={true}
@@ -81,7 +105,9 @@ const SettingDefaultValues = ({
         </div>
       </div>
       <div className="setting-dialog_tab-panel_row">
-        <div className="setting-dialog_tab-panel_row_title">Program</div>
+        <div className="setting-dialog_tab-panel_row_title">
+          External program path
+        </div>
         <div className="setting-dialog_tab-panel_row_content">
           <FileInput
             fill={true}
@@ -96,11 +122,13 @@ const SettingDefaultValues = ({
         </div>
       </div>
       <div className="setting-dialog_tab-panel_row">
-        <div className="setting-dialog_tab-panel_row_title">Is Random</div>
+        <div className="setting-dialog_tab-panel_row_title">
+          Is random on startup
+        </div>
         <div className="setting-dialog_tab-panel_row_content">
           <RadioGroup
             inline={true}
-            onChange={onChangeIsRandomRadio}
+            onChange={onChangeIsRandom}
             selectedValue={isSearchRandomly}
           >
             <Radio
@@ -117,17 +145,19 @@ const SettingDefaultValues = ({
         </div>
       </div>
       <div className="setting-dialog_tab-panel_row">
-        <div className="setting-dialog_tab-panel_row_title">Category</div>
+        <div className="setting-dialog_tab-panel_row_title">
+          Category placeholder
+        </div>
         <div className="setting-dialog_tab-panel_row_content">
           <RadioGroup
             inline={true}
-            onChange={onChangeCategoryRadio}
-            selectedValue={defaultCategory}
+            onChange={onChangePlaceholderCategory}
+            selectedValue={placeholderCategory}
           >
             {DefaultValueRadio()}
             {Object.values(SEED_DATA.CATEGORY).map(category => (
               <Radio
-                key={category}
+                key={`placeholder-${category}`}
                 label={category}
                 value={category}
                 className="setting-dialog_tab-panel_radio"
@@ -137,17 +167,63 @@ const SettingDefaultValues = ({
         </div>
       </div>
       <div className="setting-dialog_tab-panel_row">
-        <div className="setting-dialog_tab-panel_row_title">Language</div>
+        <div className="setting-dialog_tab-panel_row_title">
+          Language placeholder
+        </div>
         <div className="setting-dialog_tab-panel_row_content">
           <RadioGroup
             inline={true}
-            onChange={onChangeLanguageRadio}
+            onChange={onChangePlaceholderLanguage}
+            selectedValue={placeholderLanguage}
+          >
+            {DefaultValueRadio()}
+            {Object.values(SEED_DATA.LANGUAGE).map(language => (
+              <Radio
+                key={`placeholder-${language}`}
+                label={language}
+                value={language}
+                className="setting-dialog_tab-panel_radio"
+              />
+            ))}
+          </RadioGroup>
+        </div>
+      </div>
+      <div className="setting-dialog_tab-panel_row">
+        <div className="setting-dialog_tab-panel_row_title">
+          Category on startup
+        </div>
+        <div className="setting-dialog_tab-panel_row_content">
+          <RadioGroup
+            inline={true}
+            onChange={onChangeDefaultCategory}
+            selectedValue={defaultCategory}
+          >
+            {DefaultValueRadio()}
+            {Object.values(SEED_DATA.CATEGORY).map(category => (
+              <Radio
+                key={`default-${category}`}
+                label={category}
+                value={category}
+                className="setting-dialog_tab-panel_radio"
+              />
+            ))}
+          </RadioGroup>
+        </div>
+      </div>
+      <div className="setting-dialog_tab-panel_row">
+        <div className="setting-dialog_tab-panel_row_title">
+          Language on startup
+        </div>
+        <div className="setting-dialog_tab-panel_row_content">
+          <RadioGroup
+            inline={true}
+            onChange={onChangeDefaultLanguage}
             selectedValue={defaultLanguage}
           >
             {DefaultValueRadio()}
             {Object.values(SEED_DATA.LANGUAGE).map(language => (
               <Radio
-                key={language}
+                key={`default-${language}`}
                 label={language}
                 value={language}
                 className="setting-dialog_tab-panel_radio"

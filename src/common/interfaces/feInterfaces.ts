@@ -48,6 +48,8 @@ interface SettingDefaultValue {
   defaultSearchParams: string;
   defaultExternalProgram: string;
   isSearchRandomly: string;
+  placeholderCategory: string;
+  placeholderLanguage: string;
   defaultCategory: string;
   defaultLanguage: string;
 }

@@ -77,8 +77,8 @@ const DialogContent = ({
               selectedFolderCategory === defaultSuggestion &&
               selectedFolderLanguage === defaultSuggestion
             ) {
-              setSelectedCategory(defaultValue.defaultCategory);
-              setSelectedLanguage(defaultValue.defaultLanguage);
+              setSelectedCategory(defaultValue.placeholderCategory);
+              setSelectedLanguage(defaultValue.placeholderLanguage);
             } else {
               setSelectedCategory(selectedFolderCategory);
               setSelectedLanguage(selectedFolderLanguage);

@@ -8,8 +8,17 @@ import { UPDATE_SETTINGS } from './settingActionType';
 import { writeToFile, fileExists } from '../../../utilities/utilityFunctions';
 import { showMessage } from '../../../utilities/feUtilities';
 
-const getSettings = (dispatch: Dispatch, onSuccess: () => void): void => {
+interface OnSuccessCallback {
+  category?: string;
+  language?: string;
+}
+
+const getSettings = (
+  dispatch: Dispatch,
+  onSuccess: (defaultValue: OnSuccessCallback) => void
+): void => {
   try {
+    let defaultValues = {};
     if (!fileExists(SETTING.PATH)) {
       updateSettings(dispatch);
     } else {
@@ -30,8 +39,12 @@ const getSettings = (dispatch: Dispatch, onSuccess: () => void): void => {
         }
       };
       updateSettings(dispatch, settings);
+      defaultValues = {
+        category: data.defaultValue.defaultCategory,
+        language: data.defaultValue.defaultLanguage
+      };
     }
-    onSuccess();
+    onSuccess(defaultValues);
   } catch (error) {
     showMessage.error(error);
   }

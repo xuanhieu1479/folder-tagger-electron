@@ -32,7 +32,16 @@ const App = (): ReactElement => {
   const [refreshCount, setRefreshCount] = useState(count);
 
   useEffect(() => {
-    const onSuccessGetSettings = () => setSettingsLoaded(true);
+    const onSuccessGetSettings = (defaultValue: {
+      category?: string;
+      language?: string;
+    }) => {
+      updateParams({
+        category: defaultValue.category || undefined,
+        language: defaultValue.language || undefined
+      });
+      setSettingsLoaded(true);
+    };
 
     initIpcEventListeners(
       dispatch,
