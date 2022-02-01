@@ -48,6 +48,8 @@ interface RenameQueryResult extends QueryResult {
   newThumbnail?: string;
 }
 
+const SPECIAL_INDEX_FOR_ABSOLUTE_DYNAMIC_TAG = 4;
+
 const getTagId = (tagType: string, tagName: string) => `${tagType}-${tagName}`;
 
 @Entity()
@@ -191,7 +193,9 @@ Folder.prototype.get = async (
       const tagQueryString = (index: number) =>
         !isTagAbsolute
           ? `tag.TagName LIKE :${parameterKey(index)}`
-          : `tag.TagName = :${parameterKey(-1)}`;
+          : `tag.TagName = :${parameterKey(
+              SPECIAL_INDEX_FOR_ABSOLUTE_DYNAMIC_TAG
+            )}`;
       query.andWhere(q => {
         const subQuery = q
           .subQuery()
@@ -234,7 +238,7 @@ Folder.prototype.get = async (
             );
         }
         subQuery.setParameters({
-          [parameterKey(-1)]: tagName,
+          [parameterKey(SPECIAL_INDEX_FOR_ABSOLUTE_DYNAMIC_TAG)]: tagName,
           [parameterKey(0)]: `%${tagName}%`,
           [parameterKey(1)]: `%${tagName} %`,
           [parameterKey(2)]: `% ${tagName}%`,
