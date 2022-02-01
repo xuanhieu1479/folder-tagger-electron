@@ -62,8 +62,10 @@ const App = (): ReactElement => {
   useEffect((): void => {
     if (!isSettingsLoaded) return;
 
-    const getNewFolders = async () => {
-      const tags = generateTagsFromSearchKeywords(searchKeywords);
+    const getNewFolders = async (defaultSearchKeywords?: string) => {
+      const tags = generateTagsFromSearchKeywords(
+        defaultSearchKeywords || searchKeywords
+      );
       await getFolders(dispatch, { ...params, tags });
       document
         .getElementById(ELEMENT_ID.FOLDER_CARD_CONTAINER)
@@ -72,12 +74,16 @@ const App = (): ReactElement => {
 
     const { defaultSearchParams, isSearchRandomly } = defaultValue;
     const isRandom = isSearchRandomly.toLowerCase() === 'yes';
-    if (isFirstRender && (defaultSearchParams || isRandom)) {
-      const initialSearchParams = generateTagsFromSearchKeywords(
-        defaultSearchParams
-      );
-      getFolders(dispatch, { ...params, tags: initialSearchParams, isRandom });
+    if (isFirstRender) {
       setFirstRender(false);
+      if (defaultSearchParams) setSearchKeywords(defaultSearchParams);
+      if (isRandom) {
+        updateParams({ isRandom });
+        // Updating params will make this useEffect run again,
+        // so stop here.
+        return;
+      }
+      getNewFolders(defaultSearchParams);
     } else getNewFolders();
   }, [params, isSettingsLoaded, refreshCount]);
 
