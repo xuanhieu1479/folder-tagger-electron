@@ -102,12 +102,14 @@ Tag.prototype.get = async ({
   const hasIncludedTagTypes = includedTagTypes !== undefined;
   const query = getRepository(Tag)
     .createQueryBuilder('tag')
+    .innerJoin('tag.Folders', 'folder')
     .select('tag.TagType', 'tagType')
-    .addSelect('tag.TagName', 'tagName');
+    .addSelect('tag.TagName', 'tagName')
+    .addSelect('COUNT(folder.FolderLocation)', 'usedTimes')
+    .groupBy('tag.TagId')
+    .orderBy('usedTimes', 'DESC');
   if (getTagsForFolder)
-    query
-      .innerJoin('tag.Folders', 'folder')
-      .where('folder.FolderLocation = :folderLocation', { folderLocation });
+    query.where('folder.FolderLocation = :folderLocation', { folderLocation });
   if (hasIncludedTagTypes)
     query.andWhere(
       new Brackets(q => {
