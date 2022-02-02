@@ -59,18 +59,18 @@ const App = (): ReactElement => {
     };
   }, []);
 
+  const getNewFolders = async (defaultSearchKeywords?: string) => {
+    const tags = generateTagsFromSearchKeywords(
+      defaultSearchKeywords || searchKeywords
+    );
+    await getFolders(dispatch, { ...params, tags });
+    document
+      .getElementById(ELEMENT_ID.FOLDER_CARD_CONTAINER)
+      ?.scrollTo({ top: 0 });
+  };
+
   useEffect((): void => {
     if (!isSettingsLoaded) return;
-
-    const getNewFolders = async (defaultSearchKeywords?: string) => {
-      const tags = generateTagsFromSearchKeywords(
-        defaultSearchKeywords || searchKeywords
-      );
-      await getFolders(dispatch, { ...params, tags });
-      document
-        .getElementById(ELEMENT_ID.FOLDER_CARD_CONTAINER)
-        ?.scrollTo({ top: 0 });
-    };
 
     const { defaultSearchParams, isSearchRandomly } = defaultValue;
     const isRandom = isSearchRandomly.toLowerCase() === 'yes';
@@ -123,6 +123,7 @@ const App = (): ReactElement => {
         <FoldersDisplay
           params={params}
           updateParams={updateParams}
+          getNewFolders={getNewFolders}
           searchKeywords={searchKeywords}
           onChangeSearchKeywords={onChangeSearchKeywords}
           openSettingDialog={onOpenSettingDialog}

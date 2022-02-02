@@ -12,6 +12,7 @@ import './Header.styled.scss';
 interface Header {
   params: FolderFilterParams;
   updateParams: (newParams: Partial<FolderFilterParams>) => void;
+  getNewFolders: () => void;
   searchKeywords: string;
   onChangeSearchKeywords: (event: React.FormEvent<HTMLInputElement>) => void;
   allCategories: string[];
@@ -23,6 +24,7 @@ const noneOption = 'none';
 const Header = ({
   params,
   updateParams,
+  getNewFolders,
   searchKeywords,
   onChangeSearchKeywords,
   allCategories,
@@ -41,13 +43,15 @@ const Header = ({
     });
   };
   const onPressEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') onSearch();
+    if (event.key === 'Enter') {
+      getNewFolders();
+    }
   };
 
-  const onSearch = () => {
+  const turnOffRandom = () => {
     updateParams({ isRandom: false, ...PAGINATION.DEFAULT });
   };
-  const onRandomize = () => {
+  const turnOnRandom = () => {
     updateParams({ isRandom: true, ...PAGINATION.DEFAULT });
   };
 
@@ -100,10 +104,10 @@ const Header = ({
         </Tooltip>
       </section>
       <div className="header_action-buttons">
-        <Button intent={Intent.PRIMARY} onClick={onRandomize}>
+        <Button intent={Intent.PRIMARY} onClick={turnOnRandom}>
           Randomize
         </Button>
-        <Button intent={Intent.SUCCESS} onClick={onSearch}>
+        <Button intent={Intent.SUCCESS} onClick={turnOffRandom}>
           Search
         </Button>
       </div>

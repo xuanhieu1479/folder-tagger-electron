@@ -28,6 +28,7 @@ import './FoldersDisplay.styled.scss';
 interface FolderDisplay {
   params: FolderFilterParams;
   updateParams: (newParams: Partial<FolderFilterParams>) => void;
+  getNewFolders: () => void;
   searchKeywords: string;
   onChangeSearchKeywords: (event: React.FormEvent<HTMLInputElement>) => void;
   openSettingDialog: () => void;
@@ -40,6 +41,7 @@ const defaultFolderDialogParams = {
 const FoldersDisplay = ({
   params,
   updateParams,
+  getNewFolders,
   searchKeywords,
   onChangeSearchKeywords,
   openSettingDialog
@@ -365,6 +367,7 @@ const FoldersDisplay = ({
         <Header
           params={params}
           updateParams={updateParams}
+          getNewFolders={getNewFolders}
           searchKeywords={searchKeywords}
           onChangeSearchKeywords={onChangeSearchKeywords}
           allCategories={categories}
