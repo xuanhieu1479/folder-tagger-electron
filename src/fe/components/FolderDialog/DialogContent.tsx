@@ -15,11 +15,7 @@ import {
 import { TagAction } from '../../../common/enums/commonEnums';
 import { CustomSuggest, CustomMultiSelect } from '../commonComponents';
 import { showMessage } from '../../../utilities/feUtilities';
-import {
-  getTags,
-  modifyTagsOfFolders,
-  clearClipboard
-} from '../../redux/tag/tagAction';
+import { getTags, modifyTagsOfFolders } from '../../redux/tag/tagAction';
 
 interface DialogContent {
   dialogType: TagAction;
@@ -116,7 +112,6 @@ const DialogContent = ({
         { author: [], parody: [], character: [], genre: [] }
       );
       setSelectedTags(newSelectedTags);
-      dispatch(clearClipboard());
     };
     const keyDownListerner = (event: KeyboardEvent) => {
       const { key } = event;
