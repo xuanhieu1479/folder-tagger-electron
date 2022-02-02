@@ -1,7 +1,7 @@
 {
   "name": "folder-tagger-electron",
   "productName": "folder-tagger-electron",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Manage folders with your own tags",
   "main": ".webpack/main",
   "scripts": {
