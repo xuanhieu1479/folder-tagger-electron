@@ -69,14 +69,14 @@ const DialogContent = ({
 
         switch (dialogType) {
           case TagAction.Add:
-            if (
-              selectedFolderCategory === defaultSuggestion &&
-              selectedFolderLanguage === defaultSuggestion
-            ) {
+            if (selectedFolderCategory === defaultSuggestion) {
               setSelectedCategory(defaultValue.placeholderCategory);
-              setSelectedLanguage(defaultValue.placeholderLanguage);
             } else {
               setSelectedCategory(selectedFolderCategory);
+            }
+            if (selectedFolderLanguage === defaultSuggestion) {
+              setSelectedLanguage(defaultValue.placeholderLanguage);
+            } else {
               setSelectedLanguage(selectedFolderLanguage);
             }
             break;
