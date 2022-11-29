@@ -512,7 +512,7 @@ Folder.prototype.import = async (
   try {
     await manager.transaction(async transactionManager => {
       if (!_.isEmpty(newTags)) await transactionManager.insert(Tag, newTags);
-      // Sqlite maximum depth is 1000
+      // Because Sqlite maximum depth is 1000
       await transactionManager.save(upsertFolders, { chunk: 500 });
       if (!_.isEmpty(failedToImportFolders))
         writeToFile(
@@ -637,8 +637,14 @@ Folder.prototype.clear = async (): Promise<QueryResult> => {
     );
     const manager = getManager();
     await manager.transaction(async transactionManager => {
-      await transactionManager.remove(nonExistentFolders);
-      await transactionManager.save(updatedThumbnailFolders);
+      if (!_.isEmpty(nonExistentFolders)) {
+        // Because Sqlite maximum depth is 1000
+        await transactionManager.remove(nonExistentFolders, { chunk: 10 });
+      }
+      if (!_.isEmpty(updatedThumbnailFolders)) {
+        // Because Sqlite maximum depth is 1000
+        await transactionManager.save(updatedThumbnailFolders, { chunk: 10 });
+      }
     });
     if (!_.isEmpty(deletedFolders))
       writeToFile(
