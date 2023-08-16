@@ -1,8 +1,9 @@
 ## For Developers:
 
-- Install Python 2.7 and Visual Studio 2017 build tools from windows-build-tools https://www.npmjs.com/package/windows-build-tools (note: Using anything besides run as administrator Powershell is not recommended, since it might get stuck.)
+- Install Python 2.7 and Visual Studio 2017 build tools from windows-build-tools https://www.npmjs.com/package/windows-build-tools (note: Using anything besides run as administrator Powershell is not recommended, since it might get stuck).
 - Set msvs_version=2017 in npm.
 - Warning: For the first time please run yarn start to rebuild native modules, otherwise we will get NODE_MODULE_VERSION not compatible.
+- Install Node with version 16 or lower (later version will need openssl-legacy-provider but electron forge does not like that).
 
 - "yarn start" to start the app in development mode.
 - "yarn package" to package your app.
